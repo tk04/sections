@@ -10,13 +10,24 @@ export class SignUpResolver {
   hello() {
     return "Hello World";
   }
-  @Query(() => User)
-  me(@Ctx() { req, prisma }: context) {
-    // return prisma.user.findFirst({
-    //   where: {
-    //     googleId: google_id,
-    //   },
-    // });
+  @Query(() => User, { nullable: true })
+  async me(@Ctx() { req, prisma }: context) {
+    const token = req.cookies.token;
+    if (token) {
+      const { userId } = jwt.verify(token, process.env.JWT_SECRET!) as {
+        userId: string;
+      };
+      const user = await prisma.user.findFirst({
+        where: {
+          id: userId,
+        },
+      });
+      if (user) {
+        return user;
+      } else {
+        return null;
+      }
+    }
   }
 
   @Mutation(() => User)

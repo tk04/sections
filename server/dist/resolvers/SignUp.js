@@ -25,12 +25,22 @@ let SignUpResolver = class SignUpResolver {
     hello() {
         return "Hello World";
     }
-    me({ req, prisma }) {
-        // return prisma.user.findFirst({
-        //   where: {
-        //     googleId: google_id,
-        //   },
-        // });
+    async me({ req, prisma }) {
+        const token = req.cookies.token;
+        if (token) {
+            const { userId } = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
+            const user = await prisma.user.findFirst({
+                where: {
+                    id: userId,
+                },
+            });
+            if (user) {
+                return user;
+            }
+            else {
+                return null;
+            }
+        }
     }
     async signUp(code, { prisma, res }) {
         const data = await (0, axios_1.default)({
@@ -79,11 +89,11 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], SignUpResolver.prototype, "hello", null);
 __decorate([
-    (0, type_graphql_1.Query)(() => user_1.User),
+    (0, type_graphql_1.Query)(() => user_1.User, { nullable: true }),
     __param(0, (0, type_graphql_1.Ctx)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], SignUpResolver.prototype, "me", null);
 __decorate([
     (0, type_graphql_1.Mutation)(() => user_1.User),

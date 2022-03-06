@@ -1,23 +1,43 @@
-import React from "react";
-import { useQuery, gql } from "@apollo/client";
+import React, { useEffect } from "react";
+import { useRouter } from "next/router";
+import { useMeQuery } from "../generated/graphql";
 interface indexProps {}
-
-const TEST_QUERY = gql`
-  query TestQuery {
-    hello
-  }
-`;
-const GOOGLE_CLIENT_ID =
-  "447468003621-bo93halvpkgln6maei5ds58nri94ed3m.apps.googleusercontent.com";
-const GOOGLE_URI = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=http://localhost:3000/cb&scope=openid%20email%20profile&response_type=code&prompt=consent`;
+import Image from "next/image";
 
 const Index: React.FC<indexProps> = ({}) => {
-  const { data } = useQuery(TEST_QUERY);
-  console.log("data: ", data);
+  const { data, loading, refetch } = useMeQuery();
+  const router = useRouter();
+  const LoginSuccess = router.query.login;
+  useEffect(() => {
+    if (LoginSuccess === "success") {
+      router.push("/");
+      setTimeout(() => {
+        refetch();
+      }, 500);
+    }
+  }, [LoginSuccess, router, refetch]);
   const handleLogin = () => {
-    window.location.href = GOOGLE_URI;
+    window.location.href = process.env.GOOGLE_URI!;
   };
-  return <button onClick={handleLogin}>Sign in with google</button>;
+  return (
+    <div>
+      {data && data.me ? (
+        <>
+          <h1>HELLo</h1>
+          <h1>Name: {data?.me.name}</h1>
+          <h1>Email: {data?.me.email}</h1>
+          <Image
+            src={`${data.me.picture}`}
+            alt="user pic"
+            width={100}
+            height={100}
+          />
+        </>
+      ) : (
+        <button onClick={handleLogin}>Sign in with google</button>
+      )}
+    </div>
+  );
 };
 
 export default Index;
