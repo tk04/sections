@@ -16,30 +16,69 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SignUpResolver = void 0;
+const user_1 = require("../entities/user");
 const type_graphql_1 = require("type-graphql");
 const axios_1 = __importDefault(require("axios"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-class SignUpResolver {
-    async signUp(code) {
+let SignUpResolver = class SignUpResolver {
+    getUserByGoogleId(google_id, { prisma }) {
+        return prisma.user.findFirst({
+            where: {
+                googleId: google_id,
+            },
+        });
+    }
+    async signUp(code, { prisma }) {
         const data = await (0, axios_1.default)({
             url: "https://oauth2.googleapis.com/token",
             method: "POST",
             data: `code=${code}&client_id=${process.env.GOOGLE_CLIENT_ID}&client_secret=${process.env.GOOGLE_CLIENT_SECRET}&redirect_uri=${"http://localhost:3000/cb"}&grant_type=authorization_code`,
         }).catch((e) => console.log(e));
         if (data) {
-            console.log("DATA: ", data.data);
             const { id_token } = data.data;
             const token_data = jsonwebtoken_1.default.decode(id_token);
-            console.log("DECODED TOKEN: ", token_data);
+            const user = await prisma.user.findFirst({
+                where: {
+                    googleId: token_data.sub,
+                },
+            });
+            if (user) {
+                return user;
+            }
+            else {
+                const user = await prisma.user.create({
+                    data: {
+                        name: token_data.name,
+                        email: token_data.email,
+                        picture: token_data.picture,
+                        googleId: token_data.sub,
+                    },
+                });
+                return user;
+            }
         }
-        return true;
+        else {
+            throw new Error("Error");
+        }
     }
-}
+};
 __decorate([
-    (0, type_graphql_1.Mutation)(() => Boolean),
-    __param(0, (0, type_graphql_1.Arg)("code", () => String)),
+    (0, type_graphql_1.Query)(() => user_1.User),
+    __param(0, (0, type_graphql_1.Arg)("google_id")),
+    __param(1, (0, type_graphql_1.Ctx)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String]),
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", void 0)
+], SignUpResolver.prototype, "getUserByGoogleId", null);
+__decorate([
+    (0, type_graphql_1.Mutation)(() => user_1.User),
+    __param(0, (0, type_graphql_1.Arg)("code", () => String)),
+    __param(1, (0, type_graphql_1.Ctx)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", Promise)
 ], SignUpResolver.prototype, "signUp", null);
+SignUpResolver = __decorate([
+    (0, type_graphql_1.Resolver)(user_1.User)
+], SignUpResolver);
 exports.SignUpResolver = SignUpResolver;

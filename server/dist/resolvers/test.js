@@ -11,10 +11,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
+var _a;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TestResolver = void 0;
 const type_graphql_1 = require("type-graphql");
-const test_1 = require("../entities/test");
+const user_1 = require("../entities/user");
 let TestResolver = class TestResolver {
     name(root) {
         console.log("ROOT: ", root);
@@ -28,16 +29,16 @@ __decorate([
     (0, type_graphql_1.FieldResolver)(),
     __param(0, (0, type_graphql_1.Root)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [test_1.Recipe]),
+    __metadata("design:paramtypes", [typeof (_a = typeof user_1.Recipe !== "undefined" && user_1.Recipe) === "function" ? _a : Object]),
     __metadata("design:returntype", void 0)
 ], TestResolver.prototype, "name", null);
 __decorate([
-    (0, type_graphql_1.Query)(() => test_1.Recipe),
+    (0, type_graphql_1.Query)(() => user_1.Recipe),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], TestResolver.prototype, "test", null);
 TestResolver = __decorate([
-    (0, type_graphql_1.Resolver)(test_1.Recipe)
+    (0, type_graphql_1.Resolver)(user_1.Recipe)
 ], TestResolver);
 exports.TestResolver = TestResolver;
