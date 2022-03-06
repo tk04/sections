@@ -1,0 +1,6 @@
+mutation GoogleOpenId{
+    googleOpenId(input: GoogleOpenIdInput!): GoogleOpenIdPayload{
+        id_token
+        access_token
+    }
+}
