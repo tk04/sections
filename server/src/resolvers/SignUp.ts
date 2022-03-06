@@ -6,16 +6,17 @@ import jwt from "jsonwebtoken";
 
 @Resolver(User)
 export class SignUpResolver {
+  @Query(() => String)
+  hello() {
+    return "Hello World";
+  }
   @Query(() => User)
-  getUserByGoogleId(
-    @Arg("google_id") google_id: string,
-    @Ctx() { prisma }: context
-  ) {
-    return prisma.user.findFirst({
-      where: {
-        googleId: google_id,
-      },
-    });
+  me(@Ctx() { req, prisma }: context) {
+    // return prisma.user.findFirst({
+    //   where: {
+    //     googleId: google_id,
+    //   },
+    // });
   }
 
   @Mutation(() => User)
@@ -33,7 +34,7 @@ export class SignUpResolver {
       }&redirect_uri=${"http://localhost:3000/cb"}&grant_type=authorization_code`,
     }).catch((e) => console.log(e));
 
-    if (data) {
+    if (data && data.data && data.data.id_token) {
       const { id_token } = data.data;
       const token_data = jwt.decode(id_token) as GoogleIdToken;
       const user = await prisma.user.findFirst({

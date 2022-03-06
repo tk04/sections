@@ -1,6 +1,9 @@
-mutation GoogleOpenId{
-    googleOpenId(input: GoogleOpenIdInput!): GoogleOpenIdPayload{
-        id_token
-        access_token
-    }
+mutation CreateUser($code: String!) {
+  signUp(code: $code) {
+    id
+    name
+    email
+    picture
+    googleId
+  }
 }

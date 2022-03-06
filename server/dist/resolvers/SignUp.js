@@ -21,12 +21,15 @@ const type_graphql_1 = require("type-graphql");
 const axios_1 = __importDefault(require("axios"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 let SignUpResolver = class SignUpResolver {
-    getUserByGoogleId(google_id, { prisma }) {
-        return prisma.user.findFirst({
-            where: {
-                googleId: google_id,
-            },
-        });
+    hello() {
+        return "Hello World";
+    }
+    me({ req, prisma }) {
+        // return prisma.user.findFirst({
+        //   where: {
+        //     googleId: google_id,
+        //   },
+        // });
     }
     async signUp(code, { prisma }) {
         const data = await (0, axios_1.default)({
@@ -34,7 +37,7 @@ let SignUpResolver = class SignUpResolver {
             method: "POST",
             data: `code=${code}&client_id=${process.env.GOOGLE_CLIENT_ID}&client_secret=${process.env.GOOGLE_CLIENT_SECRET}&redirect_uri=${"http://localhost:3000/cb"}&grant_type=authorization_code`,
         }).catch((e) => console.log(e));
-        if (data) {
+        if (data && data.data && data.data.id_token) {
             const { id_token } = data.data;
             const token_data = jsonwebtoken_1.default.decode(id_token);
             const user = await prisma.user.findFirst({
@@ -63,13 +66,18 @@ let SignUpResolver = class SignUpResolver {
     }
 };
 __decorate([
-    (0, type_graphql_1.Query)(() => user_1.User),
-    __param(0, (0, type_graphql_1.Arg)("google_id")),
-    __param(1, (0, type_graphql_1.Ctx)()),
+    (0, type_graphql_1.Query)(() => String),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
-], SignUpResolver.prototype, "getUserByGoogleId", null);
+], SignUpResolver.prototype, "hello", null);
+__decorate([
+    (0, type_graphql_1.Query)(() => user_1.User),
+    __param(0, (0, type_graphql_1.Ctx)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", void 0)
+], SignUpResolver.prototype, "me", null);
 __decorate([
     (0, type_graphql_1.Mutation)(() => user_1.User),
     __param(0, (0, type_graphql_1.Arg)("code", () => String)),
