@@ -3,7 +3,7 @@ import { User } from "../entities/user";
 import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import axios from "axios";
 import jwt from "jsonwebtoken";
-
+import "dotenv/config";
 @Resolver(User)
 export class SignUpResolver {
   @Query(() => String)
@@ -22,7 +22,7 @@ export class SignUpResolver {
   @Mutation(() => User)
   async signUp(
     @Arg("code", () => String) code: string,
-    @Ctx() { prisma }: context
+    @Ctx() { prisma, res }: context
   ) {
     const data = await axios({
       url: "https://oauth2.googleapis.com/token",
@@ -33,18 +33,16 @@ export class SignUpResolver {
         process.env.GOOGLE_CLIENT_SECRET
       }&redirect_uri=${"http://localhost:3000/cb"}&grant_type=authorization_code`,
     }).catch((e) => console.log(e));
-
+    let user;
     if (data && data.data && data.data.id_token) {
       const { id_token } = data.data;
       const token_data = jwt.decode(id_token) as GoogleIdToken;
-      const user = await prisma.user.findFirst({
+      user = await prisma.user.findFirst({
         where: {
           googleId: token_data.sub,
         },
       });
-      if (user) {
-        return user;
-      } else {
+      if (!user) {
         const user = await prisma.user.create({
           data: {
             name: token_data.name,
@@ -53,8 +51,17 @@ export class SignUpResolver {
             googleId: token_data.sub,
           },
         });
-        return user;
       }
+      const token = jwt.sign({ userId: user!.id }, process.env.JWT_SECRET!, {
+        expiresIn: "30d",
+      });
+
+      res.cookie("token", token, {
+        maxAge: 1000 * 60 * 60 * 24 * 30, // 30 days
+        secure: process.env.NODE_ENV === "production",
+        httpOnly: true,
+      });
+      return user;
     } else {
       throw new Error("Error");
     }

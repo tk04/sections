@@ -20,6 +20,7 @@ const user_1 = require("../entities/user");
 const type_graphql_1 = require("type-graphql");
 const axios_1 = __importDefault(require("axios"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+require("dotenv/config");
 let SignUpResolver = class SignUpResolver {
     hello() {
         return "Hello World";
@@ -31,24 +32,22 @@ let SignUpResolver = class SignUpResolver {
         //   },
         // });
     }
-    async signUp(code, { prisma }) {
+    async signUp(code, { prisma, res }) {
         const data = await (0, axios_1.default)({
             url: "https://oauth2.googleapis.com/token",
             method: "POST",
             data: `code=${code}&client_id=${process.env.GOOGLE_CLIENT_ID}&client_secret=${process.env.GOOGLE_CLIENT_SECRET}&redirect_uri=${"http://localhost:3000/cb"}&grant_type=authorization_code`,
         }).catch((e) => console.log(e));
+        let user;
         if (data && data.data && data.data.id_token) {
             const { id_token } = data.data;
             const token_data = jsonwebtoken_1.default.decode(id_token);
-            const user = await prisma.user.findFirst({
+            user = await prisma.user.findFirst({
                 where: {
                     googleId: token_data.sub,
                 },
             });
-            if (user) {
-                return user;
-            }
-            else {
+            if (!user) {
                 const user = await prisma.user.create({
                     data: {
                         name: token_data.name,
@@ -57,8 +56,16 @@ let SignUpResolver = class SignUpResolver {
                         googleId: token_data.sub,
                     },
                 });
-                return user;
             }
+            const token = jsonwebtoken_1.default.sign({ userId: user.id }, process.env.JWT_SECRET, {
+                expiresIn: "30d",
+            });
+            res.cookie("token", token, {
+                maxAge: 1000 * 60 * 60 * 24 * 30,
+                secure: process.env.NODE_ENV === "production",
+                httpOnly: true,
+            });
+            return user;
         }
         else {
             throw new Error("Error");
