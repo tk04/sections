@@ -78,8 +78,11 @@ export class SignUpResolver {
     }
   }
 
-  @Mutation(() => User)
-  async signInWithTwitter(@Arg("code", () => String) code: string) {
+  @Mutation(() => Boolean)
+  async signInWithTwitter(
+    @Arg("code", () => String) code: string,
+    @Ctx() { prisma }: context
+  ) {
     const data = await axios({
       method: "POST",
       url: "https://api.twitter.com/2/oauth2/token",
@@ -90,6 +93,23 @@ export class SignUpResolver {
     });
     if (data.data) {
       console.log(data.data);
+      const userInfo = await axios({
+        method: "GET",
+        url: "https://api.twitter.com/2/users/me?user.fields=profile_image_url,name,verified",
+        headers: {
+          Authorization: `Bearer ${data.data.access_token}`,
+        },
+      });
+      console.log(userInfo);
+      const user = await prisma.user.create({
+        data: {
+          name: userInfo.data.data.name,
+          email: userInfo.data.data.email,
+          picture: userInfo.data.data.profile_image_url,
+          twitterId: userInfo.data.data.id,
+        },
+      });
+      console.log(user);
     }
 
     return true;

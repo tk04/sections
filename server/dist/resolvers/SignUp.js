@@ -81,6 +81,37 @@ let SignUpResolver = class SignUpResolver {
             throw new Error("Error");
         }
     }
+    async signInWithTwitter(code, { prisma }) {
+        const data = await (0, axios_1.default)({
+            method: "POST",
+            url: "https://api.twitter.com/2/oauth2/token",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+            },
+            data: `code=${code}&grant_type=authorization_code&redirect_uri=http://localhost:3000/twitter_cb&code_verifier=challenge&client_id=${process.env.TWITTER_CLIENT_ID}`,
+        });
+        if (data.data) {
+            console.log(data.data);
+            const userInfo = await (0, axios_1.default)({
+                method: "GET",
+                url: "https://api.twitter.com/2/users/me?user.fields=profile_image_url,name,verified",
+                headers: {
+                    Authorization: `Bearer ${data.data.access_token}`,
+                },
+            });
+            console.log(userInfo);
+            const user = await prisma.user.create({
+                data: {
+                    name: userInfo.data.data.name,
+                    email: userInfo.data.data.email,
+                    picture: userInfo.data.data.profile_image_url,
+                    twitterId: userInfo.data.data.id,
+                },
+            });
+            console.log(user);
+        }
+        return true;
+    }
 };
 __decorate([
     (0, type_graphql_1.Query)(() => String),
@@ -103,6 +134,14 @@ __decorate([
     __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", Promise)
 ], SignUpResolver.prototype, "signUp", null);
+__decorate([
+    (0, type_graphql_1.Mutation)(() => Boolean),
+    __param(0, (0, type_graphql_1.Arg)("code", () => String)),
+    __param(1, (0, type_graphql_1.Ctx)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", Promise)
+], SignUpResolver.prototype, "signInWithTwitter", null);
 SignUpResolver = __decorate([
     (0, type_graphql_1.Resolver)(user_1.User)
 ], SignUpResolver);

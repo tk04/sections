@@ -1,0 +1,8 @@
+mutation TwitterAuth($code: String!) {
+  twitterAuth(code: $code) {
+    id
+    name
+    email
+    pictire
+  }
+}
