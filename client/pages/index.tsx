@@ -1,35 +1,26 @@
 import React, { useEffect } from "react";
-import { useRouter } from "next/router";
-import { useMeQuery } from "../generated/graphql";
-interface indexProps {}
 import Image from "next/image";
+import { useMeQuery } from "../generated/graphql";
+import { useRouter } from "next/router";
+interface indexProps {}
 
 const Index: React.FC<indexProps> = ({}) => {
-  const { data, loading, refetch } = useMeQuery();
+  const { data, refetch } = useMeQuery();
 
   const router = useRouter();
   const LoginSuccess = router.query.login;
   useEffect(() => {
-    // let timeout: any;
     if (LoginSuccess === "success") {
       router.push("/");
       setTimeout(() => {
         refetch();
       }, 1000);
     }
-    // return () => {
-    //   clearTimeout(timeout);
-    // };
   });
-  const handleLogin = () => {
-    window.location.href = process.env.GOOGLE_URI!;
-  };
-  const twitterLogin = () => {
-    window.location.href = process.env.TWITTER_URI!;
-  };
+
   return (
     <div>
-      {data && data.me ? (
+      {data && data.me && (
         <>
           <h1>HELLo</h1>
           <h1>Name: {data?.me.name}</h1>
@@ -41,13 +32,7 @@ const Index: React.FC<indexProps> = ({}) => {
             height={100}
           />
         </>
-      ) : (
-        <div>hello</div>
       )}
-      <br />
-      <br />
-      <button onClick={handleLogin}>Sign in with google</button>
-      <button onClick={twitterLogin}>Sign in with Twitter</button>
     </div>
   );
 };
