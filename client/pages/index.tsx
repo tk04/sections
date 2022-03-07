@@ -19,6 +19,9 @@ const Index: React.FC<indexProps> = ({}) => {
   const handleLogin = () => {
     window.location.href = process.env.GOOGLE_URI!;
   };
+  const twitterLogin = () => {
+    window.location.href = process.env.TWITTER_URI!;
+  };
   return (
     <div>
       {data && data.me ? (
@@ -36,6 +39,9 @@ const Index: React.FC<indexProps> = ({}) => {
       ) : (
         <button onClick={handleLogin}>Sign in with google</button>
       )}
+      <br />
+      <br />
+      <button onClick={twitterLogin}>Sign in with Twitter</button>
     </div>
   );
 };

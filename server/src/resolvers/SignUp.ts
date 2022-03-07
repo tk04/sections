@@ -77,4 +77,21 @@ export class SignUpResolver {
       throw new Error("Error");
     }
   }
+
+  @Mutation(() => User)
+  async signInWithTwitter(@Arg("code", () => String) code: string) {
+    const data = await axios({
+      method: "POST",
+      url: "https://api.twitter.com/2/oauth2/token",
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      data: `code=${code}&grant_type=authorization_code&redirect_uri=http://localhost:3000/twitter_cb&code_verifier=challenge&client_id=${process.env.TWITTER_CLIENT_ID}`,
+    });
+    if (data.data) {
+      console.log(data.data);
+    }
+
+    return true;
+  }
 }
