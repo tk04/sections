@@ -1,4 +1,5 @@
 import React from "react";
+import { Button } from "@nextui-org/react";
 
 interface GoogleButtonProps {}
 
@@ -7,8 +8,10 @@ const Googlebutton: React.FC<GoogleButtonProps> = ({}) => {
     window.location.href = process.env.GOOGLE_URI!;
   };
   return (
-    <div
-      className="flex align-middle items-center border-2 border-gray-100 w-60 justify-center -ml-5 rounded-2xl h-11 hover:cursor-pointer"
+    <Button
+      light
+      color="primary"
+      className="flex align-middle items-center border-2 border-gray-100 w-72 justify-center -ml-5 rounded-2xl h-11 hover:cursor-pointer"
       onClick={handleLogin}
     >
       <svg
@@ -160,8 +163,8 @@ const Googlebutton: React.FC<GoogleButtonProps> = ({}) => {
           </g>
         </g>
       </svg>
-      <h1>Login with Google</h1>
-    </div>
+      <h1 className="text-black">Login with Google</h1>
+    </Button>
   );
 };
 

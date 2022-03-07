@@ -1,5 +1,8 @@
 import "../styles/globals.css";
 import type { AppProps } from "next/app";
+import { NextUIProvider } from "@nextui-org/react";
+import { SSRProvider } from "@react-aria/ssr";
+
 import {
   ApolloClient,
   InMemoryCache,
@@ -14,7 +17,11 @@ const client = new ApolloClient({
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ApolloProvider client={client}>
-      <Component {...pageProps} />
+      <SSRProvider>
+        <NextUIProvider>
+          <Component {...pageProps} />
+        </NextUIProvider>
+      </SSRProvider>
     </ApolloProvider>
   );
 }
