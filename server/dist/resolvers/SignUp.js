@@ -16,12 +16,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SignUpResolver = void 0;
+const TwitterLogin_1 = require("./../utils/TwitterLogin");
 const user_1 = require("../entities/user");
 const type_graphql_1 = require("type-graphql");
-const axios_1 = __importDefault(require("axios"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 require("dotenv/config");
 const setToken_1 = require("../utils/setToken");
+const GoogleLogin_1 = require("../utils/GoogleLogin");
 let SignUpResolver = class SignUpResolver {
     hello() {
         return "Hello World";
@@ -44,78 +45,18 @@ let SignUpResolver = class SignUpResolver {
         }
     }
     async signUp(code, { prisma, res }) {
-        const data = await (0, axios_1.default)({
-            url: "https://oauth2.googleapis.com/token",
-            method: "POST",
-            data: `code=${code}&client_id=${process.env.GOOGLE_CLIENT_ID}&client_secret=${process.env.GOOGLE_CLIENT_SECRET}&redirect_uri=${"http://localhost:3000/cb"}&grant_type=authorization_code`,
-        }).catch((e) => console.log(e));
-        let user;
-        if (data && data.data && data.data.id_token) {
-            const { id_token } = data.data;
-            const token_data = jsonwebtoken_1.default.decode(id_token);
-            user = await prisma.user.findFirst({
-                where: {
-                    googleId: token_data.sub,
-                },
-            });
-            if (!user) {
-                const user = await prisma.user.create({
-                    data: {
-                        name: token_data.name,
-                        email: token_data.email,
-                        picture: token_data.picture,
-                        googleId: token_data.sub,
-                    },
-                });
-            }
-            (0, setToken_1.setToken)(user.id, res);
-            return user;
-        }
-        else {
-            throw new Error("Error");
-        }
+        const user = await (0, GoogleLogin_1.GoogleLogin)(code, prisma).catch((e) => {
+            throw new Error(e.meesage);
+        });
+        (0, setToken_1.setToken)(user.id, res);
+        return user;
     }
     async signInWithTwitter(code, { prisma, res }) {
-        const data = await (0, axios_1.default)({
-            method: "POST",
-            url: "https://api.twitter.com/2/oauth2/token",
-            headers: {
-                "Content-Type": "application/x-www-form-urlencoded",
-            },
-            data: `code=${code}&grant_type=authorization_code&redirect_uri=http://localhost:3000/twitter_cb&code_verifier=challenge&client_id=${process.env.TWITTER_CLIENT_ID}`,
+        const user = await (0, TwitterLogin_1.TwitterLogin)(code, prisma).catch((e) => {
+            throw new Error(e.message);
         });
-        if (data.data) {
-            console.log(data.data);
-            const userInfo = await (0, axios_1.default)({
-                method: "GET",
-                url: "https://api.twitter.com/2/users/me?user.fields=profile_image_url,name,verified,public_metrics",
-                headers: {
-                    Authorization: `Bearer ${data.data.access_token}`,
-                },
-            });
-            console.log("PUBLIC_METRICS: ", userInfo.data.data.public_metrics);
-            let user = await prisma.user.findFirst({
-                where: { twitterId: userInfo.data.data.id },
-            });
-            if (user) {
-            }
-            else {
-                user = await prisma.user.create({
-                    data: {
-                        name: userInfo.data.data.name,
-                        email: userInfo.data.data.email,
-                        picture: userInfo.data.data.profile_image_url,
-                        twitterId: userInfo.data.data.id,
-                        twitterAccessToken: data.data.access_token,
-                    },
-                });
-            }
-            (0, setToken_1.setToken)(user.id, res);
-            return user;
-        }
-        else {
-            throw new Error("Could not authenticate with Twitter");
-        }
+        (0, setToken_1.setToken)(user.id, res);
+        return user;
     }
 };
 __decorate([

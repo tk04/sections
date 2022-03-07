@@ -6,16 +6,21 @@ import Image from "next/image";
 
 const Index: React.FC<indexProps> = ({}) => {
   const { data, loading, refetch } = useMeQuery();
+
   const router = useRouter();
   const LoginSuccess = router.query.login;
   useEffect(() => {
+    // let timeout: any;
     if (LoginSuccess === "success") {
       router.push("/");
       setTimeout(() => {
         refetch();
-      }, 500);
+      }, 1000);
     }
-  }, [LoginSuccess, router, refetch]);
+    // return () => {
+    //   clearTimeout(timeout);
+    // };
+  });
   const handleLogin = () => {
     window.location.href = process.env.GOOGLE_URI!;
   };
