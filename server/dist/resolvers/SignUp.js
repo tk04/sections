@@ -21,6 +21,7 @@ const type_graphql_1 = require("type-graphql");
 const axios_1 = __importDefault(require("axios"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 require("dotenv/config");
+const setToken_1 = require("../utils/setToken");
 let SignUpResolver = class SignUpResolver {
     hello() {
         return "Hello World";
@@ -67,21 +68,14 @@ let SignUpResolver = class SignUpResolver {
                     },
                 });
             }
-            const token = jsonwebtoken_1.default.sign({ userId: user.id }, process.env.JWT_SECRET, {
-                expiresIn: "30d",
-            });
-            res.cookie("token", token, {
-                maxAge: 1000 * 60 * 60 * 24 * 30,
-                secure: process.env.NODE_ENV === "production",
-                httpOnly: true,
-            });
+            (0, setToken_1.setToken)(user.id, res);
             return user;
         }
         else {
             throw new Error("Error");
         }
     }
-    async signInWithTwitter(code, { prisma }) {
+    async signInWithTwitter(code, { prisma, res }) {
         const data = await (0, axios_1.default)({
             method: "POST",
             url: "https://api.twitter.com/2/oauth2/token",
@@ -94,23 +88,34 @@ let SignUpResolver = class SignUpResolver {
             console.log(data.data);
             const userInfo = await (0, axios_1.default)({
                 method: "GET",
-                url: "https://api.twitter.com/2/users/me?user.fields=profile_image_url,name,verified",
+                url: "https://api.twitter.com/2/users/me?user.fields=profile_image_url,name,verified,public_metrics",
                 headers: {
                     Authorization: `Bearer ${data.data.access_token}`,
                 },
             });
-            console.log(userInfo);
-            const user = await prisma.user.create({
-                data: {
-                    name: userInfo.data.data.name,
-                    email: userInfo.data.data.email,
-                    picture: userInfo.data.data.profile_image_url,
-                    twitterId: userInfo.data.data.id,
-                },
+            console.log("PUBLIC_METRICS: ", userInfo.data.data.public_metrics);
+            let user = await prisma.user.findFirst({
+                where: { twitterId: userInfo.data.data.id },
             });
-            console.log(user);
+            if (user) {
+            }
+            else {
+                user = await prisma.user.create({
+                    data: {
+                        name: userInfo.data.data.name,
+                        email: userInfo.data.data.email,
+                        picture: userInfo.data.data.profile_image_url,
+                        twitterId: userInfo.data.data.id,
+                        twitterAccessToken: data.data.access_token,
+                    },
+                });
+            }
+            (0, setToken_1.setToken)(user.id, res);
+            return user;
         }
-        return true;
+        else {
+            throw new Error("Could not authenticate with Twitter");
+        }
     }
 };
 __decorate([
@@ -135,7 +140,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], SignUpResolver.prototype, "signUp", null);
 __decorate([
-    (0, type_graphql_1.Mutation)(() => Boolean),
+    (0, type_graphql_1.Mutation)(() => user_1.User),
     __param(0, (0, type_graphql_1.Arg)("code", () => String)),
     __param(1, (0, type_graphql_1.Ctx)()),
     __metadata("design:type", Function),

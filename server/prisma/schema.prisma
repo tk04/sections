@@ -18,5 +18,6 @@ model User{
   picture String @default("")
   googleId String?
   twitterId String?
+  twitterAccessToken String?
   
 }

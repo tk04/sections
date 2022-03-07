@@ -37,10 +37,11 @@ const Index: React.FC<indexProps> = ({}) => {
           />
         </>
       ) : (
-        <button onClick={handleLogin}>Sign in with google</button>
+        <div>hello</div>
       )}
       <br />
       <br />
+      <button onClick={handleLogin}>Sign in with google</button>
       <button onClick={twitterLogin}>Sign in with Twitter</button>
     </div>
   );

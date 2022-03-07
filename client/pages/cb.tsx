@@ -17,7 +17,7 @@ const Cb: React.FC<cbProps> = ({}) => {
       initUser();
       router.push("/?login=success");
     }
-  }, [code, createUser]);
+  }, [code, createUser, router]);
 
   return <div></div>;
 };

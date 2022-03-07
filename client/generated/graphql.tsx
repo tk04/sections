@@ -17,7 +17,13 @@ export type Scalars = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  signInWithTwitter: User;
   signUp: User;
+};
+
+
+export type MutationSignInWithTwitterArgs = {
+  code: Scalars['String'];
 };
 
 
@@ -28,12 +34,12 @@ export type MutationSignUpArgs = {
 export type Query = {
   __typename?: 'Query';
   hello: Scalars['String'];
-  me: User;
+  me?: Maybe<User>;
 };
 
 export type User = {
   __typename?: 'User';
-  email: Scalars['String'];
+  email?: Maybe<Scalars['String']>;
   googleId: Scalars['String'];
   id: Scalars['String'];
   name: Scalars['String'];
@@ -45,12 +51,19 @@ export type CreateUserMutationVariables = Exact<{
 }>;
 
 
-export type CreateUserMutation = { __typename?: 'Mutation', signUp: { __typename?: 'User', id: string, name: string, email: string, picture: string, googleId: string } };
+export type CreateUserMutation = { __typename?: 'Mutation', signUp: { __typename?: 'User', id: string, name: string, email?: string | null, picture: string, googleId: string } };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me: { __typename?: 'User', id: string, name: string, email: string, picture: string } };
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, name: string, email?: string | null, picture: string } | null };
+
+export type TwitterAuthMutationVariables = Exact<{
+  code: Scalars['String'];
+}>;
+
+
+export type TwitterAuthMutation = { __typename?: 'Mutation', signInWithTwitter: { __typename?: 'User', id: string, name: string, email?: string | null, picture: string } };
 
 
 export const CreateUserDocument = gql`
@@ -127,3 +140,39 @@ export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
+export const TwitterAuthDocument = gql`
+    mutation TwitterAuth($code: String!) {
+  signInWithTwitter(code: $code) {
+    id
+    name
+    email
+    picture
+  }
+}
+    `;
+export type TwitterAuthMutationFn = Apollo.MutationFunction<TwitterAuthMutation, TwitterAuthMutationVariables>;
+
+/**
+ * __useTwitterAuthMutation__
+ *
+ * To run a mutation, you first call `useTwitterAuthMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useTwitterAuthMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [twitterAuthMutation, { data, loading, error }] = useTwitterAuthMutation({
+ *   variables: {
+ *      code: // value for 'code'
+ *   },
+ * });
+ */
+export function useTwitterAuthMutation(baseOptions?: Apollo.MutationHookOptions<TwitterAuthMutation, TwitterAuthMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<TwitterAuthMutation, TwitterAuthMutationVariables>(TwitterAuthDocument, options);
+      }
+export type TwitterAuthMutationHookResult = ReturnType<typeof useTwitterAuthMutation>;
+export type TwitterAuthMutationResult = Apollo.MutationResult<TwitterAuthMutation>;
+export type TwitterAuthMutationOptions = Apollo.BaseMutationOptions<TwitterAuthMutation, TwitterAuthMutationVariables>;

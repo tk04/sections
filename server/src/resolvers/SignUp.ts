@@ -4,6 +4,7 @@ import { Arg, Ctx, Mutation, Query, Resolver } from "type-graphql";
 import axios from "axios";
 import jwt from "jsonwebtoken";
 import "dotenv/config";
+import { setToken } from "../utils/setToken";
 @Resolver(User)
 export class SignUpResolver {
   @Query(() => String)
@@ -63,25 +64,17 @@ export class SignUpResolver {
           },
         });
       }
-      const token = jwt.sign({ userId: user!.id }, process.env.JWT_SECRET!, {
-        expiresIn: "30d",
-      });
-
-      res.cookie("token", token, {
-        maxAge: 1000 * 60 * 60 * 24 * 30, // 30 days
-        secure: process.env.NODE_ENV === "production",
-        httpOnly: true,
-      });
+      setToken(user!.id, res);
       return user;
     } else {
       throw new Error("Error");
     }
   }
 
-  @Mutation(() => Boolean)
+  @Mutation(() => User)
   async signInWithTwitter(
     @Arg("code", () => String) code: string,
-    @Ctx() { prisma }: context
+    @Ctx() { prisma, res }: context
   ) {
     const data = await axios({
       method: "POST",
@@ -95,23 +88,31 @@ export class SignUpResolver {
       console.log(data.data);
       const userInfo = await axios({
         method: "GET",
-        url: "https://api.twitter.com/2/users/me?user.fields=profile_image_url,name,verified",
+        url: "https://api.twitter.com/2/users/me?user.fields=profile_image_url,name,verified,public_metrics",
         headers: {
           Authorization: `Bearer ${data.data.access_token}`,
         },
       });
-      console.log(userInfo);
-      const user = await prisma.user.create({
-        data: {
-          name: userInfo.data.data.name,
-          email: userInfo.data.data.email,
-          picture: userInfo.data.data.profile_image_url,
-          twitterId: userInfo.data.data.id,
-        },
+      console.log("PUBLIC_METRICS: ", userInfo.data.data.public_metrics);
+      let user = await prisma.user.findFirst({
+        where: { twitterId: userInfo.data.data.id },
       });
-      console.log(user);
+      if (user) {
+      } else {
+        user = await prisma.user.create({
+          data: {
+            name: userInfo.data.data.name,
+            email: userInfo.data.data.email,
+            picture: userInfo.data.data.profile_image_url,
+            twitterId: userInfo.data.data.id,
+            twitterAccessToken: data.data.access_token,
+          },
+        });
+      }
+      setToken(user!.id, res);
+      return user;
+    } else {
+      throw new Error("Could not authenticate with Twitter");
     }
-
-    return true;
   }
 }
