@@ -15,20 +15,18 @@ import handler from "../pages/api/hello";
 import Login from "./Login";
 import Signup from "./Signup";
 import Signupmodal from "./SignupModal";
+import { useSignup } from "../hooks/useSignup";
 interface NavBarProps {}
 
 const Navbar: React.FC<NavBarProps> = ({}) => {
   const router = useRouter();
   const [visibleLogin, setVisibleLogin] = useState<boolean>(false);
-  const [visibleSignup, setVisibleSignup] = useState<boolean>(false);
   const loginHandler = () => setVisibleLogin(true);
-  const SignupHandler = () => setVisibleSignup(true);
   const closeLoginHandler = () => {
     setVisibleLogin(false);
   };
-  const closeSignupHandler = () => {
-    setVisibleSignup(false);
-  };
+  const { visibleSignup, SignupHandler, closeSignupHandler } = useSignup();
+
   const { data } = useMeQuery();
   return (
     <nav className="flex mt-14 font-md font-bold lg:mx-10 2xl:mx-64 mx-10  items-center justify-between">

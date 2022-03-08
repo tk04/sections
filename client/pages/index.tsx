@@ -7,15 +7,12 @@ import Twitterbutton from "../components/TwitterButton";
 import Googlebutton from "../components/GoogleButton";
 import { Button } from "@nextui-org/react";
 import Signupmodal from "../components/SignupModal";
+import { useSignup } from "../hooks/useSignup";
 interface indexProps {}
 
 const Index: React.FC<indexProps> = ({}) => {
   const { data, refetch } = useMeQuery();
-  const [visibleSignup, setVisibleSignup] = useState<boolean>(false);
-  const SignupHandler = () => setVisibleSignup(true);
-  const closeSignupHandler = () => {
-    setVisibleSignup(false);
-  };
+  const { visibleSignup, SignupHandler, closeSignupHandler } = useSignup();
   const router = useRouter();
   const LoginSuccess = router.query.login;
   useEffect(() => {
