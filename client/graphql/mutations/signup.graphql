@@ -1,8 +1,5 @@
 mutation SignUp($input: SignupInput!) {
   signup(input: $input) {
-    id
-    name
-    email
-    picture
+    ...UserResponseFragment
   }
 }

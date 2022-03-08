@@ -1,0 +1,4 @@
+fragment UserResponseFragment on UserResponse {
+  ...UserFragment
+  ...UserErrorFragment
+}

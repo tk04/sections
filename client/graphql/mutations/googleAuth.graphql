@@ -1,9 +1,5 @@
 mutation CreateUser($code: String!) {
   signInWithGoogle(code: $code) {
-    id
-    name
-    email
-    picture
-    googleId
+    ...UserResponseFragment
   }
 }

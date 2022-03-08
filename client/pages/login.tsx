@@ -9,7 +9,7 @@ interface loginProps {}
 
 const Login: React.FC<loginProps> = ({}) => {
   const router = useRouter();
-  const [loginUser] = useLoginMutation();
+  const [loginUser, { data }] = useLoginMutation();
 
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
@@ -29,7 +29,9 @@ const Login: React.FC<loginProps> = ({}) => {
       const user = await loginUser({
         variables: { input: { email, password } as LoginInput },
       });
-      router.push("/?login=success");
+      if (user.data?.login.__typename === "User") {
+        router.push("/?login=success");
+      }
     }
   };
   return (
@@ -56,6 +58,11 @@ const Login: React.FC<loginProps> = ({}) => {
         </section>
         <Button>Login</Button>
       </form>
+      {data?.login.__typename === "UserError" && (
+        <p className="text-red-500 mr-5 font-semibold text-md mt-2">
+          Could not Login with entered credentials
+        </p>
+      )}
       <br />
       <div className="space-y-2">
         <Googlebutton />

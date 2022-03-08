@@ -54,6 +54,29 @@ __decorate([
 LoginInput = __decorate([
     (0, type_graphql_1.InputType)()
 ], LoginInput);
+let UserError = class UserError {
+};
+__decorate([
+    (0, type_graphql_1.Field)(),
+    __metadata("design:type", String)
+], UserError.prototype, "path", void 0);
+__decorate([
+    (0, type_graphql_1.Field)(),
+    __metadata("design:type", String)
+], UserError.prototype, "message", void 0);
+UserError = __decorate([
+    (0, type_graphql_1.ObjectType)()
+], UserError);
+const UserResponse = (0, type_graphql_1.createUnionType)({
+    name: "UserResponse",
+    types: () => [user_1.User, UserError],
+    resolveType: (value) => {
+        if ("email" in value || "name" in value)
+            return user_1.User;
+        if ("path" in value)
+            return UserError;
+    },
+});
 let SignUpResolver = class SignUpResolver {
     hello() {
         return "Hello World";
@@ -85,47 +108,73 @@ let SignUpResolver = class SignUpResolver {
                 },
             });
             (0, setToken_1.setToken)(user.id, res);
+            console.log("USER CREATED: ", user);
             return user;
         }
         catch (e) {
-            throw new Error("Could not create user");
+            return {
+                path: "email",
+                message: "Email already in use: try a different email",
+            };
         }
     }
     async login(input, { res, prisma }) {
-        const user = await prisma.user.findFirst({
-            where: { email: input.email.toLowerCase() },
-        });
-        if (!user) {
-            throw new Error("User not found");
-        }
-        if (user.password) {
-            const valid = await argon2_1.default.verify(user.password, input.password);
-            console.log("VAILD? ", valid);
-            if (!valid) {
-                throw new Error("Could not login user");
+        try {
+            const user = await prisma.user.findFirst({
+                where: { email: input.email.toLowerCase() },
+            });
+            if (!user) {
+                throw new Error("User not found");
+            }
+            if (user.password) {
+                const valid = await argon2_1.default.verify(user.password, input.password);
+                console.log("VAILD? ", valid);
+                if (!valid) {
+                    throw new Error("Could not login user");
+                }
+                else {
+                    (0, setToken_1.setToken)(user.id, res);
+                    return user;
+                }
             }
             else {
-                (0, setToken_1.setToken)(user.id, res);
-                return user;
+                throw new Error("Could not login user");
             }
         }
-        else {
-            throw new Error("Could not login user");
+        catch (e) {
+            return {
+                path: "login",
+                message: "Could not login user",
+            };
         }
     }
     async signInWithGoogle(code, { prisma, res }) {
-        const user = await (0, GoogleLogin_1.GoogleLogin)(code, prisma).catch((e) => {
-            throw new Error(e.meesage);
-        });
-        (0, setToken_1.setToken)(user.id, res);
-        return user;
+        try {
+            const user = await (0, GoogleLogin_1.GoogleLogin)(code, prisma);
+            (0, setToken_1.setToken)(user.id, res);
+            return user;
+        }
+        catch (e) {
+            return {
+                path: "Google Login",
+                message: "Could not authenticate with Google",
+            };
+        }
     }
     async signInWithTwitter(code, { prisma, res }) {
-        const user = await (0, TwitterLogin_1.TwitterLogin)(code, prisma).catch((e) => {
-            throw new Error(e.message);
-        });
-        (0, setToken_1.setToken)(user.id, res);
-        return user;
+        try {
+            const user = await (0, TwitterLogin_1.TwitterLogin)(code, prisma).catch((e) => {
+                throw new Error(e.message);
+            });
+            (0, setToken_1.setToken)(user.id, res);
+            return user;
+        }
+        catch (e) {
+            return {
+                path: "Twitter Login",
+                message: "Could not authenticate with Twitter",
+            };
+        }
     }
 };
 __decorate([
@@ -142,7 +191,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], SignUpResolver.prototype, "me", null);
 __decorate([
-    (0, type_graphql_1.Mutation)(() => user_1.User),
+    (0, type_graphql_1.Mutation)(() => UserResponse),
     __param(0, (0, type_graphql_1.Arg)("input", () => SignupInput)),
     __param(1, (0, type_graphql_1.Ctx)()),
     __metadata("design:type", Function),
@@ -150,7 +199,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], SignUpResolver.prototype, "signup", null);
 __decorate([
-    (0, type_graphql_1.Mutation)(() => user_1.User),
+    (0, type_graphql_1.Mutation)(() => UserResponse),
     __param(0, (0, type_graphql_1.Arg)("input", () => LoginInput)),
     __param(1, (0, type_graphql_1.Ctx)()),
     __metadata("design:type", Function),
@@ -158,7 +207,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], SignUpResolver.prototype, "login", null);
 __decorate([
-    (0, type_graphql_1.Mutation)(() => user_1.User),
+    (0, type_graphql_1.Mutation)(() => UserResponse),
     __param(0, (0, type_graphql_1.Arg)("code", () => String)),
     __param(1, (0, type_graphql_1.Ctx)()),
     __metadata("design:type", Function),
@@ -166,7 +215,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], SignUpResolver.prototype, "signInWithGoogle", null);
 __decorate([
-    (0, type_graphql_1.Mutation)(() => user_1.User),
+    (0, type_graphql_1.Mutation)(() => UserResponse),
     __param(0, (0, type_graphql_1.Arg)("code", () => String)),
     __param(1, (0, type_graphql_1.Ctx)()),
     __metadata("design:type", Function),

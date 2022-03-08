@@ -22,10 +22,10 @@ export type LoginInput = {
 
 export type Mutation = {
   __typename?: 'Mutation';
-  login: User;
-  signInWithGoogle: User;
-  signInWithTwitter: User;
-  signup: User;
+  login: UserResponse;
+  signInWithGoogle: UserResponse;
+  signInWithTwitter: UserResponse;
+  signup: UserResponse;
 };
 
 
@@ -69,51 +69,85 @@ export type User = {
   picture: Scalars['String'];
 };
 
+export type UserError = {
+  __typename?: 'UserError';
+  message: Scalars['String'];
+  path: Scalars['String'];
+};
+
+export type UserResponse = User | UserError;
+
+export type UserErrorFragmentFragment = { __typename?: 'UserError', path: string, message: string };
+
+export type UserFragmentFragment = { __typename?: 'User', id: string, name: string, email?: string | null, picture: string };
+
+type UserResponseFragment_User_Fragment = { __typename?: 'User', id: string, name: string, email?: string | null, picture: string };
+
+type UserResponseFragment_UserError_Fragment = { __typename?: 'UserError', path: string, message: string };
+
+export type UserResponseFragmentFragment = UserResponseFragment_User_Fragment | UserResponseFragment_UserError_Fragment;
+
 export type CreateUserMutationVariables = Exact<{
   code: Scalars['String'];
 }>;
 
 
-export type CreateUserMutation = { __typename?: 'Mutation', signInWithGoogle: { __typename?: 'User', id: string, name: string, email?: string | null, picture: string, googleId: string } };
+export type CreateUserMutation = { __typename?: 'Mutation', signInWithGoogle: { __typename?: 'User', id: string, name: string, email?: string | null, picture: string } | { __typename?: 'UserError', path: string, message: string } };
 
 export type LoginMutationVariables = Exact<{
   input: LoginInput;
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'User', id: string, name: string, email?: string | null, picture: string } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'User', id: string, name: string, email?: string | null, picture: string } | { __typename?: 'UserError', path: string, message: string } };
 
 export type SignUpMutationVariables = Exact<{
   input: SignupInput;
 }>;
 
 
-export type SignUpMutation = { __typename?: 'Mutation', signup: { __typename?: 'User', id: string, name: string, email?: string | null, picture: string } };
+export type SignUpMutation = { __typename?: 'Mutation', signup: { __typename?: 'User', id: string, name: string, email?: string | null, picture: string } | { __typename?: 'UserError', path: string, message: string } };
 
 export type TwitterAuthMutationVariables = Exact<{
   code: Scalars['String'];
 }>;
 
 
-export type TwitterAuthMutation = { __typename?: 'Mutation', signInWithTwitter: { __typename?: 'User', id: string, name: string, email?: string | null, picture: string } };
+export type TwitterAuthMutation = { __typename?: 'Mutation', signInWithTwitter: { __typename?: 'User', id: string, name: string, email?: string | null, picture: string } | { __typename?: 'UserError', path: string, message: string } };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, name: string, email?: string | null, picture: string } | null };
 
-
+export const UserFragmentFragmentDoc = gql`
+    fragment UserFragment on User {
+  id
+  name
+  email
+  picture
+}
+    `;
+export const UserErrorFragmentFragmentDoc = gql`
+    fragment UserErrorFragment on UserError {
+  path
+  message
+}
+    `;
+export const UserResponseFragmentFragmentDoc = gql`
+    fragment UserResponseFragment on UserResponse {
+  ...UserFragment
+  ...UserErrorFragment
+}
+    ${UserFragmentFragmentDoc}
+${UserErrorFragmentFragmentDoc}`;
 export const CreateUserDocument = gql`
     mutation CreateUser($code: String!) {
   signInWithGoogle(code: $code) {
-    id
-    name
-    email
-    picture
-    googleId
+    ...UserResponseFragment
   }
 }
-    `;
+    ${UserResponseFragmentFragmentDoc}`;
 export type CreateUserMutationFn = Apollo.MutationFunction<CreateUserMutation, CreateUserMutationVariables>;
 
 /**
@@ -143,13 +177,10 @@ export type CreateUserMutationOptions = Apollo.BaseMutationOptions<CreateUserMut
 export const LoginDocument = gql`
     mutation Login($input: LoginInput!) {
   login(input: $input) {
-    id
-    name
-    email
-    picture
+    ...UserResponseFragment
   }
 }
-    `;
+    ${UserResponseFragmentFragmentDoc}`;
 export type LoginMutationFn = Apollo.MutationFunction<LoginMutation, LoginMutationVariables>;
 
 /**
@@ -179,13 +210,10 @@ export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, Log
 export const SignUpDocument = gql`
     mutation SignUp($input: SignupInput!) {
   signup(input: $input) {
-    id
-    name
-    email
-    picture
+    ...UserResponseFragment
   }
 }
-    `;
+    ${UserResponseFragmentFragmentDoc}`;
 export type SignUpMutationFn = Apollo.MutationFunction<SignUpMutation, SignUpMutationVariables>;
 
 /**
@@ -215,13 +243,10 @@ export type SignUpMutationOptions = Apollo.BaseMutationOptions<SignUpMutation, S
 export const TwitterAuthDocument = gql`
     mutation TwitterAuth($code: String!) {
   signInWithTwitter(code: $code) {
-    id
-    name
-    email
-    picture
+    ...UserResponseFragment
   }
 }
-    `;
+    ${UserResponseFragmentFragmentDoc}`;
 export type TwitterAuthMutationFn = Apollo.MutationFunction<TwitterAuthMutation, TwitterAuthMutationVariables>;
 
 /**
@@ -251,13 +276,10 @@ export type TwitterAuthMutationOptions = Apollo.BaseMutationOptions<TwitterAuthM
 export const MeDocument = gql`
     query Me {
   me {
-    id
-    name
-    email
-    picture
+    ...UserFragment
   }
 }
-    `;
+    ${UserFragmentFragmentDoc}`;
 
 /**
  * __useMeQuery__

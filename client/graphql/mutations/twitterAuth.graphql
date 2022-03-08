@@ -1,8 +1,5 @@
 mutation TwitterAuth($code: String!) {
   signInWithTwitter(code: $code) {
-    id
-    name
-    email
-    picture
+    ...UserResponseFragment
   }
 }
