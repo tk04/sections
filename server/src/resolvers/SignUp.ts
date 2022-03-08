@@ -11,16 +11,23 @@ import {
   Query,
   Resolver,
 } from "type-graphql";
-import axios from "axios";
+
 import jwt from "jsonwebtoken";
 import "dotenv/config";
 import { setToken } from "../utils/setToken";
 import { GoogleLogin } from "../utils/GoogleLogin";
 
 @InputType()
-class UserInput {
+class SignupInput {
   @Field()
   name: string;
+  @Field()
+  email: string;
+  @Field()
+  password: string;
+}
+@InputType()
+class LoginInput {
   @Field()
   email: string;
   @Field()
@@ -54,7 +61,7 @@ export class SignUpResolver {
   }
   @Mutation(() => User)
   async signup(
-    @Arg("input", () => UserInput) input: UserInput,
+    @Arg("input", () => SignupInput) input: SignupInput,
     @Ctx() { prisma, res }: context
   ) {
     try {
@@ -69,6 +76,30 @@ export class SignUpResolver {
       return user;
     } catch (e) {
       throw new Error("Could not create user");
+    }
+  }
+  @Mutation(() => User)
+  async login(
+    @Arg("input", () => LoginInput) input: LoginInput,
+    @Ctx() { res, prisma }: context
+  ) {
+    const user = await prisma.user.findFirst({
+      where: { email: input.email.toLowerCase() },
+    });
+    if (!user) {
+      throw new Error("User not found");
+    }
+    if (user.password) {
+      const valid = await argon2.verify(user.password!, input.password);
+      console.log("VAILD? ", valid);
+      if (!valid) {
+        throw new Error("Could not login user");
+      } else {
+        setToken(user.id, res);
+        return user;
+      }
+    } else {
+      throw new Error("Could not login user");
     }
   }
 

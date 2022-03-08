@@ -1,7 +1,8 @@
-mutation SignUp($input: UserInput!) {
+mutation SignUp($input: SignupInput!) {
   signup(input: $input) {
     id
     name
     email
+    picture
   }
 }

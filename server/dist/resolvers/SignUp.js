@@ -24,23 +24,36 @@ const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 require("dotenv/config");
 const setToken_1 = require("../utils/setToken");
 const GoogleLogin_1 = require("../utils/GoogleLogin");
-let UserInput = class UserInput {
+let SignupInput = class SignupInput {
 };
 __decorate([
     (0, type_graphql_1.Field)(),
     __metadata("design:type", String)
-], UserInput.prototype, "name", void 0);
+], SignupInput.prototype, "name", void 0);
 __decorate([
     (0, type_graphql_1.Field)(),
     __metadata("design:type", String)
-], UserInput.prototype, "email", void 0);
+], SignupInput.prototype, "email", void 0);
 __decorate([
     (0, type_graphql_1.Field)(),
     __metadata("design:type", String)
-], UserInput.prototype, "password", void 0);
-UserInput = __decorate([
+], SignupInput.prototype, "password", void 0);
+SignupInput = __decorate([
     (0, type_graphql_1.InputType)()
-], UserInput);
+], SignupInput);
+let LoginInput = class LoginInput {
+};
+__decorate([
+    (0, type_graphql_1.Field)(),
+    __metadata("design:type", String)
+], LoginInput.prototype, "email", void 0);
+__decorate([
+    (0, type_graphql_1.Field)(),
+    __metadata("design:type", String)
+], LoginInput.prototype, "password", void 0);
+LoginInput = __decorate([
+    (0, type_graphql_1.InputType)()
+], LoginInput);
 let SignUpResolver = class SignUpResolver {
     hello() {
         return "Hello World";
@@ -78,6 +91,28 @@ let SignUpResolver = class SignUpResolver {
             throw new Error("Could not create user");
         }
     }
+    async login(input, { res, prisma }) {
+        const user = await prisma.user.findFirst({
+            where: { email: input.email.toLowerCase() },
+        });
+        if (!user) {
+            throw new Error("User not found");
+        }
+        if (user.password) {
+            const valid = await argon2_1.default.verify(user.password, input.password);
+            console.log("VAILD? ", valid);
+            if (!valid) {
+                throw new Error("Could not login user");
+            }
+            else {
+                (0, setToken_1.setToken)(user.id, res);
+                return user;
+            }
+        }
+        else {
+            throw new Error("Could not login user");
+        }
+    }
     async signInWithGoogle(code, { prisma, res }) {
         const user = await (0, GoogleLogin_1.GoogleLogin)(code, prisma).catch((e) => {
             throw new Error(e.meesage);
@@ -108,12 +143,20 @@ __decorate([
 ], SignUpResolver.prototype, "me", null);
 __decorate([
     (0, type_graphql_1.Mutation)(() => user_1.User),
-    __param(0, (0, type_graphql_1.Arg)("input", () => UserInput)),
+    __param(0, (0, type_graphql_1.Arg)("input", () => SignupInput)),
     __param(1, (0, type_graphql_1.Ctx)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [UserInput, Object]),
+    __metadata("design:paramtypes", [SignupInput, Object]),
     __metadata("design:returntype", Promise)
 ], SignUpResolver.prototype, "signup", null);
+__decorate([
+    (0, type_graphql_1.Mutation)(() => user_1.User),
+    __param(0, (0, type_graphql_1.Arg)("input", () => LoginInput)),
+    __param(1, (0, type_graphql_1.Ctx)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [LoginInput, Object]),
+    __metadata("design:returntype", Promise)
+], SignUpResolver.prototype, "login", null);
 __decorate([
     (0, type_graphql_1.Mutation)(() => user_1.User),
     __param(0, (0, type_graphql_1.Arg)("code", () => String)),

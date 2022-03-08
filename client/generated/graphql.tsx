@@ -15,11 +15,22 @@ export type Scalars = {
   Float: number;
 };
 
+export type LoginInput = {
+  email: Scalars['String'];
+  password: Scalars['String'];
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
+  login: User;
   signInWithGoogle: User;
   signInWithTwitter: User;
   signup: User;
+};
+
+
+export type MutationLoginArgs = {
+  input: LoginInput;
 };
 
 
@@ -34,13 +45,19 @@ export type MutationSignInWithTwitterArgs = {
 
 
 export type MutationSignupArgs = {
-  input: UserInput;
+  input: SignupInput;
 };
 
 export type Query = {
   __typename?: 'Query';
   hello: Scalars['String'];
   me?: Maybe<User>;
+};
+
+export type SignupInput = {
+  email: Scalars['String'];
+  name: Scalars['String'];
+  password: Scalars['String'];
 };
 
 export type User = {
@@ -52,12 +69,6 @@ export type User = {
   picture: Scalars['String'];
 };
 
-export type UserInput = {
-  email: Scalars['String'];
-  name: Scalars['String'];
-  password: Scalars['String'];
-};
-
 export type CreateUserMutationVariables = Exact<{
   code: Scalars['String'];
 }>;
@@ -65,12 +76,19 @@ export type CreateUserMutationVariables = Exact<{
 
 export type CreateUserMutation = { __typename?: 'Mutation', signInWithGoogle: { __typename?: 'User', id: string, name: string, email?: string | null, picture: string, googleId: string } };
 
-export type SignUpMutationVariables = Exact<{
-  input: UserInput;
+export type LoginMutationVariables = Exact<{
+  input: LoginInput;
 }>;
 
 
-export type SignUpMutation = { __typename?: 'Mutation', signup: { __typename?: 'User', id: string, name: string, email?: string | null } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'User', id: string, name: string, email?: string | null, picture: string } };
+
+export type SignUpMutationVariables = Exact<{
+  input: SignupInput;
+}>;
+
+
+export type SignUpMutation = { __typename?: 'Mutation', signup: { __typename?: 'User', id: string, name: string, email?: string | null, picture: string } };
 
 export type TwitterAuthMutationVariables = Exact<{
   code: Scalars['String'];
@@ -122,12 +140,49 @@ export function useCreateUserMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutation>;
 export type CreateUserMutationResult = Apollo.MutationResult<CreateUserMutation>;
 export type CreateUserMutationOptions = Apollo.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
+export const LoginDocument = gql`
+    mutation Login($input: LoginInput!) {
+  login(input: $input) {
+    id
+    name
+    email
+    picture
+  }
+}
+    `;
+export type LoginMutationFn = Apollo.MutationFunction<LoginMutation, LoginMutationVariables>;
+
+/**
+ * __useLoginMutation__
+ *
+ * To run a mutation, you first call `useLoginMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useLoginMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [loginMutation, { data, loading, error }] = useLoginMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useLoginMutation(baseOptions?: Apollo.MutationHookOptions<LoginMutation, LoginMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<LoginMutation, LoginMutationVariables>(LoginDocument, options);
+      }
+export type LoginMutationHookResult = ReturnType<typeof useLoginMutation>;
+export type LoginMutationResult = Apollo.MutationResult<LoginMutation>;
+export type LoginMutationOptions = Apollo.BaseMutationOptions<LoginMutation, LoginMutationVariables>;
 export const SignUpDocument = gql`
-    mutation SignUp($input: UserInput!) {
+    mutation SignUp($input: SignupInput!) {
   signup(input: $input) {
     id
     name
     email
+    picture
   }
 }
     `;
