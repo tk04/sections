@@ -9,6 +9,7 @@ const Googlebutton: React.FC<GoogleButtonProps> = ({}) => {
   };
   return (
     <Button
+      auto
       light
       color="primary"
       className="flex align-middle items-center border-2 border-gray-100 w-72 justify-center -ml-5 rounded-2xl h-11 hover:cursor-pointer"

@@ -14,6 +14,7 @@ import { useRouter } from "next/router";
 import handler from "../pages/api/hello";
 import Login from "./Login";
 import Signup from "./Signup";
+import Signupmodal from "./SignupModal";
 interface NavBarProps {}
 
 const Navbar: React.FC<NavBarProps> = ({}) => {
@@ -69,17 +70,15 @@ const Navbar: React.FC<NavBarProps> = ({}) => {
           >
             <Login />
           </Modal>
-          <Button auto className="py-3 px-10" shadow onClick={SignupHandler}>
-            Signup
-          </Button>
-          <Modal
-            closeButton
-            aria-labelledby="modal-title"
-            open={visibleSignup}
-            onClose={closeSignupHandler}
+          <Button
+            auto
+            className="py-3 px-10 font-bold"
+            shadow
+            onClick={SignupHandler}
           >
-            <Signup />
-          </Modal>
+            Signup <span className="pl-2 font-light"> --it&apos;s free</span>
+          </Button>
+          <Signupmodal open={visibleSignup} close={closeSignupHandler} />
         </section>
       )}
     </nav>
