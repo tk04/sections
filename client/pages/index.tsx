@@ -15,7 +15,7 @@ const Index: React.FC<indexProps> = ({}) => {
       router.push("/");
       setTimeout(() => {
         refetch();
-      }, 700);
+      }, 900);
     }
   });
 

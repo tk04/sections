@@ -11,15 +11,14 @@ export const TwitterLogin = async (code: string, prisma: PrismaClient) => {
       data: `code=${code}&grant_type=authorization_code&redirect_uri=http://localhost:3000/twitter_cb&code_verifier=challenge&client_id=${process.env.TWITTER_CLIENT_ID}`,
     });
     if (data.data) {
-      console.log(data.data);
       const userInfo = await axios({
         method: "GET",
-        url: "https://api.twitter.com/2/users/me?user.fields=profile_image_url,name,verified,public_metrics",
+        url: "https://api.twitter.com/2/users/me?user.fields=profile_image_url,name,verified",
         headers: {
           Authorization: `Bearer ${data.data.access_token}`,
         },
       });
-      console.log("PUBLIC_METRICS: ", userInfo.data.data.public_metrics);
+
       let user = await prisma.user.findFirst({
         where: { twitterId: userInfo.data.data.id },
       });

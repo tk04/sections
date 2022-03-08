@@ -1,12 +1,33 @@
-import { Avatar, Button } from "@nextui-org/react";
+import {
+  Avatar,
+  Button,
+  Checkbox,
+  Input,
+  Modal,
+  Row,
+  Text,
+} from "@nextui-org/react";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 import { useMeQuery } from "../generated/graphql";
 import { useRouter } from "next/router";
+import handler from "../pages/api/hello";
+import Login from "./Login";
+import Signup from "./Signup";
 interface NavBarProps {}
 
 const Navbar: React.FC<NavBarProps> = ({}) => {
   const router = useRouter();
+  const [visibleLogin, setVisibleLogin] = useState<boolean>(false);
+  const [visibleSignup, setVisibleSignup] = useState<boolean>(false);
+  const loginHandler = () => setVisibleLogin(true);
+  const SignupHandler = () => setVisibleSignup(true);
+  const closeLoginHandler = () => {
+    setVisibleLogin(false);
+  };
+  const closeSignupHandler = () => {
+    setVisibleSignup(false);
+  };
   const { data } = useMeQuery();
   return (
     <nav className="flex mt-14 font-md font-bold lg:mx-10 2xl:mx-64 mx-10  items-center justify-between">
@@ -37,14 +58,28 @@ const Navbar: React.FC<NavBarProps> = ({}) => {
         </Button>
       ) : (
         <section className="flex items-center space-x-6 cursor-pointer ">
-          <Link href="/login">
-            <h1 className="bg-slate-100 font-semibold py-3 px-5">Login</h1>
-          </Link>
-          <Link href="/signup">
-            <h1 className="bg-sky-600 py-3 text-white  px-6">
-              Get started <span className=" font-light">--it&apos;s free</span>
-            </h1>
-          </Link>
+          <Button light auto onClick={loginHandler}>
+            Login
+          </Button>
+          <Modal
+            closeButton
+            aria-labelledby="modal-title"
+            open={visibleLogin}
+            onClose={closeLoginHandler}
+          >
+            <Login />
+          </Modal>
+          <Button auto className="py-3 px-10" shadow onClick={SignupHandler}>
+            Signup
+          </Button>
+          <Modal
+            closeButton
+            aria-labelledby="modal-title"
+            open={visibleSignup}
+            onClose={closeSignupHandler}
+          >
+            <Signup />
+          </Modal>
         </section>
       )}
     </nav>
