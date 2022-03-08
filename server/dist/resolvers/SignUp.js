@@ -17,12 +17,30 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SignUpResolver = void 0;
 const TwitterLogin_1 = require("./../utils/TwitterLogin");
+const argon2_1 = __importDefault(require("argon2"));
 const user_1 = require("../entities/user");
 const type_graphql_1 = require("type-graphql");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 require("dotenv/config");
 const setToken_1 = require("../utils/setToken");
 const GoogleLogin_1 = require("../utils/GoogleLogin");
+let UserInput = class UserInput {
+};
+__decorate([
+    (0, type_graphql_1.Field)(),
+    __metadata("design:type", String)
+], UserInput.prototype, "name", void 0);
+__decorate([
+    (0, type_graphql_1.Field)(),
+    __metadata("design:type", String)
+], UserInput.prototype, "email", void 0);
+__decorate([
+    (0, type_graphql_1.Field)(),
+    __metadata("design:type", String)
+], UserInput.prototype, "password", void 0);
+UserInput = __decorate([
+    (0, type_graphql_1.InputType)()
+], UserInput);
 let SignUpResolver = class SignUpResolver {
     hello() {
         return "Hello World";
@@ -44,7 +62,23 @@ let SignUpResolver = class SignUpResolver {
             }
         }
     }
-    async signUp(code, { prisma, res }) {
+    async signup(input, { prisma, res }) {
+        try {
+            const user = await prisma.user.create({
+                data: {
+                    name: input.name,
+                    email: input.email.toLowerCase(),
+                    password: await argon2_1.default.hash(input.password),
+                },
+            });
+            (0, setToken_1.setToken)(user.id, res);
+            return user;
+        }
+        catch (e) {
+            throw new Error("Could not create user");
+        }
+    }
+    async signInWithGoogle(code, { prisma, res }) {
         const user = await (0, GoogleLogin_1.GoogleLogin)(code, prisma).catch((e) => {
             throw new Error(e.meesage);
         });
@@ -74,12 +108,20 @@ __decorate([
 ], SignUpResolver.prototype, "me", null);
 __decorate([
     (0, type_graphql_1.Mutation)(() => user_1.User),
+    __param(0, (0, type_graphql_1.Arg)("input", () => UserInput)),
+    __param(1, (0, type_graphql_1.Ctx)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [UserInput, Object]),
+    __metadata("design:returntype", Promise)
+], SignUpResolver.prototype, "signup", null);
+__decorate([
+    (0, type_graphql_1.Mutation)(() => user_1.User),
     __param(0, (0, type_graphql_1.Arg)("code", () => String)),
     __param(1, (0, type_graphql_1.Ctx)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", Promise)
-], SignUpResolver.prototype, "signUp", null);
+], SignUpResolver.prototype, "signInWithGoogle", null);
 __decorate([
     (0, type_graphql_1.Mutation)(() => user_1.User),
     __param(0, (0, type_graphql_1.Arg)("code", () => String)),

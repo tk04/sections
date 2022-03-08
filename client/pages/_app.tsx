@@ -17,11 +17,11 @@ const client = new ApolloClient({
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ApolloProvider client={client}>
-      <SSRProvider>
-        <NextUIProvider>
-          <Component {...pageProps} />
-        </NextUIProvider>
-      </SSRProvider>
+      {/* <SSRProvider> */}
+      <NextUIProvider>
+        <Component {...pageProps} />
+      </NextUIProvider>
+      {/* </SSRProvider> */}
     </ApolloProvider>
   );
 }

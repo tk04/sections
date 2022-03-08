@@ -17,8 +17,14 @@ export type Scalars = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  signInWithGoogle: User;
   signInWithTwitter: User;
-  signUp: User;
+  signup: User;
+};
+
+
+export type MutationSignInWithGoogleArgs = {
+  code: Scalars['String'];
 };
 
 
@@ -27,8 +33,8 @@ export type MutationSignInWithTwitterArgs = {
 };
 
 
-export type MutationSignUpArgs = {
-  code: Scalars['String'];
+export type MutationSignupArgs = {
+  input: UserInput;
 };
 
 export type Query = {
@@ -46,17 +52,25 @@ export type User = {
   picture: Scalars['String'];
 };
 
+export type UserInput = {
+  email: Scalars['String'];
+  name: Scalars['String'];
+  password: Scalars['String'];
+};
+
 export type CreateUserMutationVariables = Exact<{
   code: Scalars['String'];
 }>;
 
 
-export type CreateUserMutation = { __typename?: 'Mutation', signUp: { __typename?: 'User', id: string, name: string, email?: string | null, picture: string, googleId: string } };
+export type CreateUserMutation = { __typename?: 'Mutation', signInWithGoogle: { __typename?: 'User', id: string, name: string, email?: string | null, picture: string, googleId: string } };
 
-export type MeQueryVariables = Exact<{ [key: string]: never; }>;
+export type SignUpMutationVariables = Exact<{
+  input: UserInput;
+}>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, name: string, email?: string | null, picture: string } | null };
+export type SignUpMutation = { __typename?: 'Mutation', signup: { __typename?: 'User', id: string, name: string, email?: string | null } };
 
 export type TwitterAuthMutationVariables = Exact<{
   code: Scalars['String'];
@@ -65,10 +79,15 @@ export type TwitterAuthMutationVariables = Exact<{
 
 export type TwitterAuthMutation = { __typename?: 'Mutation', signInWithTwitter: { __typename?: 'User', id: string, name: string, email?: string | null, picture: string } };
 
+export type MeQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, name: string, email?: string | null, picture: string } | null };
+
 
 export const CreateUserDocument = gql`
     mutation CreateUser($code: String!) {
-  signUp(code: $code) {
+  signInWithGoogle(code: $code) {
     id
     name
     email
@@ -103,6 +122,77 @@ export function useCreateUserMutation(baseOptions?: Apollo.MutationHookOptions<C
 export type CreateUserMutationHookResult = ReturnType<typeof useCreateUserMutation>;
 export type CreateUserMutationResult = Apollo.MutationResult<CreateUserMutation>;
 export type CreateUserMutationOptions = Apollo.BaseMutationOptions<CreateUserMutation, CreateUserMutationVariables>;
+export const SignUpDocument = gql`
+    mutation SignUp($input: UserInput!) {
+  signup(input: $input) {
+    id
+    name
+    email
+  }
+}
+    `;
+export type SignUpMutationFn = Apollo.MutationFunction<SignUpMutation, SignUpMutationVariables>;
+
+/**
+ * __useSignUpMutation__
+ *
+ * To run a mutation, you first call `useSignUpMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSignUpMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [signUpMutation, { data, loading, error }] = useSignUpMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useSignUpMutation(baseOptions?: Apollo.MutationHookOptions<SignUpMutation, SignUpMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SignUpMutation, SignUpMutationVariables>(SignUpDocument, options);
+      }
+export type SignUpMutationHookResult = ReturnType<typeof useSignUpMutation>;
+export type SignUpMutationResult = Apollo.MutationResult<SignUpMutation>;
+export type SignUpMutationOptions = Apollo.BaseMutationOptions<SignUpMutation, SignUpMutationVariables>;
+export const TwitterAuthDocument = gql`
+    mutation TwitterAuth($code: String!) {
+  signInWithTwitter(code: $code) {
+    id
+    name
+    email
+    picture
+  }
+}
+    `;
+export type TwitterAuthMutationFn = Apollo.MutationFunction<TwitterAuthMutation, TwitterAuthMutationVariables>;
+
+/**
+ * __useTwitterAuthMutation__
+ *
+ * To run a mutation, you first call `useTwitterAuthMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useTwitterAuthMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [twitterAuthMutation, { data, loading, error }] = useTwitterAuthMutation({
+ *   variables: {
+ *      code: // value for 'code'
+ *   },
+ * });
+ */
+export function useTwitterAuthMutation(baseOptions?: Apollo.MutationHookOptions<TwitterAuthMutation, TwitterAuthMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<TwitterAuthMutation, TwitterAuthMutationVariables>(TwitterAuthDocument, options);
+      }
+export type TwitterAuthMutationHookResult = ReturnType<typeof useTwitterAuthMutation>;
+export type TwitterAuthMutationResult = Apollo.MutationResult<TwitterAuthMutation>;
+export type TwitterAuthMutationOptions = Apollo.BaseMutationOptions<TwitterAuthMutation, TwitterAuthMutationVariables>;
 export const MeDocument = gql`
     query Me {
   me {
@@ -140,39 +230,3 @@ export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
-export const TwitterAuthDocument = gql`
-    mutation TwitterAuth($code: String!) {
-  signInWithTwitter(code: $code) {
-    id
-    name
-    email
-    picture
-  }
-}
-    `;
-export type TwitterAuthMutationFn = Apollo.MutationFunction<TwitterAuthMutation, TwitterAuthMutationVariables>;
-
-/**
- * __useTwitterAuthMutation__
- *
- * To run a mutation, you first call `useTwitterAuthMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useTwitterAuthMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [twitterAuthMutation, { data, loading, error }] = useTwitterAuthMutation({
- *   variables: {
- *      code: // value for 'code'
- *   },
- * });
- */
-export function useTwitterAuthMutation(baseOptions?: Apollo.MutationHookOptions<TwitterAuthMutation, TwitterAuthMutationVariables>) {
-        const options = {...defaultOptions, ...baseOptions}
-        return Apollo.useMutation<TwitterAuthMutation, TwitterAuthMutationVariables>(TwitterAuthDocument, options);
-      }
-export type TwitterAuthMutationHookResult = ReturnType<typeof useTwitterAuthMutation>;
-export type TwitterAuthMutationResult = Apollo.MutationResult<TwitterAuthMutation>;
-export type TwitterAuthMutationOptions = Apollo.BaseMutationOptions<TwitterAuthMutation, TwitterAuthMutationVariables>;

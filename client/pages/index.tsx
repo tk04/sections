@@ -25,12 +25,14 @@ const Index: React.FC<indexProps> = ({}) => {
           <h1>HELLo</h1>
           <h1>Name: {data?.me.name}</h1>
           <h1>Email: {data?.me.email}</h1>
-          <Image
-            src={`${data.me.picture}`}
-            alt="user pic"
-            width={100}
-            height={100}
-          />
+          {data.me.picture && (
+            <Image
+              src={`${data.me.picture}`}
+              alt="user pic"
+              width={100}
+              height={100}
+            />
+          )}
         </>
       )}
     </div>
