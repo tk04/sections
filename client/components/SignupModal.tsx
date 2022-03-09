@@ -8,8 +8,6 @@ interface SignupModalProps {
 }
 
 const Signupmodal: React.FC<SignupModalProps> = ({ open, close }) => {
-  const [visibleSignup, setVisibleSignup] = useState<boolean>(false);
-
   return (
     <Modal
       closeButton

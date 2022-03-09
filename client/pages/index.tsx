@@ -11,7 +11,7 @@ import { useSignup } from "../hooks/useSignup";
 interface indexProps {}
 
 const Index: React.FC<indexProps> = ({}) => {
-  const { data, refetch } = useMeQuery();
+  const { refetch } = useMeQuery();
   const { visibleSignup, SignupHandler, closeSignupHandler } = useSignup();
   const router = useRouter();
   const LoginSuccess = router.query.login;

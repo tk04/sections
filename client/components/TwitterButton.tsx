@@ -11,7 +11,8 @@ const Twitterbutton: React.FC<TwitterButtonProps> = ({}) => {
   return (
     <Button
       light
-      auto
+      size="lg"
+      // auto
       color="primary"
       className="flex space-x-10 align-middle items-center border-[2px] border-gray-100 w-72 justify-center -ml-4 rounded-2xl h-11 hover:cursor-pointer"
       onClick={twitterLogin}

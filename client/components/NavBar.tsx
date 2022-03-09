@@ -20,12 +20,6 @@ interface NavBarProps {}
 
 const Navbar: React.FC<NavBarProps> = ({}) => {
   const router = useRouter();
-  const [visibleLogin, setVisibleLogin] = useState<boolean>(false);
-  const loginHandler = () => setVisibleLogin(true);
-  const closeLoginHandler = () => {
-    setVisibleLogin(false);
-  };
-  const { visibleSignup, SignupHandler, closeSignupHandler } = useSignup();
 
   const { data } = useMeQuery();
   return (
@@ -57,26 +51,18 @@ const Navbar: React.FC<NavBarProps> = ({}) => {
         </Button>
       ) : (
         <section className="flex items-center space-x-6 cursor-pointer ">
-          <Button light auto onClick={loginHandler}>
+          <Button light auto onClick={() => router.push("/login")}>
             Login
           </Button>
-          <Modal
-            closeButton
-            aria-labelledby="modal-title"
-            open={visibleLogin}
-            onClose={closeLoginHandler}
-          >
-            <Login />
-          </Modal>
+
           <Button
             auto
             className="py-3 px-10 font-bold"
             shadow
-            onClick={SignupHandler}
+            onClick={() => router.push("/signup")}
           >
             Signup <span className="pl-2 font-light"> --it&apos;s free</span>
           </Button>
-          <Signupmodal open={visibleSignup} close={closeSignupHandler} />
         </section>
       )}
     </nav>
