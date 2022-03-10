@@ -17,6 +17,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TweetResolver = void 0;
 const type_graphql_1 = require("type-graphql");
+const Tweet_1 = require("../entities/Tweet");
 const axios_1 = __importDefault(require("axios"));
 const auth_1 = require("../middleware/auth");
 let TweetResolver = class TweetResolver {
@@ -24,30 +25,29 @@ let TweetResolver = class TweetResolver {
         try {
             const access_token = req.user.twitterAccessToken;
             const tweetUrl = url.split("status/")[1];
-            const tweet = await (0, axios_1.default)({
+            console.log("TOKEN: ", access_token);
+            const tweetRes = await (0, axios_1.default)({
                 method: "GET",
                 url: `https://api.twitter.com/2/tweets/${tweetUrl}?expansions=attachments.poll_ids,attachments.media_keys,author_id&user.fields=profile_image_url,verified`,
                 headers: {
                     Authorization: `Bearer ${access_token}`,
                 },
             });
-            // const tweet = await axios.post(
-            //   `https://api.twitter.com/2/tweets/${tweetUrl}`,
-            //   {},
-            //   { headers: { Authorization: `Bearer ${access_token}` } }
-            // );
             // console.log(tweet.data);
-            console.log(tweet.data.includes);
-            return "TWEET IN CONSOLE";
+            const tweet = tweetRes.data.data;
+            const { text, id, attachments } = tweet;
+            const user = tweetRes.data.includes.users[0];
+            return { text, id, attachments, user };
         }
         catch (e) {
-            console.log(e);
+            // console.log(e);
+            console.log(e.message);
             return "error";
         }
     }
 };
 __decorate([
-    (0, type_graphql_1.Query)(() => String),
+    (0, type_graphql_1.Query)(() => Tweet_1.Tweet),
     (0, type_graphql_1.UseMiddleware)(auth_1.auth),
     __param(0, (0, type_graphql_1.Arg)("url")),
     __param(1, (0, type_graphql_1.Ctx)()),

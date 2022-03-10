@@ -1,19 +1,26 @@
 import { Field, ObjectType } from "type-graphql";
 
 @ObjectType()
-export class Tweet {
+export class TweetUser {
   @Field()
-  text: string;
+  profile_image_url: string;
+  @Field()
+  verified: boolean;
   @Field()
   name: string;
   @Field()
-  picture: string;
+  id: number;
   @Field()
   username: string;
+}
+@ObjectType()
+export class Tweet {
+  @Field()
+  text: string;
   @Field()
   id: number;
   @Field()
   likes: number;
   @Field()
-  includes: any[];
+  user: TweetUser;
 }
