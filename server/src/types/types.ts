@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { Request, Response } from "express";
+import { User } from "../entities/user";
 
 export interface GoogleIdToken {
   iss: string;
@@ -14,6 +15,6 @@ export interface GoogleIdToken {
 
 export interface context {
   prisma: PrismaClient;
-  req: Request;
+  req: Request & { user?: User };
   res: Response;
 }

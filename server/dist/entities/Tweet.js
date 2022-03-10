@@ -9,39 +9,39 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.User = void 0;
+exports.Tweet = void 0;
 const type_graphql_1 = require("type-graphql");
-let User = class User {
+let Tweet = class Tweet {
 };
 __decorate([
     (0, type_graphql_1.Field)(),
     __metadata("design:type", String)
-], User.prototype, "name", void 0);
-__decorate([
-    (0, type_graphql_1.Field)(() => String, { nullable: true }),
-    __metadata("design:type", Object)
-], User.prototype, "email", void 0);
-__decorate([
-    (0, type_graphql_1.Field)(() => String, { nullable: true }),
-    __metadata("design:type", String)
-], User.prototype, "picture", void 0);
+], Tweet.prototype, "text", void 0);
 __decorate([
     (0, type_graphql_1.Field)(),
     __metadata("design:type", String)
-], User.prototype, "id", void 0);
+], Tweet.prototype, "name", void 0);
 __decorate([
-    (0, type_graphql_1.Field)(() => String, { nullable: true }),
-    __metadata("design:type", Object)
-], User.prototype, "googleId", void 0);
+    (0, type_graphql_1.Field)(),
+    __metadata("design:type", String)
+], Tweet.prototype, "picture", void 0);
 __decorate([
-    (0, type_graphql_1.Field)(() => String, { nullable: true }),
-    __metadata("design:type", Object)
-], User.prototype, "twitterAccessToken", void 0);
+    (0, type_graphql_1.Field)(),
+    __metadata("design:type", String)
+], Tweet.prototype, "username", void 0);
 __decorate([
-    (0, type_graphql_1.Field)(() => String, { nullable: true }),
-    __metadata("design:type", Object)
-], User.prototype, "twitterId", void 0);
-User = __decorate([
+    (0, type_graphql_1.Field)(),
+    __metadata("design:type", Number)
+], Tweet.prototype, "id", void 0);
+__decorate([
+    (0, type_graphql_1.Field)(),
+    __metadata("design:type", Number)
+], Tweet.prototype, "likes", void 0);
+__decorate([
+    (0, type_graphql_1.Field)(),
+    __metadata("design:type", Array)
+], Tweet.prototype, "includes", void 0);
+Tweet = __decorate([
     (0, type_graphql_1.ObjectType)()
-], User);
-exports.User = User;
+], Tweet);
+exports.Tweet = Tweet;

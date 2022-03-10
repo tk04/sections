@@ -8,6 +8,7 @@ import { PrismaClient } from "@prisma/client";
 import "dotenv/config";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import { TweetResolver } from "./resolvers/Tweet";
 const main = async () => {
   const app = express();
   app.use(cookieParser(process.env.JWT_SECRET));
@@ -15,7 +16,7 @@ const main = async () => {
   const prisma = new PrismaClient();
   const apolloServer = new ApolloServer({
     plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
-    schema: await buildSchema({ resolvers: [SignUpResolver] }),
+    schema: await buildSchema({ resolvers: [SignUpResolver, TweetResolver] }),
     context: ({ req, res }) => ({ req, res, prisma }),
   });
   await apolloServer.start();

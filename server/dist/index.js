@@ -13,6 +13,7 @@ const client_1 = require("@prisma/client");
 require("dotenv/config");
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const cors_1 = __importDefault(require("cors"));
+const Tweet_1 = require("./resolvers/Tweet");
 const main = async () => {
     const app = (0, express_1.default)();
     app.use((0, cookie_parser_1.default)(process.env.JWT_SECRET));
@@ -20,7 +21,7 @@ const main = async () => {
     const prisma = new client_1.PrismaClient();
     const apolloServer = new apollo_server_express_1.ApolloServer({
         plugins: [(0, apollo_server_core_1.ApolloServerPluginLandingPageGraphQLPlayground)()],
-        schema: await (0, type_graphql_1.buildSchema)({ resolvers: [SignUp_1.SignUpResolver] }),
+        schema: await (0, type_graphql_1.buildSchema)({ resolvers: [SignUp_1.SignUpResolver, Tweet_1.TweetResolver] }),
         context: ({ req, res }) => ({ req, res, prisma }),
     });
     await apolloServer.start();
