@@ -18,7 +18,7 @@ const Twitterbutton: React.FC<TwitterButtonProps> = ({}) => {
       onClick={twitterLogin}
     >
       <Image src={TSVG} width={26} height={26} alt="" />
-      <h1 className="pl-3 text-black font-bold">Login with Twitter</h1>
+      <h1 className="pl-2 text-black font-medium">Login with Twitter</h1>
     </Button>
   );
 };

@@ -20,15 +20,15 @@ const Index: React.FC<indexProps> = ({}) => {
       router.push("/");
       setTimeout(() => {
         refetch();
-      }, 900);
+      }, 1000);
     }
   });
 
   return (
     <>
       <Navbar />
-      <div className="mx-20 ml-64 grid grid-cols-[30%_70%] grid-flow-col-dense h-[80vh]">
-        <article className="flex flex-col justify-center ">
+      <div className="mx-20 ml-64 grid grid-cols-[30%_70%] grid-flow-col-dense h-[90vh] ">
+        <article className="flex flex-col justify-center h-[80vh]">
           <h1 className=" text-7xl font-bold">
             Make your website <br />
             stand out
@@ -40,6 +40,8 @@ const Index: React.FC<indexProps> = ({}) => {
             sections we provide and paste the URL into your website.
           </p>
           <Button
+            shadow
+            size="xl"
             className="mt-4 text-lg py-6 w-full rounded-none"
             onClick={SignupHandler}
           >
@@ -54,6 +56,9 @@ const Index: React.FC<indexProps> = ({}) => {
         <article>
           <div></div>
         </article>
+      </div>
+      <div className="w-fit font-extrabold text-3xl m-auto ">
+        Customized Sections
       </div>
     </>
   );

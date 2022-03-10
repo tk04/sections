@@ -164,7 +164,7 @@ const Googlebutton: React.FC<GoogleButtonProps> = ({}) => {
           </g>
         </g>
       </svg>
-      <h1 className="text-black font-bold">Login with Google</h1>
+      <h1 className="text-black font-medium">Login with Google</h1>
     </Button>
   );
 };

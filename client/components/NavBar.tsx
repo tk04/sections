@@ -58,7 +58,6 @@ const Navbar: React.FC<NavBarProps> = ({}) => {
           <Button
             auto
             className="py-3 px-10 font-bold"
-            shadow
             onClick={() => router.push("/signup")}
           >
             Signup <span className="pl-2 font-light"> --it&apos;s free</span>
