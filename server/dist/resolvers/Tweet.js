@@ -19,40 +19,50 @@ exports.TweetResolver = void 0;
 const type_graphql_1 = require("type-graphql");
 const Tweet_1 = require("../entities/Tweet");
 const axios_1 = __importDefault(require("axios"));
-const auth_1 = require("../middleware/auth");
 let TweetResolver = class TweetResolver {
-    async getTweet(url, { req }) {
+    async getTweet(url) {
+        var _a, _b;
         try {
-            const access_token = req.user.twitterAccessToken;
+            const access_token = process.env.TWITTER_ACCESS_TOKEN;
             const tweetUrl = url.split("status/")[1];
-            console.log("TOKEN: ", access_token);
             const tweetRes = await (0, axios_1.default)({
                 method: "GET",
-                url: `https://api.twitter.com/2/tweets/${tweetUrl}?expansions=attachments.poll_ids,attachments.media_keys,author_id&user.fields=profile_image_url,verified`,
+                url: `https://api.twitter.com/2/tweets/${tweetUrl}?expansions=attachments.poll_ids,attachments.media_keys,author_id&user.fields=profile_image_url,verified&tweet.fields=public_metrics&media.fields=url`,
                 headers: {
                     Authorization: `Bearer ${access_token}`,
                 },
             });
-            // console.log(tweet.data);
+            // console.log(tweetRes.data.includes.polls[0].options);
+            const pollOptions = ((_a = tweetRes.data.includes) === null || _a === void 0 ? void 0 : _a.polls) &&
+                ((_b = tweetRes.data.includes) === null || _b === void 0 ? void 0 : _b.polls[0].options);
             const tweet = tweetRes.data.data;
-            const { text, id, attachments } = tweet;
+            const { text, id, attachments, public_metrics: { like_count: likes, retweet_count: retweets, reply_count: replies, }, } = tweet;
             const user = tweetRes.data.includes.users[0];
-            return { text, id, attachments, user };
+            console.log("TWEET: ", tweetRes.data);
+            console.log(tweetRes.data.includes.media);
+            return {
+                text,
+                id,
+                attachments,
+                likes,
+                user,
+                retweets,
+                replies,
+                pollOptions,
+                media: tweetRes.data.includes.media,
+            };
         }
         catch (e) {
-            // console.log(e);
-            console.log(e.message);
+            console.log("ERROR: ", e.message);
             return "error";
         }
     }
 };
 __decorate([
     (0, type_graphql_1.Query)(() => Tweet_1.Tweet),
-    (0, type_graphql_1.UseMiddleware)(auth_1.auth),
     __param(0, (0, type_graphql_1.Arg)("url")),
-    __param(1, (0, type_graphql_1.Ctx)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], TweetResolver.prototype, "getTweet", null);
 TweetResolver = __decorate([

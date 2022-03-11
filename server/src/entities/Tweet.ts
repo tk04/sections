@@ -14,6 +14,22 @@ export class TweetUser {
   username: string;
 }
 @ObjectType()
+export class Poll {
+  @Field()
+  label: string;
+  @Field()
+  votes: number;
+}
+@ObjectType()
+export class Media {
+  @Field()
+  media_key: number;
+  @Field()
+  type: string;
+  @Field(() => String, { nullable: true })
+  url: string;
+}
+@ObjectType()
 export class Tweet {
   @Field()
   text: string;
@@ -23,4 +39,12 @@ export class Tweet {
   likes: number;
   @Field()
   user: TweetUser;
+  @Field()
+  retweets: number;
+  @Field()
+  replies: number;
+  @Field(() => [Poll], { nullable: true })
+  pollOptions: Poll[];
+  @Field(() => [Media], { nullable: true })
+  media: Media[];
 }
