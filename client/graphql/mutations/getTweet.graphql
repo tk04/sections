@@ -1,5 +1,6 @@
-query getTweet($url: String!) {
+mutation getTweet($url: String!) {
   getTweet(url: $url) {
+    id
     likes
     text
     media {

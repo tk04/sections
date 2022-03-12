@@ -1,10 +1,10 @@
 import axios from "axios";
-import { Arg, Query, Resolver } from "type-graphql";
+import { Arg, Mutation, Query, Resolver } from "type-graphql";
 import { Tweet } from "../entities/Tweet";
 
 @Resolver()
 export class TweetResolver {
-  @Query(() => Tweet)
+  @Mutation(() => Tweet)
   async getTweet(@Arg("url") url: string) {
     try {
       const access_token = process.env.TWITTER_ACCESS_TOKEN;
@@ -34,6 +34,7 @@ export class TweetResolver {
           reply_count: replies,
         },
       } = tweet;
+      // console.log(tweet);
 
       const user = tweetRes.data.includes.users[0];
       return {
