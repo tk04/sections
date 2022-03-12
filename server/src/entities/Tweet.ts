@@ -23,11 +23,13 @@ export class Poll {
 @ObjectType()
 export class Media {
   @Field()
-  media_key: number;
+  media_key: string;
   @Field()
   type: string;
   @Field(() => String, { nullable: true })
   url: string;
+  @Field(() => String, { nullable: true })
+  preview_image_url: string;
 }
 @ObjectType()
 export class Tweet {

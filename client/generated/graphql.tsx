@@ -20,6 +20,14 @@ export type LoginInput = {
   password: Scalars['String'];
 };
 
+export type Media = {
+  __typename?: 'Media';
+  media_key: Scalars['String'];
+  preview_image_url?: Maybe<Scalars['String']>;
+  type: Scalars['String'];
+  url?: Maybe<Scalars['String']>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   login: UserResponse;
@@ -48,10 +56,22 @@ export type MutationSignupArgs = {
   input: SignupInput;
 };
 
+export type Poll = {
+  __typename?: 'Poll';
+  label: Scalars['String'];
+  votes: Scalars['Float'];
+};
+
 export type Query = {
   __typename?: 'Query';
+  getTweet: Tweet;
   hello: Scalars['String'];
   me?: Maybe<User>;
+};
+
+
+export type QueryGetTweetArgs = {
+  url: Scalars['String'];
 };
 
 export type SignupInput = {
@@ -60,13 +80,36 @@ export type SignupInput = {
   password: Scalars['String'];
 };
 
+export type Tweet = {
+  __typename?: 'Tweet';
+  id: Scalars['Float'];
+  likes: Scalars['Float'];
+  media?: Maybe<Array<Media>>;
+  pollOptions?: Maybe<Array<Poll>>;
+  replies: Scalars['Float'];
+  retweets: Scalars['Float'];
+  text: Scalars['String'];
+  user: TweetUser;
+};
+
+export type TweetUser = {
+  __typename?: 'TweetUser';
+  id: Scalars['Float'];
+  name: Scalars['String'];
+  profile_image_url: Scalars['String'];
+  username: Scalars['String'];
+  verified: Scalars['Boolean'];
+};
+
 export type User = {
   __typename?: 'User';
   email?: Maybe<Scalars['String']>;
-  googleId: Scalars['String'];
+  googleId?: Maybe<Scalars['String']>;
   id: Scalars['String'];
   name: Scalars['String'];
-  picture: Scalars['String'];
+  picture?: Maybe<Scalars['String']>;
+  twitterAccessToken?: Maybe<Scalars['String']>;
+  twitterId?: Maybe<Scalars['String']>;
 };
 
 export type UserError = {
@@ -79,9 +122,9 @@ export type UserResponse = User | UserError;
 
 export type UserErrorFragmentFragment = { __typename?: 'UserError', path: string, message: string };
 
-export type UserFragmentFragment = { __typename?: 'User', id: string, name: string, email?: string | null, picture: string };
+export type UserFragmentFragment = { __typename?: 'User', id: string, name: string, email?: string | null, picture?: string | null };
 
-type UserResponseFragment_User_Fragment = { __typename?: 'User', id: string, name: string, email?: string | null, picture: string };
+type UserResponseFragment_User_Fragment = { __typename?: 'User', id: string, name: string, email?: string | null, picture?: string | null };
 
 type UserResponseFragment_UserError_Fragment = { __typename?: 'UserError', path: string, message: string };
 
@@ -92,33 +135,40 @@ export type CreateUserMutationVariables = Exact<{
 }>;
 
 
-export type CreateUserMutation = { __typename?: 'Mutation', signInWithGoogle: { __typename?: 'User', id: string, name: string, email?: string | null, picture: string } | { __typename?: 'UserError', path: string, message: string } };
+export type CreateUserMutation = { __typename?: 'Mutation', signInWithGoogle: { __typename?: 'User', id: string, name: string, email?: string | null, picture?: string | null } | { __typename?: 'UserError', path: string, message: string } };
 
 export type LoginMutationVariables = Exact<{
   input: LoginInput;
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'User', id: string, name: string, email?: string | null, picture: string } | { __typename?: 'UserError', path: string, message: string } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'User', id: string, name: string, email?: string | null, picture?: string | null } | { __typename?: 'UserError', path: string, message: string } };
 
 export type SignUpMutationVariables = Exact<{
   input: SignupInput;
 }>;
 
 
-export type SignUpMutation = { __typename?: 'Mutation', signup: { __typename?: 'User', id: string, name: string, email?: string | null, picture: string } | { __typename?: 'UserError', path: string, message: string } };
+export type SignUpMutation = { __typename?: 'Mutation', signup: { __typename?: 'User', id: string, name: string, email?: string | null, picture?: string | null } | { __typename?: 'UserError', path: string, message: string } };
 
 export type TwitterAuthMutationVariables = Exact<{
   code: Scalars['String'];
 }>;
 
 
-export type TwitterAuthMutation = { __typename?: 'Mutation', signInWithTwitter: { __typename?: 'User', id: string, name: string, email?: string | null, picture: string } | { __typename?: 'UserError', path: string, message: string } };
+export type TwitterAuthMutation = { __typename?: 'Mutation', signInWithTwitter: { __typename?: 'User', id: string, name: string, email?: string | null, picture?: string | null } | { __typename?: 'UserError', path: string, message: string } };
+
+export type GetTweetQueryVariables = Exact<{
+  url: Scalars['String'];
+}>;
+
+
+export type GetTweetQuery = { __typename?: 'Query', getTweet: { __typename?: 'Tweet', likes: number, text: string, media?: Array<{ __typename?: 'Media', url?: string | null, preview_image_url?: string | null, type: string }> | null, user: { __typename?: 'TweetUser', name: string, profile_image_url: string, id: number, username: string, verified: boolean } } };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, name: string, email?: string | null, picture: string } | null };
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, name: string, email?: string | null, picture?: string | null } | null };
 
 export const UserFragmentFragmentDoc = gql`
     fragment UserFragment on User {
@@ -273,6 +323,54 @@ export function useTwitterAuthMutation(baseOptions?: Apollo.MutationHookOptions<
 export type TwitterAuthMutationHookResult = ReturnType<typeof useTwitterAuthMutation>;
 export type TwitterAuthMutationResult = Apollo.MutationResult<TwitterAuthMutation>;
 export type TwitterAuthMutationOptions = Apollo.BaseMutationOptions<TwitterAuthMutation, TwitterAuthMutationVariables>;
+export const GetTweetDocument = gql`
+    query getTweet($url: String!) {
+  getTweet(url: $url) {
+    likes
+    text
+    media {
+      url
+      preview_image_url
+      type
+    }
+    user {
+      name
+      profile_image_url
+      id
+      username
+      verified
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetTweetQuery__
+ *
+ * To run a query within a React component, call `useGetTweetQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTweetQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTweetQuery({
+ *   variables: {
+ *      url: // value for 'url'
+ *   },
+ * });
+ */
+export function useGetTweetQuery(baseOptions: Apollo.QueryHookOptions<GetTweetQuery, GetTweetQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetTweetQuery, GetTweetQueryVariables>(GetTweetDocument, options);
+      }
+export function useGetTweetLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTweetQuery, GetTweetQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetTweetQuery, GetTweetQueryVariables>(GetTweetDocument, options);
+        }
+export type GetTweetQueryHookResult = ReturnType<typeof useGetTweetQuery>;
+export type GetTweetLazyQueryHookResult = ReturnType<typeof useGetTweetLazyQuery>;
+export type GetTweetQueryResult = Apollo.QueryResult<GetTweetQuery, GetTweetQueryVariables>;
 export const MeDocument = gql`
     query Me {
   me {

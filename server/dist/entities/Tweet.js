@@ -55,7 +55,7 @@ let Media = class Media {
 };
 __decorate([
     (0, type_graphql_1.Field)(),
-    __metadata("design:type", Number)
+    __metadata("design:type", String)
 ], Media.prototype, "media_key", void 0);
 __decorate([
     (0, type_graphql_1.Field)(),
@@ -65,6 +65,10 @@ __decorate([
     (0, type_graphql_1.Field)(() => String, { nullable: true }),
     __metadata("design:type", String)
 ], Media.prototype, "url", void 0);
+__decorate([
+    (0, type_graphql_1.Field)(() => String, { nullable: true }),
+    __metadata("design:type", String)
+], Media.prototype, "preview_image_url", void 0);
 Media = __decorate([
     (0, type_graphql_1.ObjectType)()
 ], Media);

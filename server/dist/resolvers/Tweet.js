@@ -16,9 +16,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.TweetResolver = void 0;
+const axios_1 = __importDefault(require("axios"));
 const type_graphql_1 = require("type-graphql");
 const Tweet_1 = require("../entities/Tweet");
-const axios_1 = __importDefault(require("axios"));
 let TweetResolver = class TweetResolver {
     async getTweet(url) {
         var _a, _b;
@@ -27,7 +27,7 @@ let TweetResolver = class TweetResolver {
             const tweetUrl = url.split("status/")[1];
             const tweetRes = await (0, axios_1.default)({
                 method: "GET",
-                url: `https://api.twitter.com/2/tweets/${tweetUrl}?expansions=attachments.poll_ids,attachments.media_keys,author_id&user.fields=profile_image_url,verified&tweet.fields=public_metrics&media.fields=url`,
+                url: `https://api.twitter.com/2/tweets/${tweetUrl}?expansions=attachments.poll_ids,attachments.media_keys,author_id&user.fields=profile_image_url,verified&tweet.fields=public_metrics&media.fields=url,preview_image_url`,
                 headers: {
                     Authorization: `Bearer ${access_token}`,
                 },
@@ -38,8 +38,6 @@ let TweetResolver = class TweetResolver {
             const tweet = tweetRes.data.data;
             const { text, id, attachments, public_metrics: { like_count: likes, retweet_count: retweets, reply_count: replies, }, } = tweet;
             const user = tweetRes.data.includes.users[0];
-            console.log("TWEET: ", tweetRes.data);
-            console.log(tweetRes.data.includes.media);
             return {
                 text,
                 id,

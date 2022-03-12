@@ -1,9 +1,6 @@
-import { Arg, Ctx, Query, Resolver, UseMiddleware } from "type-graphql";
-import { Tweet } from "../entities/Tweet";
 import axios from "axios";
-import { auth } from "../middleware/auth";
-import { context } from "../types/types";
-import { refreshTwitterToken } from "../utils/refreshTwitterToken";
+import { Arg, Query, Resolver } from "type-graphql";
+import { Tweet } from "../entities/Tweet";
 
 @Resolver()
 export class TweetResolver {
@@ -15,7 +12,7 @@ export class TweetResolver {
       const tweetUrl = url.split("status/")[1];
       const tweetRes = await axios({
         method: "GET",
-        url: `https://api.twitter.com/2/tweets/${tweetUrl}?expansions=attachments.poll_ids,attachments.media_keys,author_id&user.fields=profile_image_url,verified&tweet.fields=public_metrics&media.fields=url`,
+        url: `https://api.twitter.com/2/tweets/${tweetUrl}?expansions=attachments.poll_ids,attachments.media_keys,author_id&user.fields=profile_image_url,verified&tweet.fields=public_metrics&media.fields=url,preview_image_url`,
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
@@ -39,8 +36,6 @@ export class TweetResolver {
       } = tweet;
 
       const user = tweetRes.data.includes.users[0];
-      console.log("TWEET: ", tweetRes.data);
-      console.log(tweetRes.data.includes.media);
       return {
         text,
         id,
