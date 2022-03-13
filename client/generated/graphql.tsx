@@ -127,6 +127,8 @@ export type UserError = {
 
 export type UserResponse = User | UserError;
 
+export type TweetFragmentFragment = { __typename?: 'Tweet', id: number, likes: number, text: string, retweets: number, replies: number, media?: Array<{ __typename?: 'Media', url?: string | null, preview_image_url?: string | null, type: string }> | null, user: { __typename?: 'TweetUser', name: string, profile_image_url: string, id: number, username: string, verified: boolean } };
+
 export type UserErrorFragmentFragment = { __typename?: 'UserError', path: string, message: string };
 
 export type UserFragmentFragment = { __typename?: 'User', id: string, name: string, email?: string | null, picture?: string | null };
@@ -149,12 +151,12 @@ export type GetTweetMutationVariables = Exact<{
 }>;
 
 
-export type GetTweetMutation = { __typename?: 'Mutation', getTweet: { __typename?: 'Tweet', id: number, likes: number, text: string, media?: Array<{ __typename?: 'Media', url?: string | null, preview_image_url?: string | null, type: string }> | null, user: { __typename?: 'TweetUser', name: string, profile_image_url: string, id: number, username: string, verified: boolean } } };
+export type GetTweetMutation = { __typename?: 'Mutation', getTweet: { __typename?: 'Tweet', id: number, likes: number, text: string, retweets: number, replies: number, media?: Array<{ __typename?: 'Media', url?: string | null, preview_image_url?: string | null, type: string }> | null, user: { __typename?: 'TweetUser', name: string, profile_image_url: string, id: number, username: string, verified: boolean } } };
 
 export type GetTweetsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetTweetsQuery = { __typename?: 'Query', getTweets: Array<{ __typename?: 'Tweet', text: string, id: number, likes: number, media?: Array<{ __typename?: 'Media', url?: string | null, preview_image_url?: string | null, media_key: string }> | null, user: { __typename?: 'TweetUser', username: string, profile_image_url: string } }> };
+export type GetTweetsQuery = { __typename?: 'Query', getTweets: Array<{ __typename?: 'Tweet', id: number, likes: number, text: string, retweets: number, replies: number, media?: Array<{ __typename?: 'Media', url?: string | null, preview_image_url?: string | null, type: string }> | null, user: { __typename?: 'TweetUser', name: string, profile_image_url: string, id: number, username: string, verified: boolean } }> };
 
 export type CreateUserMutationVariables = Exact<{
   code: Scalars['String'];
@@ -189,6 +191,27 @@ export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, name: string, email?: string | null, picture?: string | null } | null };
 
+export const TweetFragmentFragmentDoc = gql`
+    fragment TweetFragment on Tweet {
+  id
+  likes
+  text
+  retweets
+  replies
+  media {
+    url
+    preview_image_url
+    type
+  }
+  user {
+    name
+    profile_image_url
+    id
+    username
+    verified
+  }
+}
+    `;
 export const UserFragmentFragmentDoc = gql`
     fragment UserFragment on User {
   id
@@ -244,24 +267,10 @@ export type AddTweetsMutationOptions = Apollo.BaseMutationOptions<AddTweetsMutat
 export const GetTweetDocument = gql`
     mutation getTweet($url: String!) {
   getTweet(url: $url) {
-    id
-    likes
-    text
-    media {
-      url
-      preview_image_url
-      type
-    }
-    user {
-      name
-      profile_image_url
-      id
-      username
-      verified
-    }
+    ...TweetFragment
   }
 }
-    `;
+    ${TweetFragmentFragmentDoc}`;
 export type GetTweetMutationFn = Apollo.MutationFunction<GetTweetMutation, GetTweetMutationVariables>;
 
 /**
@@ -291,21 +300,10 @@ export type GetTweetMutationOptions = Apollo.BaseMutationOptions<GetTweetMutatio
 export const GetTweetsDocument = gql`
     query getTweets {
   getTweets {
-    text
-    id
-    likes
-    media {
-      url
-      preview_image_url
-      media_key
-    }
-    user {
-      username
-      profile_image_url
-    }
+    ...TweetFragment
   }
 }
-    `;
+    ${TweetFragmentFragmentDoc}`;
 
 /**
  * __useGetTweetsQuery__

@@ -1,6 +1,7 @@
 import { Button, Input } from "@nextui-org/react";
 
 import React, { useRef, useState } from "react";
+import Tweet from "../components/Tweet";
 import { useGetTweetMutation } from "../generated/graphql";
 
 interface dashboardProps {}
@@ -15,6 +16,7 @@ const Dashboard: React.FC<dashboardProps> = ({}) => {
       },
     });
   };
+  console.log("DATA: ", data);
 
   return (
     <div className="ml-20">
@@ -31,6 +33,7 @@ const Dashboard: React.FC<dashboardProps> = ({}) => {
       <Button onClick={tweetHandler} size="lg">
         Save
       </Button>
+      {data && data.getTweet && <Tweet tweet={data.getTweet} />}
     </div>
   );
 };

@@ -1,16 +1,5 @@
 query getTweets {
   getTweets {
-    text
-    id
-    likes
-    media {
-      url
-      preview_image_url
-      media_key
-    }
-    user {
-      username
-      profile_image_url
-    }
+    ...TweetFragment
   }
 }

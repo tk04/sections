@@ -1,0 +1,19 @@
+fragment TweetFragment on Tweet {
+  id
+  likes
+  text
+  retweets
+  replies
+  media {
+    url
+    preview_image_url
+    type
+  }
+  user {
+    name
+    profile_image_url
+    id
+    username
+    verified
+  }
+}
