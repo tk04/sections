@@ -19,7 +19,43 @@ exports.TweetResolver = void 0;
 const axios_1 = __importDefault(require("axios"));
 const type_graphql_1 = require("type-graphql");
 const Tweet_1 = require("../entities/Tweet");
+const auth_1 = require("../middleware/auth");
+const getTweets_1 = require("../utils/getTweets");
+let TweetInput = class TweetInput {
+};
+__decorate([
+    (0, type_graphql_1.Field)(),
+    __metadata("design:type", String)
+], TweetInput.prototype, "tweet", void 0);
+__decorate([
+    (0, type_graphql_1.Field)(() => String, { nullable: true }),
+    __metadata("design:type", String)
+], TweetInput.prototype, "userId", void 0);
+TweetInput = __decorate([
+    (0, type_graphql_1.InputType)()
+], TweetInput);
 let TweetResolver = class TweetResolver {
+    async getTweets({ req, prisma }) {
+        const tweets = await prisma.tweets.findMany({
+            where: { userId: req.user.id },
+        });
+        console.log(tweets);
+        const result = await (0, getTweets_1.getTweetsHelper)(tweets);
+        return result;
+    }
+    async addTweets(tweetURLs, { req, prisma }) {
+        try {
+            tweetURLs.forEach((tweet) => (tweet.userId = req.user.id));
+            const tweets = await prisma.tweets.createMany({
+                data: tweetURLs,
+            });
+            console.log(tweets);
+            return true;
+        }
+        catch (e) {
+            return false;
+        }
+    }
     async getTweet(url) {
         var _a, _b;
         try {
@@ -57,6 +93,23 @@ let TweetResolver = class TweetResolver {
         }
     }
 };
+__decorate([
+    (0, type_graphql_1.Query)(() => [Tweet_1.Tweet]),
+    (0, type_graphql_1.UseMiddleware)(auth_1.auth),
+    __param(0, (0, type_graphql_1.Ctx)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], TweetResolver.prototype, "getTweets", null);
+__decorate([
+    (0, type_graphql_1.Mutation)(() => Boolean),
+    (0, type_graphql_1.UseMiddleware)(auth_1.auth),
+    __param(0, (0, type_graphql_1.Arg)("tweetURLs", () => [TweetInput])),
+    __param(1, (0, type_graphql_1.Ctx)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Array, Object]),
+    __metadata("design:returntype", Promise)
+], TweetResolver.prototype, "addTweets", null);
 __decorate([
     (0, type_graphql_1.Mutation)(() => Tweet_1.Tweet),
     __param(0, (0, type_graphql_1.Arg)("url")),

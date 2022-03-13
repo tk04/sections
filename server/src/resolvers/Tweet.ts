@@ -1,9 +1,63 @@
 import axios from "axios";
-import { Arg, Mutation, Query, Resolver } from "type-graphql";
+import {
+  Arg,
+  Ctx,
+  Field,
+  InputType,
+  Mutation,
+  Query,
+  Resolver,
+  UseMiddleware,
+} from "type-graphql";
 import { Tweet } from "../entities/Tweet";
+import { auth } from "../middleware/auth";
+import { context } from "../types/types";
+import { getTweetsHelper } from "../utils/getTweets";
+export type TweetsCreateManyInput = {
+  id?: string;
+  userId: string;
+  tweet: string;
+};
+@InputType()
+class TweetInput {
+  @Field()
+  tweet: string;
+  @Field(() => String, { nullable: true })
+  userId?: string;
+}
 
 @Resolver()
 export class TweetResolver {
+  @Query(() => [Tweet])
+  @UseMiddleware(auth)
+  async getTweets(@Ctx() { req, prisma }: context) {
+    const tweets = await prisma.tweets.findMany({
+      where: { userId: req.user!.id },
+    });
+    console.log(tweets);
+    const result = await getTweetsHelper(tweets);
+
+    return result;
+  }
+
+  @Mutation(() => Boolean)
+  @UseMiddleware(auth)
+  async addTweets(
+    @Arg("tweetURLs", () => [TweetInput])
+    tweetURLs: TweetInput[],
+    @Ctx() { req, prisma }: context
+  ) {
+    try {
+      tweetURLs.forEach((tweet) => (tweet.userId = req.user!.id));
+      const tweets = await prisma.tweets.createMany({
+        data: tweetURLs as TweetsCreateManyInput[],
+      });
+      console.log(tweets);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
   @Mutation(() => Tweet)
   async getTweet(@Arg("url") url: string) {
     try {
