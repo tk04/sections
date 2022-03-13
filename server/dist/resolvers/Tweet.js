@@ -39,17 +39,17 @@ let TweetResolver = class TweetResolver {
         const tweets = await prisma.tweets.findMany({
             where: { userId: req.user.id },
         });
-        console.log(tweets);
         const result = await (0, getTweets_1.getTweetsHelper)(tweets);
         return result;
     }
     async addTweets(tweetURLs, { req, prisma }) {
         try {
-            tweetURLs.forEach((tweet) => (tweet.userId = req.user.id));
-            const tweets = await prisma.tweets.createMany({
-                data: tweetURLs,
+            const modTweets = tweetURLs.map((tweet) => {
+                return { tweet: tweet, userId: req.user.id };
             });
-            console.log(tweets);
+            const tweets = await prisma.tweets.createMany({
+                data: modTweets,
+            });
             return true;
         }
         catch (e) {
@@ -104,7 +104,7 @@ __decorate([
 __decorate([
     (0, type_graphql_1.Mutation)(() => Boolean),
     (0, type_graphql_1.UseMiddleware)(auth_1.auth),
-    __param(0, (0, type_graphql_1.Arg)("tweetURLs", () => [TweetInput])),
+    __param(0, (0, type_graphql_1.Arg)("tweetURLs", () => [String])),
     __param(1, (0, type_graphql_1.Ctx)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Array, Object]),

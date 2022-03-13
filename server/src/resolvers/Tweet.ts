@@ -34,7 +34,7 @@ export class TweetResolver {
     const tweets = await prisma.tweets.findMany({
       where: { userId: req.user!.id },
     });
-    console.log(tweets);
+
     const result = await getTweetsHelper(tweets);
 
     return result;
@@ -43,16 +43,18 @@ export class TweetResolver {
   @Mutation(() => Boolean)
   @UseMiddleware(auth)
   async addTweets(
-    @Arg("tweetURLs", () => [TweetInput])
-    tweetURLs: TweetInput[],
+    @Arg("tweetURLs", () => [String])
+    tweetURLs: string[],
     @Ctx() { req, prisma }: context
   ) {
     try {
-      tweetURLs.forEach((tweet) => (tweet.userId = req.user!.id));
-      const tweets = await prisma.tweets.createMany({
-        data: tweetURLs as TweetsCreateManyInput[],
+      const modTweets = tweetURLs.map((tweet) => {
+        return { tweet: tweet, userId: req.user!.id };
       });
-      console.log(tweets);
+      const tweets = await prisma.tweets.createMany({
+        data: modTweets as TweetsCreateManyInput[],
+      });
+
       return true;
     } catch (e) {
       return false;

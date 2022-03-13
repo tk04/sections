@@ -10,7 +10,7 @@ export const TwitterLogin = async (code: string, prisma: PrismaClient) => {
       },
       data: `code=${code}&grant_type=authorization_code&redirect_uri=http://localhost:3000/twitter_cb&code_verifier=challenge&client_id=${process.env.TWITTER_CLIENT_ID}`,
     });
-    console.log("DATA: ", data.data);
+
     if (data.data) {
       const userInfo = await axios({
         method: "GET",

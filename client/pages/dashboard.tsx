@@ -16,8 +16,6 @@ const Dashboard: React.FC<dashboardProps> = ({}) => {
     });
   };
 
-  console.log("DATA : ", data);
-
   return (
     <div className="ml-20">
       <br />

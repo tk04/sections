@@ -11,7 +11,7 @@ import { SignupInput, useSignUpMutation } from "../generated/graphql";
 const Index: React.FC<indexProps> = ({}) => {
   const router = useRouter();
   const [createUser, { data }] = useSignUpMutation();
-  console.log("DATA: ", data);
+
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const nameRef = useRef<HTMLInputElement>(null);
@@ -32,8 +32,8 @@ const Index: React.FC<indexProps> = ({}) => {
       const user = await createUser({
         variables: { input: { name, email, password } as SignupInput },
       });
-      // router.push("/?login=success");
-      // console.log("USER: ", user);
+      router.push("/?login=success");
+      console.log("USER: ", user);
     }
   };
   return (

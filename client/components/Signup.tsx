@@ -11,7 +11,6 @@ import { SignupInput, useSignUpMutation } from "../generated/graphql";
 const Index: React.FC<indexProps> = ({}) => {
   const router = useRouter();
   const [createUser, { data }] = useSignUpMutation();
-  console.log("DATA: ", data);
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const nameRef = useRef<HTMLInputElement>(null);
@@ -29,10 +28,10 @@ const Index: React.FC<indexProps> = ({}) => {
     } else if (name.length <= 1) {
       alert("Name input must be at least 2 characters long");
     } else {
-      const user = await createUser({
+      await createUser({
         variables: { input: { name, email, password } as SignupInput },
       });
-      // router.push("/?login=success");
+      router.push("/?login=success");
       // console.log("USER: ", user);
     }
   };
