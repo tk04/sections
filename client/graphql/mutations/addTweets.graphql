@@ -1,0 +1,3 @@
+mutation addTweets($urls: [String!]!) {
+  addTweets(tweetURLs: $urls)
+}

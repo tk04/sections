@@ -30,11 +30,17 @@ export type Media = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  addTweets: Scalars['Boolean'];
   getTweet: Tweet;
   login: UserResponse;
   signInWithGoogle: UserResponse;
   signInWithTwitter: UserResponse;
   signup: UserResponse;
+};
+
+
+export type MutationAddTweetsArgs = {
+  tweetURLs: Array<Scalars['String']>;
 };
 
 
@@ -70,6 +76,7 @@ export type Poll = {
 
 export type Query = {
   __typename?: 'Query';
+  getTweets: Array<Tweet>;
   hello: Scalars['String'];
   me?: Maybe<User>;
 };
@@ -130,12 +137,24 @@ type UserResponseFragment_UserError_Fragment = { __typename?: 'UserError', path:
 
 export type UserResponseFragmentFragment = UserResponseFragment_User_Fragment | UserResponseFragment_UserError_Fragment;
 
+export type AddTweetsMutationVariables = Exact<{
+  urls: Array<Scalars['String']> | Scalars['String'];
+}>;
+
+
+export type AddTweetsMutation = { __typename?: 'Mutation', addTweets: boolean };
+
 export type GetTweetMutationVariables = Exact<{
   url: Scalars['String'];
 }>;
 
 
 export type GetTweetMutation = { __typename?: 'Mutation', getTweet: { __typename?: 'Tweet', id: number, likes: number, text: string, media?: Array<{ __typename?: 'Media', url?: string | null, preview_image_url?: string | null, type: string }> | null, user: { __typename?: 'TweetUser', name: string, profile_image_url: string, id: number, username: string, verified: boolean } } };
+
+export type GetTweetsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetTweetsQuery = { __typename?: 'Query', getTweets: Array<{ __typename?: 'Tweet', text: string, id: number, likes: number, media?: Array<{ __typename?: 'Media', url?: string | null, preview_image_url?: string | null, media_key: string }> | null, user: { __typename?: 'TweetUser', username: string, profile_image_url: string } }> };
 
 export type CreateUserMutationVariables = Exact<{
   code: Scalars['String'];
@@ -191,6 +210,37 @@ export const UserResponseFragmentFragmentDoc = gql`
 }
     ${UserFragmentFragmentDoc}
 ${UserErrorFragmentFragmentDoc}`;
+export const AddTweetsDocument = gql`
+    mutation addTweets($urls: [String!]!) {
+  addTweets(tweetURLs: $urls)
+}
+    `;
+export type AddTweetsMutationFn = Apollo.MutationFunction<AddTweetsMutation, AddTweetsMutationVariables>;
+
+/**
+ * __useAddTweetsMutation__
+ *
+ * To run a mutation, you first call `useAddTweetsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddTweetsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addTweetsMutation, { data, loading, error }] = useAddTweetsMutation({
+ *   variables: {
+ *      urls: // value for 'urls'
+ *   },
+ * });
+ */
+export function useAddTweetsMutation(baseOptions?: Apollo.MutationHookOptions<AddTweetsMutation, AddTweetsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddTweetsMutation, AddTweetsMutationVariables>(AddTweetsDocument, options);
+      }
+export type AddTweetsMutationHookResult = ReturnType<typeof useAddTweetsMutation>;
+export type AddTweetsMutationResult = Apollo.MutationResult<AddTweetsMutation>;
+export type AddTweetsMutationOptions = Apollo.BaseMutationOptions<AddTweetsMutation, AddTweetsMutationVariables>;
 export const GetTweetDocument = gql`
     mutation getTweet($url: String!) {
   getTweet(url: $url) {
@@ -238,6 +288,51 @@ export function useGetTweetMutation(baseOptions?: Apollo.MutationHookOptions<Get
 export type GetTweetMutationHookResult = ReturnType<typeof useGetTweetMutation>;
 export type GetTweetMutationResult = Apollo.MutationResult<GetTweetMutation>;
 export type GetTweetMutationOptions = Apollo.BaseMutationOptions<GetTweetMutation, GetTweetMutationVariables>;
+export const GetTweetsDocument = gql`
+    query getTweets {
+  getTweets {
+    text
+    id
+    likes
+    media {
+      url
+      preview_image_url
+      media_key
+    }
+    user {
+      username
+      profile_image_url
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetTweetsQuery__
+ *
+ * To run a query within a React component, call `useGetTweetsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetTweetsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetTweetsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetTweetsQuery(baseOptions?: Apollo.QueryHookOptions<GetTweetsQuery, GetTweetsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetTweetsQuery, GetTweetsQueryVariables>(GetTweetsDocument, options);
+      }
+export function useGetTweetsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetTweetsQuery, GetTweetsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetTweetsQuery, GetTweetsQueryVariables>(GetTweetsDocument, options);
+        }
+export type GetTweetsQueryHookResult = ReturnType<typeof useGetTweetsQuery>;
+export type GetTweetsLazyQueryHookResult = ReturnType<typeof useGetTweetsLazyQuery>;
+export type GetTweetsQueryResult = Apollo.QueryResult<GetTweetsQuery, GetTweetsQueryVariables>;
 export const CreateUserDocument = gql`
     mutation CreateUser($code: String!) {
   signInWithGoogle(code: $code) {
