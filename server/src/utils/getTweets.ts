@@ -29,6 +29,7 @@ export const getTweetsHelper = async (tweets: Tweets[]) => {
             Authorization: `Bearer ${access_token}`,
           },
         });
+
         const pollOptions: any[] =
           tweetRes.data.includes?.polls &&
           tweetRes.data.includes?.polls[0].options;

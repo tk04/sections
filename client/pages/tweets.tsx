@@ -1,3 +1,4 @@
+import { Grid } from "@nextui-org/react";
 import React from "react";
 import TweetTest from "../components/Tweet";
 import { useGetTweetsQuery } from "../generated/graphql";
@@ -7,7 +8,7 @@ interface tweetProps {}
 const Tweet: React.FC<tweetProps> = ({}) => {
   const { data } = useGetTweetsQuery();
   return (
-    <div>
+    <div className="flex flex-wrap flex-auto justify-center place-items-center justify-items-center self-stretch">
       {data && data.getTweets && (
         <>
           {data.getTweets.map((tweet) => (
