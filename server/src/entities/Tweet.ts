@@ -37,7 +37,7 @@ export class Media {
 }
 @ObjectType()
 export class Tweet {
-  @Field()
+  @Field(() => String, { nullable: true })
   text: string;
   @Field()
   id: number;

@@ -84,7 +84,7 @@ exports.Media = Media;
 let Tweet = class Tweet {
 };
 __decorate([
-    (0, type_graphql_1.Field)(),
+    (0, type_graphql_1.Field)(() => String, { nullable: true }),
     __metadata("design:type", String)
 ], Tweet.prototype, "text", void 0);
 __decorate([

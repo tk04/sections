@@ -45,9 +45,10 @@ export const getTweetsHelper = async (tweets: Tweets[]) => {
             reply_count: replies,
           },
         } = tweet;
-        //   console.log("TWEET: ", tweet);
+        // console.log("TWEET: ", tweet);
 
         const user = tweetRes.data.includes.users[0];
+
         return {
           text,
           id,

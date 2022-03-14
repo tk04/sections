@@ -8,7 +8,22 @@ interface tweetProps {}
 const Tweet: React.FC<tweetProps> = ({}) => {
   const { data } = useGetTweetsQuery();
   return (
-    <div className="flex flex-wrap flex-auto justify-center place-items-center justify-items-center self-stretch">
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+        gridTemplateRows: "repeat(auto-fill, minmax(100px, 1fr))",
+        gridAutoFlow: "row dense",
+        gridAutoRows: "200px",
+        // gridAutoRows: "minmax(200px, 1fr)",
+        // height: "100vh",
+        margin: "0 500px",
+        justifyContent: "center",
+        // alignContent: "end",
+        // gridGap: "7px",
+      }}
+      // className="flex flex-wrap w-[00px] h-64 "
+    >
       {data && data.getTweets && (
         <>
           {data.getTweets.map((tweet) => (
