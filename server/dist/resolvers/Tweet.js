@@ -60,7 +60,7 @@ let TweetResolver = class TweetResolver {
         var _a, _b;
         try {
             const access_token = process.env.TWITTER_ACCESS_TOKEN;
-            const tweetUrl = url.split("status/")[1];
+            const tweetUrl = url.split("status/")[1].split("?")[0];
             const tweetRes = await (0, axios_1.default)({
                 method: "GET",
                 url: `https://api.twitter.com/2/tweets/${tweetUrl}?expansions=attachments.poll_ids,attachments.media_keys,author_id&user.fields=profile_image_url,verified&tweet.fields=public_metrics&media.fields=url,preview_image_url`,
@@ -68,7 +68,6 @@ let TweetResolver = class TweetResolver {
                     Authorization: `Bearer ${access_token}`,
                 },
             });
-            // console.log(tweetRes.data.includes.polls[0].options);
             const pollOptions = ((_a = tweetRes.data.includes) === null || _a === void 0 ? void 0 : _a.polls) &&
                 ((_b = tweetRes.data.includes) === null || _b === void 0 ? void 0 : _b.polls[0].options);
             const tweet = tweetRes.data.data;
@@ -88,7 +87,8 @@ let TweetResolver = class TweetResolver {
             };
         }
         catch (e) {
-            console.log("ERROR: ", e.message);
+            console.log("ERROR: ", e.response.data.errors);
+            console.log("ERROR: ", e.response.data.errors[0].parameters);
             return "error";
         }
     }
