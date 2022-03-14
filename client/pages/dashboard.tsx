@@ -26,7 +26,7 @@ const Dashboard: React.FC<dashboardProps> = ({}) => {
         className="mb-2 w-60"
         placeholder="Tweet URL"
         aria-label="Tweet URL"
-        initialValue="https://twitter.com/tkrvl/status/1487840380687159297?s=20&t=Q3vzO0HXvZAFhn9QXQqU0w"
+        initialValue="https://twitter.com/_lordmax_/status/1503137288695341057?s=20&t=2y6GcTryK3R8jFNQCu6nCg"
         ref={inputRef}
       />
       <br />
