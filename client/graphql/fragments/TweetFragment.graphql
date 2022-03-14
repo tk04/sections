@@ -8,6 +8,8 @@ fragment TweetFragment on Tweet {
     url
     preview_image_url
     type
+    width
+    height
   }
   user {
     name

@@ -63,7 +63,7 @@ let TweetResolver = class TweetResolver {
             const tweetUrl = url.split("status/")[1].split("?")[0];
             const tweetRes = await (0, axios_1.default)({
                 method: "GET",
-                url: `https://api.twitter.com/2/tweets/${tweetUrl}?expansions=attachments.poll_ids,attachments.media_keys,author_id&user.fields=profile_image_url,verified&tweet.fields=public_metrics&media.fields=url,preview_image_url`,
+                url: `https://api.twitter.com/2/tweets/${tweetUrl}?expansions=attachments.poll_ids,attachments.media_keys,author_id&user.fields=profile_image_url,verified&tweet.fields=public_metrics&media.fields=url,preview_image_url,height,width`,
                 headers: {
                     Authorization: `Bearer ${access_token}`,
                 },
@@ -72,7 +72,7 @@ let TweetResolver = class TweetResolver {
                 ((_b = tweetRes.data.includes) === null || _b === void 0 ? void 0 : _b.polls[0].options);
             const tweet = tweetRes.data.data;
             const { text, id, attachments, public_metrics: { like_count: likes, retweet_count: retweets, reply_count: replies, }, } = tweet;
-            // console.log(tweet);
+            // console.log(tweetRes.data.includes.media);
             const user = tweetRes.data.includes.users[0];
             return {
                 text,

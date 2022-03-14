@@ -1,4 +1,4 @@
-import { Field, ObjectType } from "type-graphql";
+import { Field, ObjectType, Int } from "type-graphql";
 
 @ObjectType()
 export class TweetUser {
@@ -30,6 +30,10 @@ export class Media {
   url: string;
   @Field(() => String, { nullable: true })
   preview_image_url: string;
+  @Field(() => Int, { nullable: true })
+  width: number;
+  @Field(() => Int, { nullable: true })
+  height: number;
 }
 @ObjectType()
 export class Tweet {

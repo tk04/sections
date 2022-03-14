@@ -22,10 +22,12 @@ export type LoginInput = {
 
 export type Media = {
   __typename?: 'Media';
+  height?: Maybe<Scalars['Int']>;
   media_key: Scalars['String'];
   preview_image_url?: Maybe<Scalars['String']>;
   type: Scalars['String'];
   url?: Maybe<Scalars['String']>;
+  width?: Maybe<Scalars['Int']>;
 };
 
 export type Mutation = {
@@ -127,7 +129,7 @@ export type UserError = {
 
 export type UserResponse = User | UserError;
 
-export type TweetFragmentFragment = { __typename?: 'Tweet', id: number, likes: number, text: string, retweets: number, replies: number, media?: Array<{ __typename?: 'Media', url?: string | null, preview_image_url?: string | null, type: string }> | null, user: { __typename?: 'TweetUser', name: string, profile_image_url: string, id: number, username: string, verified: boolean } };
+export type TweetFragmentFragment = { __typename?: 'Tweet', id: number, likes: number, text: string, retweets: number, replies: number, media?: Array<{ __typename?: 'Media', url?: string | null, preview_image_url?: string | null, type: string, width?: number | null, height?: number | null }> | null, user: { __typename?: 'TweetUser', name: string, profile_image_url: string, id: number, username: string, verified: boolean } };
 
 export type UserErrorFragmentFragment = { __typename?: 'UserError', path: string, message: string };
 
@@ -151,12 +153,12 @@ export type GetTweetMutationVariables = Exact<{
 }>;
 
 
-export type GetTweetMutation = { __typename?: 'Mutation', getTweet: { __typename?: 'Tweet', id: number, likes: number, text: string, retweets: number, replies: number, media?: Array<{ __typename?: 'Media', url?: string | null, preview_image_url?: string | null, type: string }> | null, user: { __typename?: 'TweetUser', name: string, profile_image_url: string, id: number, username: string, verified: boolean } } };
+export type GetTweetMutation = { __typename?: 'Mutation', getTweet: { __typename?: 'Tweet', id: number, likes: number, text: string, retweets: number, replies: number, media?: Array<{ __typename?: 'Media', url?: string | null, preview_image_url?: string | null, type: string, width?: number | null, height?: number | null }> | null, user: { __typename?: 'TweetUser', name: string, profile_image_url: string, id: number, username: string, verified: boolean } } };
 
 export type GetTweetsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetTweetsQuery = { __typename?: 'Query', getTweets: Array<{ __typename?: 'Tweet', id: number, likes: number, text: string, retweets: number, replies: number, media?: Array<{ __typename?: 'Media', url?: string | null, preview_image_url?: string | null, type: string }> | null, user: { __typename?: 'TweetUser', name: string, profile_image_url: string, id: number, username: string, verified: boolean } }> };
+export type GetTweetsQuery = { __typename?: 'Query', getTweets: Array<{ __typename?: 'Tweet', id: number, likes: number, text: string, retweets: number, replies: number, media?: Array<{ __typename?: 'Media', url?: string | null, preview_image_url?: string | null, type: string, width?: number | null, height?: number | null }> | null, user: { __typename?: 'TweetUser', name: string, profile_image_url: string, id: number, username: string, verified: boolean } }> };
 
 export type CreateUserMutationVariables = Exact<{
   code: Scalars['String'];
@@ -202,6 +204,8 @@ export const TweetFragmentFragmentDoc = gql`
     url
     preview_image_url
     type
+    width
+    height
   }
   user {
     name

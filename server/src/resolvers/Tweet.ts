@@ -68,7 +68,7 @@ export class TweetResolver {
 
       const tweetRes = await axios({
         method: "GET",
-        url: `https://api.twitter.com/2/tweets/${tweetUrl}?expansions=attachments.poll_ids,attachments.media_keys,author_id&user.fields=profile_image_url,verified&tweet.fields=public_metrics&media.fields=url,preview_image_url`,
+        url: `https://api.twitter.com/2/tweets/${tweetUrl}?expansions=attachments.poll_ids,attachments.media_keys,author_id&user.fields=profile_image_url,verified&tweet.fields=public_metrics&media.fields=url,preview_image_url,height,width`,
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
@@ -90,7 +90,7 @@ export class TweetResolver {
           reply_count: replies,
         },
       } = tweet;
-      // console.log(tweet);
+      // console.log(tweetRes.data.includes.media);
 
       const user = tweetRes.data.includes.users[0];
       return {

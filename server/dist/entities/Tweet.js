@@ -69,6 +69,14 @@ __decorate([
     (0, type_graphql_1.Field)(() => String, { nullable: true }),
     __metadata("design:type", String)
 ], Media.prototype, "preview_image_url", void 0);
+__decorate([
+    (0, type_graphql_1.Field)(() => type_graphql_1.Int, { nullable: true }),
+    __metadata("design:type", Number)
+], Media.prototype, "width", void 0);
+__decorate([
+    (0, type_graphql_1.Field)(() => type_graphql_1.Int, { nullable: true }),
+    __metadata("design:type", Number)
+], Media.prototype, "height", void 0);
 Media = __decorate([
     (0, type_graphql_1.ObjectType)()
 ], Media);
