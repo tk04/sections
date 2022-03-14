@@ -36,11 +36,16 @@ TweetInput = __decorate([
 ], TweetInput);
 let TweetResolver = class TweetResolver {
     async getTweets({ req, prisma }) {
-        const tweets = await prisma.tweets.findMany({
-            where: { userId: req.user.id },
-        });
-        const result = await (0, getTweets_1.getTweetsHelper)(tweets);
-        return result;
+        try {
+            const tweets = await prisma.tweets.findMany({
+                where: { userId: req.user.id },
+            });
+            const result = await (0, getTweets_1.getTweetsHelper)(tweets);
+            return result;
+        }
+        catch (e) {
+            console.log("ERROR: ", e);
+        }
     }
     async addTweets(tweetURLs, { req, prisma }) {
         try {
@@ -53,6 +58,7 @@ let TweetResolver = class TweetResolver {
             return true;
         }
         catch (e) {
+            console.log("ERROR: ", e);
             return false;
         }
     }

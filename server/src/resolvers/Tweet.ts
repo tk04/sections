@@ -31,13 +31,17 @@ export class TweetResolver {
   @Query(() => [Tweet])
   @UseMiddleware(auth)
   async getTweets(@Ctx() { req, prisma }: context) {
-    const tweets = await prisma.tweets.findMany({
-      where: { userId: req.user!.id },
-    });
+    try {
+      const tweets = await prisma.tweets.findMany({
+        where: { userId: req.user!.id },
+      });
 
-    const result = await getTweetsHelper(tweets);
+      const result = await getTweetsHelper(tweets);
 
-    return result;
+      return result;
+    } catch (e) {
+      console.log("ERROR: ", e);
+    }
   }
 
   @Mutation(() => Boolean)
@@ -57,6 +61,7 @@ export class TweetResolver {
 
       return true;
     } catch (e) {
+      console.log("ERROR: ", e);
       return false;
     }
   }

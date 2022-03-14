@@ -1,4 +1,4 @@
-query getTweets {
+query GetTweets {
   getTweets {
     ...TweetFragment
   }

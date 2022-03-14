@@ -22,7 +22,7 @@ const getTweetsHelper = async (tweets) => {
         // let results: Tweet[] = new Array();
         const results = await Promise.all(tweets.map(async (val) => {
             var _a, _b;
-            const url = val.tweet.split("status/")[1];
+            const url = val.tweet.split("status/")[1].split("?")[0];
             const tweetRes = await (0, axios_1.default)({
                 method: "GET",
                 url: `https://api.twitter.com/2/tweets/${url}?expansions=attachments.poll_ids,attachments.media_keys,author_id&user.fields=profile_image_url,verified&tweet.fields=public_metrics&media.fields=url,preview_image_url`,
@@ -51,7 +51,7 @@ const getTweetsHelper = async (tweets) => {
         return results;
     }
     catch (e) {
-        console.log("ERROR");
+        console.log("ERROR: ", e);
     }
 };
 exports.getTweetsHelper = getTweetsHelper;
