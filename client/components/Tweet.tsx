@@ -102,17 +102,17 @@ const Tweet: React.FC<TweetProps> = ({ tweet }) => {
             </div>
           ) : tweet.media.length == 4 ? (
             <div
-              className="grid grid-cols-[50%_50%] grid-rows-2 grid-flow-row-dense mt-3"
+              className="grid grid-cols-[50%_50%] grid-rows-2 grid-flow-row-dense mt-3 gap-1"
               style={{
-                width: "100%",
-                height: "400px",
-                maxHeight: "500px",
+                // width: "100%",
+                // height: "400px",
+                // maxHeight: "500px",
                 position: "relative",
               }}
             >
               {tweet.media.map((media, idx) => (
                 <section
-                  className={`relative col-span-1 row-span-1 pr-2`}
+                  className={`relative col-span-1 row-span-1 pr-1`}
                   key={media.url}
                   style={{
                     width: "100%",
