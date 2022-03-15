@@ -81,7 +81,7 @@ let TweetResolver = class TweetResolver {
             // console.log(tweetRes.data.includes.media);
             const user = tweetRes.data.includes.users[0];
             return {
-                url: url,
+                url: url.split("?")[0],
                 text,
                 id,
                 attachments,
@@ -110,11 +110,11 @@ let TweetResolver = class TweetResolver {
             await prisma.tweets.delete({
                 where: { id: tweet.id },
             });
-            return true;
+            return tweet.tweet;
         }
         catch (e) {
             console.log("ERROR: ", e);
-            return false;
+            return "error";
         }
     }
 };
@@ -143,7 +143,7 @@ __decorate([
     __metadata("design:returntype", Promise)
 ], TweetResolver.prototype, "getTweet", null);
 __decorate([
-    (0, type_graphql_1.Mutation)(() => Boolean),
+    (0, type_graphql_1.Mutation)(() => String),
     (0, type_graphql_1.UseMiddleware)(auth_1.auth),
     __param(0, (0, type_graphql_1.Arg)("url")),
     __param(1, (0, type_graphql_1.Ctx)()),

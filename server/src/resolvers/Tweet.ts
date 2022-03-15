@@ -98,7 +98,7 @@ export class TweetResolver {
 
       const user = tweetRes.data.includes.users[0];
       return {
-        url: url,
+        url: url.split("?")[0],
         text,
         id,
         attachments,
@@ -116,7 +116,7 @@ export class TweetResolver {
     }
   }
 
-  @Mutation(() => Boolean)
+  @Mutation(() => String)
   @UseMiddleware(auth)
   async deleteTweet(@Arg("url") url: string, @Ctx() { req, prisma }: context) {
     try {
@@ -131,10 +131,10 @@ export class TweetResolver {
         where: { id: tweet.id },
       });
 
-      return true;
+      return tweet.tweet;
     } catch (e) {
       console.log("ERROR: ", e);
-      return false;
+      return "error";
     }
   }
 }

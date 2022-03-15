@@ -29,12 +29,14 @@ const Navbar: React.FC<NavBarProps> = ({}) => {
           <li>Sections</li>
         </Link>
       </ul>
-      <ul className="lg:flex lg:space-x-14 xl:space-x-20 lg  mx-auto hidden">
-        <li>Home</li>
-        <li>Features</li>
-        <li>Pricing</li>
-        <li>About</li>
-      </ul>
+      {!data?.me && (
+        <ul className="lg:flex lg:space-x-14 xl:space-x-20 lg  mx-auto hidden">
+          <li>Home</li>
+          <li>Features</li>
+          <li>Pricing</li>
+          <li>About</li>
+        </ul>
+      )}
 
       {data && data.me ? (
         <Button auto light size="md" onClick={() => router.push("/profile")}>

@@ -1,8 +1,10 @@
 import { Button, Input, Loading } from "@nextui-org/react";
 import React, { useRef, useState } from "react";
 import Managetweets from "../components/ManageTweets";
-import Tweets from "../components/tweets";
+import Navbar from "../components/NavBar";
+import Tweets from "../components/Tweets";
 import {
+  GetTweetsDocument,
   TweetFragmentFragment,
   useAddTweetsMutation,
   useGetTweetMutation,
@@ -15,11 +17,22 @@ const Dashboard: React.FC<dashboardProps> = ({}) => {
   const [saveLoading, setLoading] = useState<boolean>(false);
   const [label, setLabel] = useState<string>("");
   const inputRef = useRef<HTMLInputElement>(null);
-  const [addTweets] = useAddTweetsMutation();
   const [getTweet, { data }] = useGetTweetMutation();
+  const [addTweets] = useAddTweetsMutation({
+    update: (cache) => {
+      const { getTweets } = cache.readQuery({ query: GetTweetsDocument })!;
+
+      cache.writeQuery({
+        query: GetTweetsDocument,
+        data: { getTweets: [...getTweets, ...tweets] },
+      });
+    },
+  });
   const clickHandler = (id: number) => {
     setTweets((prev) => {
-      return prev.filter((tweet) => tweet.id !== id);
+      const idx = prev.findIndex((tweet) => tweet.id === id);
+
+      return [...prev.slice(0, idx), ...prev.slice(idx + 1)];
     });
   };
   const tweetHandler = async () => {
@@ -53,38 +66,41 @@ const Dashboard: React.FC<dashboardProps> = ({}) => {
     }
   };
   return (
-    <div className="p-20">
-      <br />
-      <div className="flex flex-row items-center space-x-4">
-        <Input
-          size="md"
-          className="mb-2 w-60"
-          placeholder="Tweet URL"
-          aria-label="Tweet URL"
-          initialValue="https://twitter.com/_lordmax_/status/1503137288695341057?s=20&t=2y6GcTryK3R8jFNQCu6nCg"
-          ref={inputRef}
-          label={label}
-        />
+    <>
+      <Navbar />
+      <div className="p-20">
+        <br />
+        <div className="flex flex-row  space-x-4 justify-center">
+          <Input
+            size="md"
+            className="mb-2 w-60"
+            placeholder="Tweet URL"
+            aria-label="Tweet URL"
+            initialValue="https://twitter.com/_lordmax_/status/1503137288695341057?s=20&t=2y6GcTryK3R8jFNQCu6nCg"
+            ref={inputRef}
+            label={label}
+          />
 
-        <Button onClick={tweetHandler} size="md" light bordered>
-          Preview
-        </Button>
-      </div>
-      {tweets && (
-        <div>
-          <Tweets tweets={tweets} clickEvent={clickHandler} />
+          <Button onClick={tweetHandler} size="md" light bordered>
+            Preview
+          </Button>
         </div>
-      )}
-      <br />
-      <br />
-      {tweets.length > 0 && !saveLoading && (
-        <Button onClick={saveHandler} size="lg" className="w-80 m-auto">
-          Save
-        </Button>
-      )}
-      {saveLoading && <Loading />}
-      <Managetweets refresh={saveLoading} />
-    </div>
+        {tweets && (
+          <div>
+            <Tweets tweets={tweets} clickEvent={clickHandler} />
+          </div>
+        )}
+        <br />
+        <br />
+        {tweets.length > 0 && !saveLoading && (
+          <Button onClick={saveHandler} size="lg" className="w-80 m-auto">
+            Save
+          </Button>
+        )}
+        {saveLoading && <Loading />}
+        <Managetweets />
+      </div>
+    </>
   );
 };
 

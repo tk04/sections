@@ -33,7 +33,7 @@ export type Media = {
 export type Mutation = {
   __typename?: 'Mutation';
   addTweets: Scalars['Boolean'];
-  deleteTweet: Scalars['Boolean'];
+  deleteTweet: Scalars['String'];
   getTweet: Tweet;
   login: UserResponse;
   signInWithGoogle: UserResponse;
@@ -160,7 +160,7 @@ export type DeleteTweetMutationVariables = Exact<{
 }>;
 
 
-export type DeleteTweetMutation = { __typename?: 'Mutation', deleteTweet: boolean };
+export type DeleteTweetMutation = { __typename?: 'Mutation', deleteTweet: string };
 
 export type GetTweetMutationVariables = Exact<{
   url: Scalars['String'];
