@@ -15,22 +15,16 @@ const Tweet: React.FC<TweetProps> = ({ tweet, clickEvent }) => {
     tweet.pollOptions &&
     tweet.pollOptions.reduce((acc, cur) => acc + cur.votes, 0);
   console.log("TOTAL VOTES: ", totalVotes);
-  const link = tweet.text!.split("https://t.co")[1]
-    ? "https://t.co" + tweet.text!.split("https://t.co")[1]
-    : null;
+  // const link = tweet.text!.split("https://t.co")[1]
+  //   ? "https://t.co" + tweet.text!.split("https://t.co")[1]
+  //   : null;
 
   const tweetHandler = () => {
-    if (link) {
-      window.open(link);
-    } else {
-      return;
-    }
+    window.open(tweet.url);
   };
   return (
     <div
-      className={`max-w-[300px] p-3 ${
-        link && "cursor-pointer hover:bg-gray-50 rounded-lg"
-      }`}
+      className={`max-w-[300px] p-3 cursor-pointer hover:bg-gray-50 rounded-lg"`}
       style={{
         width: "300px",
         minWidth: "300px",

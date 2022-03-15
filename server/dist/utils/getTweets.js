@@ -37,6 +37,7 @@ const getTweetsHelper = async (tweets) => {
             // console.log("TWEET: ", tweet);
             const user = tweetRes.data.includes.users[0];
             return {
+                url: val.tweet.split("?")[0],
                 text,
                 id,
                 likes,
