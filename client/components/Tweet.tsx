@@ -14,17 +14,13 @@ const Tweet: React.FC<TweetProps> = ({ tweet, clickEvent }) => {
   const totalVotes =
     tweet.pollOptions &&
     tweet.pollOptions.reduce((acc, cur) => acc + cur.votes, 0);
-  console.log("TOTAL VOTES: ", totalVotes);
-  // const link = tweet.text!.split("https://t.co")[1]
-  //   ? "https://t.co" + tweet.text!.split("https://t.co")[1]
-  //   : null;
 
   const tweetHandler = () => {
     window.open(tweet.url);
   };
   return (
     <div
-      className={`max-w-[300px] p-3 cursor-pointer hover:bg-gray-50 rounded-lg"`}
+      className={`max-w-[300px] p-3 cursor-pointer hover:bg-gray-50 rounded-xg"`}
       style={{
         width: "300px",
         minWidth: "300px",
@@ -230,7 +226,9 @@ const Tweet: React.FC<TweetProps> = ({ tweet, clickEvent }) => {
             >
               <div className="flex justify-between">
                 <p>{poll.label}</p>
-                <p className="text-gray-500">{poll.votes}</p>
+                <p className="text-gray-500">
+                  {((poll.votes / totalVotes!) * 100).toFixed(2)}%
+                </p>
               </div>
             </div>
           ))}

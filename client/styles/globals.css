@@ -32,4 +32,6 @@ a {
   column-gap: 1px;
   -moz-columns: 300px auto;
   columns: 300px auto;
+  -webkit-column-gap: 1px;
+  -moz-column-gap: 1px;
 }
