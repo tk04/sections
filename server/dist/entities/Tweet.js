@@ -115,6 +115,10 @@ __decorate([
     (0, type_graphql_1.Field)(() => [Media], { nullable: true }),
     __metadata("design:type", Array)
 ], Tweet.prototype, "media", void 0);
+__decorate([
+    (0, type_graphql_1.Field)(() => String, { nullable: true }),
+    __metadata("design:type", String)
+], Tweet.prototype, "url", void 0);
 Tweet = __decorate([
     (0, type_graphql_1.ObjectType)()
 ], Tweet);

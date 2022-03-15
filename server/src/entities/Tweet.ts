@@ -53,4 +53,6 @@ export class Tweet {
   pollOptions: Poll[];
   @Field(() => [Media], { nullable: true })
   media: Media[];
+  @Field(() => String, { nullable: true })
+  url?: string;
 }

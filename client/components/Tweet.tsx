@@ -7,9 +7,10 @@ import { FaRegComment } from "react-icons/fa";
 import { BsFillPatchCheckFill } from "react-icons/bs";
 interface TweetProps {
   tweet: TweetFragmentFragment;
+  clickEvent?: (id: number) => void;
 }
 
-const Tweet: React.FC<TweetProps> = ({ tweet }) => {
+const Tweet: React.FC<TweetProps> = ({ tweet, clickEvent }) => {
   const link = tweet.text.split("https://t.co")[1]
     ? "https://t.co" + tweet.text.split("https://t.co")[1]
     : null;
@@ -30,7 +31,7 @@ const Tweet: React.FC<TweetProps> = ({ tweet }) => {
         width: "300px",
         minWidth: "300px",
       }}
-      onClick={tweetHandler}
+      onClick={clickEvent ? clickEvent.bind(null, tweet.id) : tweetHandler}
     >
       <div className="flex space-x-2 mb-2">
         <Image

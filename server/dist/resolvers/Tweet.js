@@ -81,6 +81,7 @@ let TweetResolver = class TweetResolver {
             // console.log(tweetRes.data.includes.media);
             const user = tweetRes.data.includes.users[0];
             return {
+                url: url,
                 text,
                 id,
                 attachments,

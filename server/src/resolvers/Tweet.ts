@@ -47,8 +47,7 @@ export class TweetResolver {
   @Mutation(() => Boolean)
   @UseMiddleware(auth)
   async addTweets(
-    @Arg("tweetURLs", () => [String])
-    tweetURLs: string[],
+    @Arg("tweetURLs", () => [String]) tweetURLs: string[],
     @Ctx() { req, prisma }: context
   ) {
     try {
@@ -99,6 +98,7 @@ export class TweetResolver {
 
       const user = tweetRes.data.includes.users[0];
       return {
+        url: url,
         text,
         id,
         attachments,

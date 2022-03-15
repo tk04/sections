@@ -97,7 +97,8 @@ export type Tweet = {
   pollOptions?: Maybe<Array<Poll>>;
   replies: Scalars['Float'];
   retweets: Scalars['Float'];
-  text: Scalars['String'];
+  text?: Maybe<Scalars['String']>;
+  url?: Maybe<Scalars['String']>;
   user: TweetUser;
 };
 
@@ -129,7 +130,7 @@ export type UserError = {
 
 export type UserResponse = User | UserError;
 
-export type TweetFragmentFragment = { __typename?: 'Tweet', id: number, likes: number, text: string, retweets: number, replies: number, media?: Array<{ __typename?: 'Media', url?: string | null, preview_image_url?: string | null, type: string, width?: number | null, height?: number | null }> | null, user: { __typename?: 'TweetUser', name: string, profile_image_url: string, id: number, username: string, verified: boolean } };
+export type TweetFragmentFragment = { __typename?: 'Tweet', id: number, url?: string | null, likes: number, text?: string | null, retweets: number, replies: number, media?: Array<{ __typename?: 'Media', url?: string | null, preview_image_url?: string | null, type: string, width?: number | null, height?: number | null }> | null, user: { __typename?: 'TweetUser', name: string, profile_image_url: string, id: number, username: string, verified: boolean } };
 
 export type UserErrorFragmentFragment = { __typename?: 'UserError', path: string, message: string };
 
@@ -153,7 +154,7 @@ export type GetTweetMutationVariables = Exact<{
 }>;
 
 
-export type GetTweetMutation = { __typename?: 'Mutation', getTweet: { __typename?: 'Tweet', id: number, likes: number, text: string, retweets: number, replies: number, media?: Array<{ __typename?: 'Media', url?: string | null, preview_image_url?: string | null, type: string, width?: number | null, height?: number | null }> | null, user: { __typename?: 'TweetUser', name: string, profile_image_url: string, id: number, username: string, verified: boolean } } };
+export type GetTweetMutation = { __typename?: 'Mutation', getTweet: { __typename?: 'Tweet', id: number, url?: string | null, likes: number, text?: string | null, retweets: number, replies: number, media?: Array<{ __typename?: 'Media', url?: string | null, preview_image_url?: string | null, type: string, width?: number | null, height?: number | null }> | null, user: { __typename?: 'TweetUser', name: string, profile_image_url: string, id: number, username: string, verified: boolean } } };
 
 export type CreateUserMutationVariables = Exact<{
   code: Scalars['String'];
@@ -186,7 +187,7 @@ export type TwitterAuthMutation = { __typename?: 'Mutation', signInWithTwitter: 
 export type GetTweetsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetTweetsQuery = { __typename?: 'Query', getTweets: Array<{ __typename?: 'Tweet', id: number, likes: number, text: string, retweets: number, replies: number, media?: Array<{ __typename?: 'Media', url?: string | null, preview_image_url?: string | null, type: string, width?: number | null, height?: number | null }> | null, user: { __typename?: 'TweetUser', name: string, profile_image_url: string, id: number, username: string, verified: boolean } }> };
+export type GetTweetsQuery = { __typename?: 'Query', getTweets: Array<{ __typename?: 'Tweet', id: number, url?: string | null, likes: number, text?: string | null, retweets: number, replies: number, media?: Array<{ __typename?: 'Media', url?: string | null, preview_image_url?: string | null, type: string, width?: number | null, height?: number | null }> | null, user: { __typename?: 'TweetUser', name: string, profile_image_url: string, id: number, username: string, verified: boolean } }> };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -196,6 +197,7 @@ export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: st
 export const TweetFragmentFragmentDoc = gql`
     fragment TweetFragment on Tweet {
   id
+  url
   likes
   text
   retweets

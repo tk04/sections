@@ -1,6 +1,6 @@
-import { Grid } from "@nextui-org/react";
 import React from "react";
 import TweetTest from "../components/Tweet";
+import Tweets from "../components/tweets";
 import { useGetTweetsQuery } from "../generated/graphql";
 
 interface tweetProps {}
@@ -8,14 +8,10 @@ interface tweetProps {}
 const Tweet: React.FC<tweetProps> = ({}) => {
   const { data } = useGetTweetsQuery();
   return (
-    <div className="tweets px-20 m-auto">
+    <div>
       {data && data.getTweets && (
         <>
-          {data.getTweets.map((tweet) => (
-            <div key={tweet.id} className="tweetChild">
-              <TweetTest tweet={tweet} />
-            </div>
-          ))}
+          <Tweets tweets={data.getTweets} />
         </>
       )}
     </div>

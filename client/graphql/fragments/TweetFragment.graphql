@@ -1,5 +1,6 @@
 fragment TweetFragment on Tweet {
   id
+  url
   likes
   text
   retweets
