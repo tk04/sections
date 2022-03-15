@@ -7,7 +7,7 @@ import { FiHeart } from "react-icons/fi";
 import { TweetFragmentFragment } from "../generated/graphql";
 interface TweetProps {
   tweet: TweetFragmentFragment;
-  clickEvent?: (id: number) => void;
+  clickEvent?: (id: number, url: string) => void;
 }
 
 const Tweet: React.FC<TweetProps> = ({ tweet, clickEvent }) => {
@@ -25,7 +25,9 @@ const Tweet: React.FC<TweetProps> = ({ tweet, clickEvent }) => {
         width: "300px",
         minWidth: "300px",
       }}
-      onClick={clickEvent ? clickEvent.bind(null, tweet.id) : tweetHandler}
+      onClick={
+        clickEvent ? clickEvent.bind(null, tweet.id, tweet.url) : tweetHandler
+      }
     >
       <div className="flex space-x-2 mb-2">
         <Image

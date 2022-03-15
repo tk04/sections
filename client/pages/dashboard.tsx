@@ -1,10 +1,8 @@
 import { Button, Input, Loading } from "@nextui-org/react";
-
 import React, { useRef, useState } from "react";
-import Tweet from "../components/Tweet";
+import Managetweets from "../components/ManageTweets";
 import Tweets from "../components/tweets";
 import {
-  AddTweetsMutationVariables,
   TweetFragmentFragment,
   useAddTweetsMutation,
   useGetTweetMutation,
@@ -17,7 +15,7 @@ const Dashboard: React.FC<dashboardProps> = ({}) => {
   const [saveLoading, setLoading] = useState<boolean>(false);
   const [label, setLabel] = useState<string>("");
   const inputRef = useRef<HTMLInputElement>(null);
-  const [addTweets, { data: addData, loading }] = useAddTweetsMutation();
+  const [addTweets] = useAddTweetsMutation();
   const [getTweet, { data }] = useGetTweetMutation();
   const clickHandler = (id: number) => {
     setTweets((prev) => {
@@ -85,6 +83,7 @@ const Dashboard: React.FC<dashboardProps> = ({}) => {
         </Button>
       )}
       {saveLoading && <Loading />}
+      <Managetweets refresh={saveLoading} />
     </div>
   );
 };

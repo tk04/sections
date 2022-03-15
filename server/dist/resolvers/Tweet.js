@@ -50,7 +50,7 @@ let TweetResolver = class TweetResolver {
     async addTweets(tweetURLs, { req, prisma }) {
         try {
             const modTweets = tweetURLs.map((tweet) => {
-                return { tweet: tweet, userId: req.user.id };
+                return { tweet: tweet.split("?")[0], userId: req.user.id };
             });
             const tweets = await prisma.tweets.createMany({
                 data: modTweets,
@@ -99,6 +99,24 @@ let TweetResolver = class TweetResolver {
             return "error";
         }
     }
+    async deleteTweet(url, { req, prisma }) {
+        try {
+            const tweet = await prisma.tweets.findFirst({
+                where: { tweet: url, userId: req.user.id },
+            });
+            if (!tweet) {
+                return true;
+            }
+            await prisma.tweets.delete({
+                where: { id: tweet.id },
+            });
+            return true;
+        }
+        catch (e) {
+            console.log("ERROR: ", e);
+            return false;
+        }
+    }
 };
 __decorate([
     (0, type_graphql_1.Query)(() => [Tweet_1.Tweet]),
@@ -124,6 +142,15 @@ __decorate([
     __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", Promise)
 ], TweetResolver.prototype, "getTweet", null);
+__decorate([
+    (0, type_graphql_1.Mutation)(() => Boolean),
+    (0, type_graphql_1.UseMiddleware)(auth_1.auth),
+    __param(0, (0, type_graphql_1.Arg)("url")),
+    __param(1, (0, type_graphql_1.Ctx)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, Object]),
+    __metadata("design:returntype", Promise)
+], TweetResolver.prototype, "deleteTweet", null);
 TweetResolver = __decorate([
     (0, type_graphql_1.Resolver)()
 ], TweetResolver);

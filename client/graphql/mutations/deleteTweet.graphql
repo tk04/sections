@@ -1,0 +1,3 @@
+mutation DeleteTweet($url: String!) {
+  deleteTweet(url: $url)
+}

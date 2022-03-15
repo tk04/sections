@@ -3,7 +3,7 @@ import { TweetFragmentFragment } from "../generated/graphql";
 import Tweet from "./Tweet";
 interface tweetsProps {
   tweets: TweetFragmentFragment[];
-  clickEvent?: (id: number) => void;
+  clickEvent?: (id: number, url: string) => void;
 }
 
 const Tweets: React.FC<tweetsProps> = ({ tweets, clickEvent }) => {

@@ -52,7 +52,7 @@ export class TweetResolver {
   ) {
     try {
       const modTweets = tweetURLs.map((tweet) => {
-        return { tweet: tweet, userId: req.user!.id };
+        return { tweet: tweet.split("?")[0], userId: req.user!.id };
       });
       const tweets = await prisma.tweets.createMany({
         data: modTweets as TweetsCreateManyInput[],
@@ -113,6 +113,28 @@ export class TweetResolver {
       console.log("ERROR: ", e.response.data.errors);
       console.log("ERROR: ", e.response.data.errors[0].parameters);
       return "error";
+    }
+  }
+
+  @Mutation(() => Boolean)
+  @UseMiddleware(auth)
+  async deleteTweet(@Arg("url") url: string, @Ctx() { req, prisma }: context) {
+    try {
+      const tweet = await prisma.tweets.findFirst({
+        where: { tweet: url, userId: req.user!.id },
+      });
+      if (!tweet) {
+        return true;
+      }
+
+      await prisma.tweets.delete({
+        where: { id: tweet.id },
+      });
+
+      return true;
+    } catch (e) {
+      console.log("ERROR: ", e);
+      return false;
     }
   }
 }

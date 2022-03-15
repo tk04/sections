@@ -54,5 +54,5 @@ export class Tweet {
   @Field(() => [Media], { nullable: true })
   media: Media[];
   @Field()
-  url?: string;
+  url: string;
 }
