@@ -1,0 +1,12 @@
+.tweetChild {
+  display: block;
+  -webkit-column-break-inside: avoid;
+  page-break-inside: avoid;
+  break-inside: avoid-column;
+  width: 250px;
+}
+.tweets {
+  -webkit-columns: 300px auto; /* Chrome, Safari, Opera */
+  -moz-columns: 300px auto; /* Firefox */
+  columns: 300px auto;
+}

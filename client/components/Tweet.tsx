@@ -9,7 +9,7 @@ interface TweetProps {
   tweet: TweetFragmentFragment;
 }
 
-const TweetTest: React.FC<TweetProps> = ({ tweet }) => {
+const Tweet: React.FC<TweetProps> = ({ tweet }) => {
   const link = tweet.text.split("https://t.co")[1]
     ? "https://t.co" + tweet.text.split("https://t.co")[1]
     : null;
@@ -23,9 +23,13 @@ const TweetTest: React.FC<TweetProps> = ({ tweet }) => {
   };
   return (
     <div
-      className={`max-w-sm p-3 ${
+      className={`max-w-[300px] p-3 ${
         link && "cursor-pointer hover:bg-gray-50 rounded-lg"
       }`}
+      style={{
+        width: "300px",
+        minWidth: "300px",
+      }}
       onClick={tweetHandler}
     >
       <div className="flex space-x-2 mb-2">
@@ -218,4 +222,4 @@ const TweetTest: React.FC<TweetProps> = ({ tweet }) => {
   );
 };
 
-export default TweetTest;
+export default Tweet;
