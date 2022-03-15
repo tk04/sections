@@ -29,6 +29,7 @@ a {
 }
 .tweets {
   -webkit-columns: 300px auto;
+  column-gap: 1px;
   -moz-columns: 300px auto;
   columns: 300px auto;
 }

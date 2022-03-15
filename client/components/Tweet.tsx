@@ -1,18 +1,22 @@
-import React from "react";
 import Image from "next/image";
-import { TweetFragmentFragment } from "../generated/graphql";
-import { FiHeart } from "react-icons/fi";
+import React from "react";
 import { AiOutlineRetweet } from "react-icons/ai";
-import { FaRegComment } from "react-icons/fa";
 import { BsFillPatchCheckFill } from "react-icons/bs";
+import { FaRegComment } from "react-icons/fa";
+import { FiHeart } from "react-icons/fi";
+import { TweetFragmentFragment } from "../generated/graphql";
 interface TweetProps {
   tweet: TweetFragmentFragment;
   clickEvent?: (id: number) => void;
 }
 
 const Tweet: React.FC<TweetProps> = ({ tweet, clickEvent }) => {
-  const link = tweet.text.split("https://t.co")[1]
-    ? "https://t.co" + tweet.text.split("https://t.co")[1]
+  const totalVotes =
+    tweet.pollOptions &&
+    tweet.pollOptions.reduce((acc, cur) => acc + cur.votes, 0);
+  console.log("TOTAL VOTES: ", totalVotes);
+  const link = tweet.text!.split("https://t.co")[1]
+    ? "https://t.co" + tweet.text!.split("https://t.co")[1]
     : null;
 
   const tweetHandler = () => {
@@ -51,7 +55,7 @@ const Tweet: React.FC<TweetProps> = ({ tweet, clickEvent }) => {
           <p className=" text-gray-400">@{tweet.user.username}</p>
         </div>
       </div>
-      <h1>{tweet.text.split("https://t.co")[0]}</h1>
+      <h1>{tweet.text!.split("https://t.co")[0]}</h1>
 
       {tweet.media && (
         <div>
@@ -173,35 +177,69 @@ const Tweet: React.FC<TweetProps> = ({ tweet, clickEvent }) => {
                   width: `${tweet.media[0].width}`,
                 }}
               >
-                {tweet.media[0].height! > 400 ? (
-                  <Image
-                    src={tweet.media[0].url!}
-                    alt="media"
-                    width={tweet.media[0].width!}
-                    height={
-                      tweet.media[0].height! > 1600
-                        ? 1600
-                        : tweet.media[0].height!
-                    }
-                    className="rounded-lg"
-                    objectFit="cover"
-                    priority
-                  />
+                {tweet.media[0].type == "photo" ? (
+                  <>
+                    {tweet.media[0].height! > 400 ? (
+                      <Image
+                        src={tweet.media[0].url!}
+                        alt="media"
+                        width={tweet.media[0].width!}
+                        height={
+                          tweet.media[0].height! > 1600
+                            ? 1600
+                            : tweet.media[0].height!
+                        }
+                        className="rounded-lg"
+                        objectFit="cover"
+                        priority
+                      />
+                    ) : (
+                      <Image
+                        src={tweet.media[0].url!}
+                        alt="media"
+                        // width={tweet.media[0].width!}
+                        // height={tweet.media[0].height!}
+                        className="rounded-lg"
+                        objectFit="cover"
+                        priority
+                        layout="fill"
+                      />
+                    )}
+                  </>
                 ) : (
-                  <Image
-                    src={tweet.media[0].url!}
-                    alt="media"
-                    // width={tweet.media[0].width!}
-                    // height={tweet.media[0].height!}
-                    className="rounded-lg"
-                    objectFit="cover"
-                    priority
-                    layout="fill"
-                  />
+                  <>
+                    {tweet.media[0].preview_image_url && (
+                      <Image
+                        src={tweet.media[0].preview_image_url}
+                        alt="media"
+                        // width={tweet.media[0].width!}
+                        // height={tweet.media[0].height!}
+                        className="rounded-lg"
+                        objectFit="cover"
+                        priority
+                        layout="fill"
+                      />
+                    )}
+                  </>
                 )}
               </div>
             )
           )}
+        </div>
+      )}
+      {tweet.pollOptions && tweet.pollOptions.length > 0 && (
+        <div className=" space-y-3 mt-3">
+          {tweet.pollOptions.map((poll, idx) => (
+            <div
+              key={idx}
+              className=" bg-slate-100 rounded-xl p-2 px-5 text-gray-600"
+            >
+              <div className="flex justify-between">
+                <p>{poll.label}</p>
+                <p className="text-gray-500">{poll.votes}</p>
+              </div>
+            </div>
+          ))}
         </div>
       )}
 
