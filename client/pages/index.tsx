@@ -41,22 +41,27 @@ const Index: React.FC<indexProps> = ({}) => {
   return (
     <>
       <Navbar />j
-      <div className="mx-20 ml-64 grid grid-cols-[30%_70%] grid-flow-col-dense h-[90vh] ">
-        <article className="flex flex-col justify-center h-[80vh]">
-          <h1 className=" text-7xl font-bold">
-            Make your website <br />
-            stand out
+      <div
+        // className="mx-20 ml-64 grid grid-cols-[30%_70%] grid-flow-col-dense h-[90vh] "
+        className="flex flex-col items-center mt-24"
+      >
+        <article>
+          <h1 className=" text-6xl text-center font-bold">
+            Make your website stand out
           </h1>
           <br />
-          <p className="w-96">
+          <br />
+          <p className="w-fit mx-auto text-center ">
             Customise your site with plugin with custom designed section
             components in less than 20 seconds. Choose from the wide range of
+            <br />
             sections we provide and paste the URL into your website.
           </p>
+          <br />
           <Button
             shadow
             size="xl"
-            className="mt-4 text-lg py-6 w-full rounded-none"
+            className="mt-4 text-lg py-6  w-56 m-auto rounded-none"
             onClick={SignupHandler}
           >
             Get started
@@ -71,9 +76,9 @@ const Index: React.FC<indexProps> = ({}) => {
           <div></div>
         </article>
       </div>
-      <div className="w-fit font-extrabold text-3xl m-auto ">
+      {/* <div className="w-fit font-extrabold text-3xl m-auto ">
         Customized Sections
-      </div>
+      </div> */}
       <br />
       <IframeResizer
         forwardRef={iframeRef}

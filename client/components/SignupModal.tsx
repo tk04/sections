@@ -10,6 +10,7 @@ interface SignupModalProps {
 const Signupmodal: React.FC<SignupModalProps> = ({ open, close }) => {
   return (
     <Modal
+      blur
       closeButton
       aria-labelledby="modal-title"
       open={open}
