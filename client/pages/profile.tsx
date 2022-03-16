@@ -10,7 +10,7 @@ import {
 import Image from "next/image";
 import TSVG from "../public/TwitterLogo.svg";
 import Googlesvg from "../components/GoogleSVG";
-import { off } from "process";
+
 interface profileProps {}
 
 const Profile: React.FC<profileProps> = ({}) => {
@@ -22,7 +22,7 @@ const Profile: React.FC<profileProps> = ({}) => {
       const { me } = cache.readQuery({ query: MeDocument }) as {
         me: UserResponse;
       };
-      // console.log("NEW DATA: ", updateMe);
+      console.log("NEW DATA: ", updateMe);
       if (updateMe?.__typename == "FullUser") {
         cache.writeQuery({
           query: MeDocument,
@@ -50,6 +50,17 @@ const Profile: React.FC<profileProps> = ({}) => {
     };
     await updateMe({
       variables: { input },
+      optimisticResponse: {
+        __typename: "Mutation",
+        updateMe: {
+          __typename: "FullUser",
+          twitter: data!.me!.twitter,
+          google: data!.me!.google,
+          picture: data!.me!.picture,
+          id: data!.me!.id,
+          ...input,
+        },
+      },
     });
   };
   return (
