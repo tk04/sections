@@ -3,7 +3,7 @@ import { buildSchema } from "type-graphql";
 import express from "express";
 import { ApolloServer, gql } from "apollo-server-express";
 import { ApolloServerPluginLandingPageGraphQLPlayground } from "apollo-server-core";
-import { SignUpResolver } from "./resolvers/SignUp";
+import { UserResolver } from "./resolvers/User";
 import { PrismaClient } from "@prisma/client";
 import "dotenv/config";
 import cookieParser from "cookie-parser";
@@ -16,7 +16,7 @@ const main = async () => {
   const prisma = new PrismaClient();
   const apolloServer = new ApolloServer({
     plugins: [ApolloServerPluginLandingPageGraphQLPlayground()],
-    schema: await buildSchema({ resolvers: [SignUpResolver, TweetResolver] }),
+    schema: await buildSchema({ resolvers: [UserResolver, TweetResolver] }),
     context: ({ req, res }) => ({ req, res, prisma }),
   });
   await apolloServer.start();

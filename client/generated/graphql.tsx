@@ -52,6 +52,7 @@ export type Mutation = {
   signInWithGoogle: UserResponse;
   signInWithTwitter: UserResponse;
   signup: UserResponse;
+  updateMe: UserResponse;
 };
 
 
@@ -87,6 +88,11 @@ export type MutationSignInWithTwitterArgs = {
 
 export type MutationSignupArgs = {
   input: SignupInput;
+};
+
+
+export type MutationUpdateMeArgs = {
+  input: UpdateInput;
 };
 
 export type Poll = {
@@ -143,6 +149,11 @@ export type UserError = {
 };
 
 export type UserResponse = FullUser | UserError;
+
+export type UpdateInput = {
+  email: Scalars['String'];
+  name: Scalars['String'];
+};
 
 export type TweetFragmentFragment = { __typename?: 'Tweet', id: number, url: string, likes: number, text?: string | null, retweets: number, replies: number, media?: Array<{ __typename?: 'Media', url?: string | null, preview_image_url?: string | null, type: string, width?: number | null, height?: number | null }> | null, user: { __typename?: 'TweetUser', name: string, profile_image_url: string, id: number, username: string, verified: boolean }, pollOptions?: Array<{ __typename?: 'Poll', label: string, votes: number }> | null };
 
@@ -204,6 +215,13 @@ export type TwitterAuthMutationVariables = Exact<{
 
 
 export type TwitterAuthMutation = { __typename?: 'Mutation', signInWithTwitter: { __typename?: 'FullUser', id: string, name: string, email?: string | null, picture?: string | null, twitter: boolean, google: boolean } | { __typename?: 'UserError', path: string, message: string } };
+
+export type UpdateMeMutationVariables = Exact<{
+  input: UpdateInput;
+}>;
+
+
+export type UpdateMeMutation = { __typename?: 'Mutation', updateMe: { __typename: 'FullUser', name: string, email?: string | null, id: string, twitter: boolean, google: boolean, picture?: string | null } | { __typename: 'UserError', path: string, message: string } };
 
 export type GetMyTweetsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -500,6 +518,51 @@ export function useTwitterAuthMutation(baseOptions?: Apollo.MutationHookOptions<
 export type TwitterAuthMutationHookResult = ReturnType<typeof useTwitterAuthMutation>;
 export type TwitterAuthMutationResult = Apollo.MutationResult<TwitterAuthMutation>;
 export type TwitterAuthMutationOptions = Apollo.BaseMutationOptions<TwitterAuthMutation, TwitterAuthMutationVariables>;
+export const UpdateMeDocument = gql`
+    mutation UpdateMe($input: updateInput!) {
+  updateMe(input: $input) {
+    __typename
+    ... on FullUser {
+      name
+      email
+      id
+      twitter
+      google
+      picture
+    }
+    ... on UserError {
+      path
+      message
+    }
+  }
+}
+    `;
+export type UpdateMeMutationFn = Apollo.MutationFunction<UpdateMeMutation, UpdateMeMutationVariables>;
+
+/**
+ * __useUpdateMeMutation__
+ *
+ * To run a mutation, you first call `useUpdateMeMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateMeMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateMeMutation, { data, loading, error }] = useUpdateMeMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUpdateMeMutation(baseOptions?: Apollo.MutationHookOptions<UpdateMeMutation, UpdateMeMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdateMeMutation, UpdateMeMutationVariables>(UpdateMeDocument, options);
+      }
+export type UpdateMeMutationHookResult = ReturnType<typeof useUpdateMeMutation>;
+export type UpdateMeMutationResult = Apollo.MutationResult<UpdateMeMutation>;
+export type UpdateMeMutationOptions = Apollo.BaseMutationOptions<UpdateMeMutation, UpdateMeMutationVariables>;
 export const GetMyTweetsDocument = gql`
     query GetMyTweets {
   getMyTweets {

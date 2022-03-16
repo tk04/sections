@@ -1,0 +1,17 @@
+mutation UpdateMe($input: updateInput!) {
+  updateMe(input: $input) {
+    __typename
+    ... on FullUser {
+      name
+      email
+      id
+      twitter
+      google
+      picture
+    }
+    ... on UserError {
+      path
+      message
+    }
+  }
+}

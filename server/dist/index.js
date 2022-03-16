@@ -8,7 +8,7 @@ const type_graphql_1 = require("type-graphql");
 const express_1 = __importDefault(require("express"));
 const apollo_server_express_1 = require("apollo-server-express");
 const apollo_server_core_1 = require("apollo-server-core");
-const SignUp_1 = require("./resolvers/SignUp");
+const User_1 = require("./resolvers/User");
 const client_1 = require("@prisma/client");
 require("dotenv/config");
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
@@ -21,7 +21,7 @@ const main = async () => {
     const prisma = new client_1.PrismaClient();
     const apolloServer = new apollo_server_express_1.ApolloServer({
         plugins: [(0, apollo_server_core_1.ApolloServerPluginLandingPageGraphQLPlayground)()],
-        schema: await (0, type_graphql_1.buildSchema)({ resolvers: [SignUp_1.SignUpResolver, Tweet_1.TweetResolver] }),
+        schema: await (0, type_graphql_1.buildSchema)({ resolvers: [User_1.UserResolver, Tweet_1.TweetResolver] }),
         context: ({ req, res }) => ({ req, res, prisma }),
     });
     await apolloServer.start();

@@ -1,4 +1,4 @@
-import { TwitterLogin } from "./../utils/TwitterLogin";
+import { TwitterLogin } from "../utils/TwitterLogin";
 import { context, GoogleIdToken } from "../types/types";
 import argon2 from "argon2";
 import { User } from "../entities/user";
@@ -12,12 +12,14 @@ import {
   ObjectType,
   Query,
   Resolver,
+  UseMiddleware,
 } from "type-graphql";
 
 import jwt from "jsonwebtoken";
 import "dotenv/config";
 import { setToken } from "../utils/setToken";
 import { GoogleLogin } from "../utils/GoogleLogin";
+import { auth } from "../middleware/auth";
 
 @InputType()
 class SignupInput {
@@ -27,6 +29,13 @@ class SignupInput {
   email: string;
   @Field()
   password: string;
+}
+@InputType()
+class updateInput {
+  @Field()
+  name: string;
+  @Field()
+  email: string;
 }
 @InputType()
 class LoginInput {
@@ -59,7 +68,7 @@ const UserResponse = createUnionType({
   },
 });
 @Resolver(User)
-export class SignUpResolver {
+export class UserResolver {
   @Query(() => String)
   hello() {
     return "Hello World";
@@ -91,6 +100,33 @@ export class SignUpResolver {
       }
     }
   }
+
+  @Mutation(() => UserResponse)
+  @UseMiddleware(auth)
+  async updateMe(
+    @Ctx() { prisma, req }: context,
+    @Arg("input") input: updateInput
+  ) {
+    try {
+      const user = await prisma.user.update({
+        where: { id: req!.user!.id },
+        data: input,
+      });
+      const response: FullUser = {
+        ...user,
+        twitter: !!user.twitterId,
+        google: !!user.googleId,
+      };
+      console.log(response);
+      return response;
+    } catch (e) {
+      return {
+        path: "update",
+        message: "Could not update user",
+      } as UserError;
+    }
+  }
+
   @Mutation(() => UserResponse)
   async signup(
     @Arg("input", () => SignupInput) input: SignupInput,
