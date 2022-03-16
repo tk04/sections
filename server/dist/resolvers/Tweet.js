@@ -35,10 +35,22 @@ TweetInput = __decorate([
     (0, type_graphql_1.InputType)()
 ], TweetInput);
 let TweetResolver = class TweetResolver {
-    async getTweets({ req, prisma }) {
+    async getMyTweets({ req, prisma }) {
         try {
             const tweets = await prisma.tweets.findMany({
                 where: { userId: req.user.id },
+            });
+            const result = await (0, getTweets_1.getTweetsHelper)(tweets);
+            return result;
+        }
+        catch (e) {
+            console.log("ERROR: ", e);
+        }
+    }
+    async getTweets({ prisma }, id) {
+        try {
+            const tweets = await prisma.tweets.findMany({
+                where: { userId: id },
             });
             const result = await (0, getTweets_1.getTweetsHelper)(tweets);
             return result;
@@ -124,6 +136,14 @@ __decorate([
     __param(0, (0, type_graphql_1.Ctx)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], TweetResolver.prototype, "getMyTweets", null);
+__decorate([
+    (0, type_graphql_1.Query)(() => [Tweet_1.Tweet]),
+    __param(0, (0, type_graphql_1.Ctx)()),
+    __param(1, (0, type_graphql_1.Arg)("id")),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object, String]),
     __metadata("design:returntype", Promise)
 ], TweetResolver.prototype, "getTweets", null);
 __decorate([

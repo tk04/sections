@@ -88,7 +88,7 @@ const Index: React.FC<indexProps> = ({}) => {
         // log
         onMessage={onMessage}
         onResized={onResized}
-        src="http://localhost:3000/tweets"
+        src="http://localhost:3000/tweets/f101e13e-863b-4b5b-a23d-62e3874db00e"
         style={{ width: "1px", minWidth: "100%" }}
       />
     </>

@@ -1,5 +1,5 @@
-query GetTweets {
-  getTweets {
+query GetTweets($id: String!) {
+  getTweets(id: $id) {
     ...TweetFragment
   }
 }

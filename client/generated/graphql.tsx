@@ -84,9 +84,15 @@ export type Poll = {
 
 export type Query = {
   __typename?: 'Query';
+  getMyTweets: Array<Tweet>;
   getTweets: Array<Tweet>;
   hello: Scalars['String'];
   me?: Maybe<User>;
+};
+
+
+export type QueryGetTweetsArgs = {
+  id: Scalars['String'];
 };
 
 export type SignupInput = {
@@ -197,7 +203,14 @@ export type TwitterAuthMutationVariables = Exact<{
 
 export type TwitterAuthMutation = { __typename?: 'Mutation', signInWithTwitter: { __typename?: 'User', id: string, name: string, email?: string | null, picture?: string | null } | { __typename?: 'UserError', path: string, message: string } };
 
-export type GetTweetsQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetMyTweetsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetMyTweetsQuery = { __typename?: 'Query', getMyTweets: Array<{ __typename?: 'Tweet', id: number, url: string, likes: number, text?: string | null, retweets: number, replies: number, media?: Array<{ __typename?: 'Media', url?: string | null, preview_image_url?: string | null, type: string, width?: number | null, height?: number | null }> | null, user: { __typename?: 'TweetUser', name: string, profile_image_url: string, id: number, username: string, verified: boolean }, pollOptions?: Array<{ __typename?: 'Poll', label: string, votes: number }> | null }> };
+
+export type GetTweetsQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
 
 
 export type GetTweetsQuery = { __typename?: 'Query', getTweets: Array<{ __typename?: 'Tweet', id: number, url: string, likes: number, text?: string | null, retweets: number, replies: number, media?: Array<{ __typename?: 'Media', url?: string | null, preview_image_url?: string | null, type: string, width?: number | null, height?: number | null }> | null, user: { __typename?: 'TweetUser', name: string, profile_image_url: string, id: number, username: string, verified: boolean }, pollOptions?: Array<{ __typename?: 'Poll', label: string, votes: number }> | null }> };
@@ -483,9 +496,43 @@ export function useTwitterAuthMutation(baseOptions?: Apollo.MutationHookOptions<
 export type TwitterAuthMutationHookResult = ReturnType<typeof useTwitterAuthMutation>;
 export type TwitterAuthMutationResult = Apollo.MutationResult<TwitterAuthMutation>;
 export type TwitterAuthMutationOptions = Apollo.BaseMutationOptions<TwitterAuthMutation, TwitterAuthMutationVariables>;
+export const GetMyTweetsDocument = gql`
+    query GetMyTweets {
+  getMyTweets {
+    ...TweetFragment
+  }
+}
+    ${TweetFragmentFragmentDoc}`;
+
+/**
+ * __useGetMyTweetsQuery__
+ *
+ * To run a query within a React component, call `useGetMyTweetsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetMyTweetsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetMyTweetsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetMyTweetsQuery(baseOptions?: Apollo.QueryHookOptions<GetMyTweetsQuery, GetMyTweetsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetMyTweetsQuery, GetMyTweetsQueryVariables>(GetMyTweetsDocument, options);
+      }
+export function useGetMyTweetsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetMyTweetsQuery, GetMyTweetsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetMyTweetsQuery, GetMyTweetsQueryVariables>(GetMyTweetsDocument, options);
+        }
+export type GetMyTweetsQueryHookResult = ReturnType<typeof useGetMyTweetsQuery>;
+export type GetMyTweetsLazyQueryHookResult = ReturnType<typeof useGetMyTweetsLazyQuery>;
+export type GetMyTweetsQueryResult = Apollo.QueryResult<GetMyTweetsQuery, GetMyTweetsQueryVariables>;
 export const GetTweetsDocument = gql`
-    query GetTweets {
-  getTweets {
+    query GetTweets($id: String!) {
+  getTweets(id: $id) {
     ...TweetFragment
   }
 }
@@ -503,10 +550,11 @@ export const GetTweetsDocument = gql`
  * @example
  * const { data, loading, error } = useGetTweetsQuery({
  *   variables: {
+ *      id: // value for 'id'
  *   },
  * });
  */
-export function useGetTweetsQuery(baseOptions?: Apollo.QueryHookOptions<GetTweetsQuery, GetTweetsQueryVariables>) {
+export function useGetTweetsQuery(baseOptions: Apollo.QueryHookOptions<GetTweetsQuery, GetTweetsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<GetTweetsQuery, GetTweetsQueryVariables>(GetTweetsDocument, options);
       }

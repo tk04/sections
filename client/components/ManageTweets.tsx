@@ -3,14 +3,14 @@ import {
   GetTweetsDocument,
   TweetFragmentFragment,
   useDeleteTweetMutation,
-  useGetTweetsQuery,
+  useGetMyTweetsQuery,
 } from "../generated/graphql";
 import Tweets from "./Tweets";
 interface ManageTweetsProps {}
 
 const Managetweets: React.FC<ManageTweetsProps> = ({}) => {
   const [deleted, setDeleted] = useState<boolean>(false);
-  const { data } = useGetTweetsQuery();
+  const { data } = useGetMyTweetsQuery();
   const [deleteTweet] = useDeleteTweetMutation({
     update: (cache, { data }) => {
       const results: any = cache.readQuery({ query: GetTweetsDocument });
@@ -36,7 +36,7 @@ const Managetweets: React.FC<ManageTweetsProps> = ({}) => {
   useEffect(() => {
     if (data) {
       console.log("SETTING TWEETS");
-      setTweets(data.getTweets);
+      setTweets(data.getMyTweets);
     }
   }, [data]);
   const clickHandler = async (id: number, url: string) => {

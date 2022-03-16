@@ -29,16 +29,18 @@ const Tweet: React.FC<TweetProps> = ({ tweet, clickEvent }) => {
         clickEvent ? clickEvent.bind(null, tweet.id, tweet.url) : tweetHandler
       }
     >
-      <div className="flex space-x-2 mb-2">
-        <Image
-          src={tweet.user.profile_image_url}
-          className="rounded-full"
-          alt="profile"
-          width={45}
-          height={45}
-          layout="fixed"
-          priority
-        />
+      <div className="flex space-x-2 mb-2 overflow-auto">
+        <div>
+          <Image
+            src={tweet.user.profile_image_url}
+            className="rounded-full"
+            alt="profile"
+            width={45}
+            height={45}
+            layout="fixed"
+            priority
+          />
+        </div>
         <div className="flex flex-col space-y-0">
           <div className="flex space-x-2 items-center">
             <h2>{tweet.user.name}</h2>

@@ -3,6 +3,7 @@ import React, { useRef, useState } from "react";
 import Managetweets from "../components/ManageTweets";
 import Navbar from "../components/NavBar";
 import Tweets from "../components/Tweets";
+import Tweetslink from "../components/TweetsLink";
 import {
   GetTweetsDocument,
   TweetFragmentFragment,
@@ -100,6 +101,7 @@ const Dashboard: React.FC<dashboardProps> = ({}) => {
         {saveLoading && <Loading />}
         <Managetweets />
       </div>
+      <Tweetslink />
     </>
   );
 };

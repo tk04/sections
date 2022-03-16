@@ -39,12 +39,19 @@ const Navbar: React.FC<NavBarProps> = ({}) => {
       )}
 
       {data && data.me ? (
-        <Button auto light size="md" onClick={() => router.push("/profile")}>
+        <Button
+          auto
+          light
+          size="md"
+          className="cursor-pointer"
+          onClick={() => router.push("/profile")}
+        >
           {data.me.picture && (
             <Avatar
               size="md"
               src={data?.me.picture}
               color="primary"
+              className="cursor-pointer"
               bordered
               squared
             />

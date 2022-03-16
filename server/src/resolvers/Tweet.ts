@@ -30,10 +30,24 @@ class TweetInput {
 export class TweetResolver {
   @Query(() => [Tweet])
   @UseMiddleware(auth)
-  async getTweets(@Ctx() { req, prisma }: context) {
+  async getMyTweets(@Ctx() { req, prisma }: context) {
     try {
       const tweets = await prisma.tweets.findMany({
         where: { userId: req.user!.id },
+      });
+
+      const result = await getTweetsHelper(tweets);
+
+      return result;
+    } catch (e) {
+      console.log("ERROR: ", e);
+    }
+  }
+  @Query(() => [Tweet])
+  async getTweets(@Ctx() { prisma }: context, @Arg("id") id: string) {
+    try {
+      const tweets = await prisma.tweets.findMany({
+        where: { userId: id },
       });
 
       const result = await getTweetsHelper(tweets);
