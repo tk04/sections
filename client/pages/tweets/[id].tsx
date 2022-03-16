@@ -8,7 +8,7 @@ interface tweetProps {}
 const Tweet: React.FC<tweetProps> = ({}) => {
   const router = useRouter();
   const id: string | null = router.query.id as string;
-  console.log("id: ", id);
+
   const { data } = useGetTweetsQuery({
     variables: { id: id },
     skip: !id,

@@ -22,7 +22,6 @@ const Profile: React.FC<profileProps> = ({ onSave }) => {
       const { me } = cache.readQuery({ query: MeDocument }) as {
         me: UserResponse;
       };
-      console.log("NEW DATA: ", updateMe);
       if (updateMe?.__typename == "FullUser") {
         cache.writeQuery({
           query: MeDocument,

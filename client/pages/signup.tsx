@@ -33,7 +33,6 @@ const Index: React.FC<indexProps> = ({}) => {
         variables: { input: { name, email, password } as SignupInput },
       });
       router.push("/?login=success");
-      console.log("USER: ", user);
     }
   };
   return (

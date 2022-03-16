@@ -142,7 +142,6 @@ let UserResolver = class UserResolver {
                 twitter: !!user.twitterId,
                 google: !!user.googleId,
             };
-            console.log(response);
             return response;
         }
         catch (e) {
@@ -162,7 +161,6 @@ let UserResolver = class UserResolver {
                 },
             });
             (0, setToken_1.setToken)(user.id, res);
-            console.log("USER CREATED: ", user);
             return user;
         }
         catch (e) {
@@ -182,7 +180,6 @@ let UserResolver = class UserResolver {
             }
             if (user.password) {
                 const valid = await argon2_1.default.verify(user.password, input.password);
-                console.log("VAILD? ", valid);
                 if (!valid) {
                     throw new Error("Could not login user");
                 }

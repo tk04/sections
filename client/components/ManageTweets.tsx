@@ -35,7 +35,6 @@ const Managetweets: React.FC<ManageTweetsProps> = ({}) => {
   const [tweets, setTweets] = useState<TweetFragmentFragment[]>([]);
   useEffect(() => {
     if (data) {
-      console.log("SETTING TWEETS");
       setTweets(data.getMyTweets);
     }
   }, [data]);

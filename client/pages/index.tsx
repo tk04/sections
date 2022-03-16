@@ -37,12 +37,6 @@ const Index: React.FC<indexProps> = ({}) => {
       }, 1000);
     }
   });
-  function resizeIframe() {
-    console.log(
-      tweetRef.current!.contentWindow!.document.body.scrollHeight + "px"
-    );
-    console.log(tweetRef.current!.contentWindow!.document.body.scrollHeight);
-  }
 
   return (
     <>

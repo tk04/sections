@@ -21,12 +21,14 @@ const Dashboard: React.FC<dashboardProps> = ({}) => {
   const [getTweet, { data }] = useGetTweetMutation();
   const [addTweets] = useAddTweetsMutation({
     update: (cache) => {
-      const { getTweets } = cache.readQuery({ query: GetTweetsDocument })!;
+      const data: any = cache.readQuery({ query: GetTweetsDocument })!;
 
-      cache.writeQuery({
-        query: GetTweetsDocument,
-        data: { getTweets: [...getTweets, ...tweets] },
-      });
+      if (data) {
+        cache.writeQuery({
+          query: GetTweetsDocument,
+          data: { getTweets: [...data.getTweets, ...tweets] },
+        });
+      }
     },
   });
   const clickHandler = (id: number) => {
@@ -77,7 +79,6 @@ const Dashboard: React.FC<dashboardProps> = ({}) => {
             className="mb-2 w-60"
             placeholder="Tweet URL"
             aria-label="Tweet URL"
-            initialValue="https://twitter.com/_lordmax_/status/1503137288695341057?s=20&t=2y6GcTryK3R8jFNQCu6nCg"
             ref={inputRef}
             label={label}
           />
