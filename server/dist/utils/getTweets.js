@@ -25,7 +25,7 @@ const getTweetsHelper = async (tweets, redis) => {
             const url = val.tweet.split("status/")[1].split("?")[0];
             const inCache = await redis.get(`tweet:${url}`);
             if (inCache) {
-                console.log("FOUND IN CACHE");
+                // cache hits
                 return JSON.parse(inCache);
             }
             const tweetRes = await (0, axios_1.default)({

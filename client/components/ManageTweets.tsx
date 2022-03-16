@@ -45,17 +45,13 @@ const Managetweets: React.FC<ManageTweetsProps> = ({}) => {
       setTimeout(() => {
         setDeleted(false);
       }, 3000);
-      // setTweets((prev) => {
-      // const idx = prev.findIndex((tweet) => tweet.id === id);
 
-      // return [...prev.slice(0, idx), ...prev.slice(idx + 1)];
-      // });
       await deleteTweet({ variables: { url } });
     }
   };
   return (
     <div>
-      <h1 className="m-auto w-fit mt-10 mb-5">
+      <h1 className="m-auto w-fit mt-10 mb-5 text-xl ">
         Manage current tweets (click to delete tweet)
       </h1>
       {deleted && <p className="w-fit m-auto">Tweet deleted successfully</p>}

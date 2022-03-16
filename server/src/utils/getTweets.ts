@@ -25,8 +25,7 @@ export const getTweetsHelper = async (tweets: Tweets[], redis: Redis) => {
         const inCache = await redis.get(`tweet:${url}`);
 
         if (inCache) {
-          console.log("FOUND IN CACHE");
-
+          // cache hits
           return JSON.parse(inCache);
         }
 
