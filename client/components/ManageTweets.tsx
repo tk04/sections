@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {
+  GetMyTweetsDocument,
   GetTweetsDocument,
   TweetFragmentFragment,
   useDeleteTweetMutation,
@@ -13,19 +14,19 @@ const Managetweets: React.FC<ManageTweetsProps> = ({}) => {
   const { data } = useGetMyTweetsQuery();
   const [deleteTweet] = useDeleteTweetMutation({
     update: (cache, { data }) => {
-      const results: any = cache.readQuery({ query: GetTweetsDocument });
-      if (results) {
+      const results: any = cache.readQuery({ query: GetMyTweetsDocument });
+      if (results.getMyTweets) {
         // const values =
-        const idx = results.getTweets.findIndex(
+        const idx = results.getMyTweets.findIndex(
           (tweet: any) => tweet.url === data?.deleteTweet
         );
 
         cache.writeQuery({
-          query: GetTweetsDocument,
+          query: GetMyTweetsDocument,
           data: {
-            getTweets: [
-              ...results.getTweets.slice(0, idx),
-              ...results.getTweets.slice(idx + 1),
+            getMyTweets: [
+              ...results.getMyTweets.slice(0, idx),
+              ...results.getMyTweets.slice(idx + 1),
             ],
           },
         });

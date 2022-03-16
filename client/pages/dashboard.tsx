@@ -5,6 +5,7 @@ import Navbar from "../components/NavBar";
 import Tweets from "../components/Tweets";
 import Tweetslink from "../components/TweetsLink";
 import {
+  GetMyTweetsDocument,
   GetTweetsDocument,
   TweetFragmentFragment,
   useAddTweetsMutation,
@@ -21,12 +22,12 @@ const Dashboard: React.FC<dashboardProps> = ({}) => {
   const [getTweet, { data }] = useGetTweetMutation();
   const [addTweets] = useAddTweetsMutation({
     update: (cache) => {
-      const data: any = cache.readQuery({ query: GetTweetsDocument })!;
-
+      const data: any = cache.readQuery({ query: GetMyTweetsDocument })!;
+      console.log("DATA: ", data);
       if (data) {
         cache.writeQuery({
-          query: GetTweetsDocument,
-          data: { getTweets: [...data.getTweets, ...tweets] },
+          query: GetMyTweetsDocument,
+          data: { getMyTweets: [...data.getMyTweets, ...tweets] },
         });
       }
     },
@@ -73,16 +74,17 @@ const Dashboard: React.FC<dashboardProps> = ({}) => {
       <Navbar />
       <div className="p-20">
         <br />
+        {label && <h1 className="text-center mb-2">{label}</h1>}
         <div className="flex flex-row  space-x-4 justify-center">
-          <Input
-            size="md"
-            className="mb-2 w-60"
-            placeholder="Tweet URL"
-            aria-label="Tweet URL"
-            ref={inputRef}
-            label={label}
-          />
-
+          <div>
+            <Input
+              size="md"
+              className="mb-2 w-60"
+              placeholder="Tweet URL"
+              aria-label="Tweet URL"
+              ref={inputRef}
+            />
+          </div>
           <Button onClick={tweetHandler} size="md" light bordered>
             Preview
           </Button>
