@@ -30,13 +30,13 @@ class TweetInput {
 export class TweetResolver {
   @Query(() => [Tweet])
   @UseMiddleware(auth)
-  async getMyTweets(@Ctx() { req, prisma }: context) {
+  async getMyTweets(@Ctx() { req, prisma, redis }: context) {
     try {
       const tweets = await prisma.tweets.findMany({
         where: { userId: req.user!.id },
       });
 
-      const result = await getTweetsHelper(tweets);
+      const result = await getTweetsHelper(tweets, redis);
 
       return result;
     } catch (e) {
@@ -44,13 +44,13 @@ export class TweetResolver {
     }
   }
   @Query(() => [Tweet])
-  async getTweets(@Ctx() { prisma }: context, @Arg("id") id: string) {
+  async getTweets(@Ctx() { prisma, redis }: context, @Arg("id") id: string) {
     try {
       const tweets = await prisma.tweets.findMany({
         where: { userId: id },
       });
 
-      const result = await getTweetsHelper(tweets);
+      const result = await getTweetsHelper(tweets, redis);
 
       return result;
     } catch (e) {
@@ -68,7 +68,7 @@ export class TweetResolver {
       const modTweets = tweetURLs.map((tweet) => {
         return { tweet: tweet.split("?")[0], userId: req.user!.id };
       });
-      const tweets = await prisma.tweets.createMany({
+      await prisma.tweets.createMany({
         data: modTweets as TweetsCreateManyInput[],
       });
 
@@ -132,7 +132,10 @@ export class TweetResolver {
 
   @Mutation(() => String)
   @UseMiddleware(auth)
-  async deleteTweet(@Arg("url") url: string, @Ctx() { req, prisma }: context) {
+  async deleteTweet(
+    @Arg("url") url: string,
+    @Ctx() { req, prisma, redis }: context
+  ) {
     try {
       const tweet = await prisma.tweets.findFirst({
         where: { tweet: url, userId: req.user!.id },
@@ -140,7 +143,8 @@ export class TweetResolver {
       if (!tweet) {
         return true;
       }
-
+      const tweetCacheId = tweet.tweet.split("status/")[1].split("?")[0];
+      await redis.dump(`tweet:${tweetCacheId}`);
       await prisma.tweets.delete({
         where: { id: tweet.id },
       });

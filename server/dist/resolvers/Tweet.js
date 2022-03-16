@@ -35,24 +35,24 @@ TweetInput = __decorate([
     (0, type_graphql_1.InputType)()
 ], TweetInput);
 let TweetResolver = class TweetResolver {
-    async getMyTweets({ req, prisma }) {
+    async getMyTweets({ req, prisma, redis }) {
         try {
             const tweets = await prisma.tweets.findMany({
                 where: { userId: req.user.id },
             });
-            const result = await (0, getTweets_1.getTweetsHelper)(tweets);
+            const result = await (0, getTweets_1.getTweetsHelper)(tweets, redis);
             return result;
         }
         catch (e) {
             console.log("ERROR: ", e);
         }
     }
-    async getTweets({ prisma }, id) {
+    async getTweets({ prisma, redis }, id) {
         try {
             const tweets = await prisma.tweets.findMany({
                 where: { userId: id },
             });
-            const result = await (0, getTweets_1.getTweetsHelper)(tweets);
+            const result = await (0, getTweets_1.getTweetsHelper)(tweets, redis);
             return result;
         }
         catch (e) {
@@ -64,7 +64,7 @@ let TweetResolver = class TweetResolver {
             const modTweets = tweetURLs.map((tweet) => {
                 return { tweet: tweet.split("?")[0], userId: req.user.id };
             });
-            const tweets = await prisma.tweets.createMany({
+            await prisma.tweets.createMany({
                 data: modTweets,
             });
             return true;
@@ -111,7 +111,7 @@ let TweetResolver = class TweetResolver {
             return "error";
         }
     }
-    async deleteTweet(url, { req, prisma }) {
+    async deleteTweet(url, { req, prisma, redis }) {
         try {
             const tweet = await prisma.tweets.findFirst({
                 where: { tweet: url, userId: req.user.id },
@@ -119,6 +119,8 @@ let TweetResolver = class TweetResolver {
             if (!tweet) {
                 return true;
             }
+            const tweetCacheId = tweet.tweet.split("status/")[1].split("?")[0];
+            await redis.dump(`tweet:${tweetCacheId}`);
             await prisma.tweets.delete({
                 where: { id: tweet.id },
             });

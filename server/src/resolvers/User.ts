@@ -1,7 +1,6 @@
-import { TwitterLogin } from "../utils/TwitterLogin";
-import { context, GoogleIdToken } from "../types/types";
 import argon2 from "argon2";
-import { User } from "../entities/user";
+import "dotenv/config";
+import jwt from "jsonwebtoken";
 import {
   Arg,
   createUnionType,
@@ -14,12 +13,12 @@ import {
   Resolver,
   UseMiddleware,
 } from "type-graphql";
-
-import jwt from "jsonwebtoken";
-import "dotenv/config";
-import { setToken } from "../utils/setToken";
-import { GoogleLogin } from "../utils/GoogleLogin";
+import { User } from "../entities/user";
 import { auth } from "../middleware/auth";
+import { context } from "../types/types";
+import { GoogleLogin } from "../utils/GoogleLogin";
+import { setToken } from "../utils/setToken";
+import { TwitterLogin } from "../utils/TwitterLogin";
 
 @InputType()
 class SignupInput {

@@ -1,7 +1,7 @@
 import { Tweets } from "@prisma/client";
 import axios from "axios";
 import { Tweet } from "../entities/Tweet";
-
+import { Redis } from "ioredis";
 // const getTweets = async (tweets: Tweets[]) => {
 //   const result = await Promise.all(
 //     tweets.map(async (tweet) => {
@@ -14,7 +14,7 @@ import { Tweet } from "../entities/Tweet";
 
 //   return result;
 // };
-export const getTweetsHelper = async (tweets: Tweets[]) => {
+export const getTweetsHelper = async (tweets: Tweets[], redis: Redis) => {
   try {
     const access_token = process.env.TWITTER_ACCESS_TOKEN;
 
@@ -22,6 +22,14 @@ export const getTweetsHelper = async (tweets: Tweets[]) => {
     const results: Tweet[] = await Promise.all(
       tweets.map(async (val) => {
         const url = val.tweet.split("status/")[1].split("?")[0];
+        const inCache = await redis.get(`tweet:${url}`);
+
+        if (inCache) {
+          console.log("FOUND IN CACHE");
+
+          return JSON.parse(inCache);
+        }
+
         const tweetRes = await axios({
           method: "GET",
           url: `https://api.twitter.com/2/tweets/${url}?expansions=attachments.poll_ids,attachments.media_keys,author_id&user.fields=profile_image_url,verified&tweet.fields=public_metrics&media.fields=url,preview_image_url`,
@@ -48,8 +56,7 @@ export const getTweetsHelper = async (tweets: Tweets[]) => {
         // console.log("TWEET: ", tweet);
 
         const user = tweetRes.data.includes.users[0];
-
-        return {
+        const response = {
           url: val.tweet.split("?")[0],
           text,
           id,
@@ -60,6 +67,13 @@ export const getTweetsHelper = async (tweets: Tweets[]) => {
           pollOptions,
           media: tweetRes.data.includes.media,
         };
+        redis.set(
+          `tweet:${url}`,
+          JSON.stringify(response),
+          "ex",
+          60 * 60 * 24 * 5
+        ); // 5 days
+        return response;
       })
     );
     // console.log("RESULTS", results);

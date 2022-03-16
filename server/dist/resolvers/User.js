@@ -16,15 +16,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserResolver = void 0;
-const TwitterLogin_1 = require("../utils/TwitterLogin");
 const argon2_1 = __importDefault(require("argon2"));
-const user_1 = require("../entities/user");
-const type_graphql_1 = require("type-graphql");
-const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 require("dotenv/config");
-const setToken_1 = require("../utils/setToken");
-const GoogleLogin_1 = require("../utils/GoogleLogin");
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const type_graphql_1 = require("type-graphql");
+const user_1 = require("../entities/user");
 const auth_1 = require("../middleware/auth");
+const GoogleLogin_1 = require("../utils/GoogleLogin");
+const setToken_1 = require("../utils/setToken");
+const TwitterLogin_1 = require("../utils/TwitterLogin");
 let SignupInput = class SignupInput {
 };
 __decorate([
