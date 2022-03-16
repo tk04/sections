@@ -12,33 +12,18 @@ const Navbar: React.FC<NavBarProps> = ({}) => {
   const { data } = useMeQuery();
 
   return (
-    <nav className="flex mt-14 font-md font-bold lg:mx-10 2xl:mx-64 mx-10  items-center justify-between">
+    <nav className="flex mt-14 font-md font-bold lg:mx-10 2xl:mx-64 mx-10  items-center justify-between align-middle">
       <ul className=" cursor-pointer">
         <Link href="/">
           <li>Sections</li>
         </Link>
       </ul>
-      {!data?.me && (
-        <ul className="lg:flex lg:space-x-14 xl:space-x-20 lg  mx-auto hidden">
-          <li>Home</li>
-          <li>Features</li>
-          <li>Pricing</li>
-          <li>About</li>
-        </ul>
-      )}
 
       {data && data.me ? (
-        // <Button
-        //   auto
-        //   light
-        //   size="md"
-        //   className="cursor-pointer"
-        //   // onClick={() => router.push("/profile")}
-        // >
         <Tooltip
           content={<Profilemenu />}
           trigger="click"
-          placement="bottom"
+          placement="leftEnd"
           className="flex items-center"
         >
           {data.me.picture && (
@@ -54,7 +39,6 @@ const Navbar: React.FC<NavBarProps> = ({}) => {
           <h1 className="ml-2">{data?.me.name}</h1>
         </Tooltip>
       ) : (
-        // </Button>
         <section className="flex items-center space-x-6 cursor-pointer ">
           <Button light auto onClick={() => router.push("/login")}>
             Login
@@ -62,6 +46,8 @@ const Navbar: React.FC<NavBarProps> = ({}) => {
 
           <Button
             auto
+            light
+            bordered
             className="py-3 px-10 font-bold"
             onClick={() => router.push("/signup")}
           >

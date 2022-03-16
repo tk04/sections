@@ -131,6 +131,18 @@ let TweetResolver = class TweetResolver {
             return "error";
         }
     }
+    async getLandingPageTweets({ prisma, redis }) {
+        try {
+            const tweets = await prisma.tweets.findMany({
+                where: { userId: "f101e13e-863b-4b5b-a23d-62e3874db00e" },
+            });
+            const result = await (0, getTweets_1.getTweetsHelper)(tweets, redis);
+            return result;
+        }
+        catch (e) {
+            console.log("ERROR: ", e);
+        }
+    }
 };
 __decorate([
     (0, type_graphql_1.Query)(() => [Tweet_1.Tweet]),
@@ -173,6 +185,13 @@ __decorate([
     __metadata("design:paramtypes", [String, Object]),
     __metadata("design:returntype", Promise)
 ], TweetResolver.prototype, "deleteTweet", null);
+__decorate([
+    (0, type_graphql_1.Query)(() => [Tweet_1.Tweet]),
+    __param(0, (0, type_graphql_1.Ctx)()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Object]),
+    __metadata("design:returntype", Promise)
+], TweetResolver.prototype, "getLandingPageTweets", null);
 TweetResolver = __decorate([
     (0, type_graphql_1.Resolver)()
 ], TweetResolver);

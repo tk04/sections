@@ -1,0 +1,5 @@
+query GetLandingPageTweets {
+  getLandingPageTweets {
+    ...TweetFragment
+  }
+}

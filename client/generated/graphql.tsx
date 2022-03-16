@@ -103,6 +103,7 @@ export type Poll = {
 
 export type Query = {
   __typename?: 'Query';
+  getLandingPageTweets: Array<Tweet>;
   getMyTweets: Array<Tweet>;
   getTweets: Array<Tweet>;
   hello: Scalars['String'];
@@ -222,6 +223,11 @@ export type UpdateMeMutationVariables = Exact<{
 
 
 export type UpdateMeMutation = { __typename?: 'Mutation', updateMe: { __typename: 'FullUser', name: string, email?: string | null, id: string, twitter: boolean, google: boolean, picture?: string | null } | { __typename: 'UserError', path: string, message: string } };
+
+export type GetLandingPageTweetsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetLandingPageTweetsQuery = { __typename?: 'Query', getLandingPageTweets: Array<{ __typename?: 'Tweet', id: number, url: string, likes: number, text?: string | null, retweets: number, replies: number, media?: Array<{ __typename?: 'Media', url?: string | null, preview_image_url?: string | null, type: string, width?: number | null, height?: number | null }> | null, user: { __typename?: 'TweetUser', name: string, profile_image_url: string, id: number, username: string, verified: boolean }, pollOptions?: Array<{ __typename?: 'Poll', label: string, votes: number }> | null }> };
 
 export type GetMyTweetsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -563,6 +569,40 @@ export function useUpdateMeMutation(baseOptions?: Apollo.MutationHookOptions<Upd
 export type UpdateMeMutationHookResult = ReturnType<typeof useUpdateMeMutation>;
 export type UpdateMeMutationResult = Apollo.MutationResult<UpdateMeMutation>;
 export type UpdateMeMutationOptions = Apollo.BaseMutationOptions<UpdateMeMutation, UpdateMeMutationVariables>;
+export const GetLandingPageTweetsDocument = gql`
+    query GetLandingPageTweets {
+  getLandingPageTweets {
+    ...TweetFragment
+  }
+}
+    ${TweetFragmentFragmentDoc}`;
+
+/**
+ * __useGetLandingPageTweetsQuery__
+ *
+ * To run a query within a React component, call `useGetLandingPageTweetsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetLandingPageTweetsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetLandingPageTweetsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useGetLandingPageTweetsQuery(baseOptions?: Apollo.QueryHookOptions<GetLandingPageTweetsQuery, GetLandingPageTweetsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetLandingPageTweetsQuery, GetLandingPageTweetsQueryVariables>(GetLandingPageTweetsDocument, options);
+      }
+export function useGetLandingPageTweetsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetLandingPageTweetsQuery, GetLandingPageTweetsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetLandingPageTweetsQuery, GetLandingPageTweetsQueryVariables>(GetLandingPageTweetsDocument, options);
+        }
+export type GetLandingPageTweetsQueryHookResult = ReturnType<typeof useGetLandingPageTweetsQuery>;
+export type GetLandingPageTweetsLazyQueryHookResult = ReturnType<typeof useGetLandingPageTweetsLazyQuery>;
+export type GetLandingPageTweetsQueryResult = Apollo.QueryResult<GetLandingPageTweetsQuery, GetLandingPageTweetsQueryVariables>;
 export const GetMyTweetsDocument = gql`
     query GetMyTweets {
   getMyTweets {

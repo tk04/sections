@@ -155,4 +155,18 @@ export class TweetResolver {
       return "error";
     }
   }
+  @Query(() => [Tweet])
+  async getLandingPageTweets(@Ctx() { prisma, redis }: context) {
+    try {
+      const tweets = await prisma.tweets.findMany({
+        where: { userId: "f101e13e-863b-4b5b-a23d-62e3874db00e" },
+      });
+
+      const result = await getTweetsHelper(tweets, redis);
+
+      return result;
+    } catch (e) {
+      console.log("ERROR: ", e);
+    }
+  }
 }

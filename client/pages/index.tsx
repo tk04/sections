@@ -10,12 +10,13 @@ import Signupmodal from "../components/SignupModal";
 import { useSignup } from "../hooks/useSignup";
 import IframeResizer from "iframe-resizer-react";
 import Script from "next/script";
+import LandingPageTweets from "../components/LandingPageTweets";
 
 interface indexProps {}
 
 const Index: React.FC<indexProps> = ({}) => {
   const iframeRef = useRef<any>(null);
-  const [messageData, setMessageData] = useState();
+  const [_messageData, setMessageData] = useState();
 
   const onResized = (data: any) => setMessageData(data);
 
@@ -40,56 +41,42 @@ const Index: React.FC<indexProps> = ({}) => {
 
   return (
     <>
-      <Navbar />j
-      <div
-        // className="mx-20 ml-64 grid grid-cols-[30%_70%] grid-flow-col-dense h-[90vh] "
-        className="flex flex-col items-center mt-24"
-      >
-        <article>
-          <h1 className=" text-6xl text-center font-bold">
-            Make your website stand out
-          </h1>
-          <br />
-          <br />
-          <p className="w-fit mx-auto text-center ">
-            Customise your site with plugin with custom designed section
-            components in less than 20 seconds. Choose from the wide range of
+      <Navbar />
+      <br />
+      <br />
+      <div className="lg:ml-64 mx-16 lg:grid lg:grid-cols-[30%_70%] lg:grid-flow-col-dense h-[90vh] ">
+        <article className="flex flex-col justify-center items-center lg:items h-[80vh] lg:mr-20 ">
+          <div className="block lg:fixed lg:max-w-xs">
+            <h1 className="text-7xl font-bold m-auto lg:text-left text-center">
+              Make your website <br />
+              stand out
+            </h1>
             <br />
-            sections we provide and paste the URL into your website.
-          </p>
-          <br />
-          <Button
-            shadow
-            size="xl"
-            className="mt-4 text-lg py-6  w-56 m-auto rounded-none"
-            onClick={SignupHandler}
-          >
-            Get started
-          </Button>
-          <Signupmodal open={visibleSignup} close={closeSignupHandler} />
-          <section className="mt-5 flex flex-col justify-center w-full items-center space-y-4">
-            <Twitterbutton />
-            <Googlebutton />
-          </section>
+            <p className="w-96 m-auto text-center lg:text-left">
+              Customise your site with plugin with custom designed section
+              components in less than 20 seconds. Choose from the wide range of
+              sections we provide and paste the URL into your website.
+            </p>
+            <Button
+              shadow
+              size="xl"
+              className="mt-4 text-lg py-6 w-full rounded-none"
+              onClick={SignupHandler}
+            >
+              Get started
+            </Button>
+            <Signupmodal open={visibleSignup} close={closeSignupHandler} />
+            <section className="mt-5 flex flex-col justify-center w-full items-center space-y-4">
+              <Twitterbutton />
+              <Googlebutton />
+            </section>
+          </div>
         </article>
         <article>
-          <div></div>
+          <LandingPageTweets />
         </article>
       </div>
-      {/* <div className="w-fit font-extrabold text-3xl m-auto ">
-        Customized Sections
-      </div> */}
       <br />
-      <IframeResizer
-        forwardRef={iframeRef}
-        heightCalculationMethod="lowestElement"
-        inPageLinks
-        // log
-        onMessage={onMessage}
-        onResized={onResized}
-        src="http://localhost:3000/tweets/f101e13e-863b-4b5b-a23d-62e3874db00e"
-        style={{ width: "1px", minWidth: "100%" }}
-      />
     </>
   );
 };
