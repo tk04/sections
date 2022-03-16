@@ -29,7 +29,7 @@ const Login: React.FC<loginProps> = ({}) => {
       const user = await loginUser({
         variables: { input: { email, password } as LoginInput },
       });
-      if (user.data?.login.__typename === "User") {
+      if (user.data?.login.__typename === "FullUser") {
         router.push("/?login=success");
       }
     }

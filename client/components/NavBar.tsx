@@ -1,8 +1,9 @@
-import { Avatar, Button } from "@nextui-org/react";
+import { Avatar, Button, Tooltip } from "@nextui-org/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
 import { useMeQuery } from "../generated/graphql";
+import Profilemenu from "./ProfileMenu";
 interface NavBarProps {}
 
 const Navbar: React.FC<NavBarProps> = ({}) => {
@@ -27,16 +28,22 @@ const Navbar: React.FC<NavBarProps> = ({}) => {
       )}
 
       {data && data.me ? (
-        <Button
-          auto
-          light
-          size="md"
-          className="cursor-pointer"
-          onClick={() => router.push("/profile")}
+        // <Button
+        //   auto
+        //   light
+        //   size="md"
+        //   className="cursor-pointer"
+        //   // onClick={() => router.push("/profile")}
+        // >
+        <Tooltip
+          content={<Profilemenu />}
+          trigger="click"
+          placement="bottom"
+          className="flex items-center"
         >
           {data.me.picture && (
             <Avatar
-              size="md"
+              // size="md"
               src={data?.me.picture}
               color="primary"
               className="cursor-pointer"
@@ -45,8 +52,9 @@ const Navbar: React.FC<NavBarProps> = ({}) => {
             />
           )}
           <h1 className="ml-2">{data?.me.name}</h1>
-        </Button>
+        </Tooltip>
       ) : (
+        // </Button>
         <section className="flex items-center space-x-6 cursor-pointer ">
           <Button light auto onClick={() => router.push("/login")}>
             Login
