@@ -8,7 +8,9 @@ export const auth: MiddlewareFn<context> = async ({ context }, next) => {
     try {
       const userId = (jwt.decode(token) as jwt.JwtPayload & { userId: string })
         .userId;
-      const user = await prisma.user.findFirst({ where: { id: userId } });
+      const user = await prisma.user.findFirst({
+        where: { id: userId },
+      });
       if (!user) {
         throw new Error("User not found");
       }

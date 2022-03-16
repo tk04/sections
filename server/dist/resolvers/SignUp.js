@@ -67,12 +67,25 @@ __decorate([
 UserError = __decorate([
     (0, type_graphql_1.ObjectType)()
 ], UserError);
+let FullUser = class FullUser extends user_1.User {
+};
+__decorate([
+    (0, type_graphql_1.Field)(),
+    __metadata("design:type", Boolean)
+], FullUser.prototype, "twitter", void 0);
+__decorate([
+    (0, type_graphql_1.Field)(),
+    __metadata("design:type", Boolean)
+], FullUser.prototype, "google", void 0);
+FullUser = __decorate([
+    (0, type_graphql_1.ObjectType)()
+], FullUser);
 const UserResponse = (0, type_graphql_1.createUnionType)({
     name: "UserResponse",
-    types: () => [user_1.User, UserError],
+    types: () => [FullUser, UserError],
     resolveType: (value) => {
         if ("email" in value || "name" in value)
-            return user_1.User;
+            return FullUser;
         if ("path" in value)
             return UserError;
     },
@@ -90,8 +103,14 @@ let SignUpResolver = class SignUpResolver {
                     id: userId,
                 },
             });
+            // response.google = !!user.googleId;
             if (user) {
-                return user;
+                const response = {
+                    ...user,
+                    twitter: !!user.twitterId,
+                    google: !!user.googleId,
+                };
+                return response;
             }
             else {
                 return null;
@@ -134,7 +153,12 @@ let SignUpResolver = class SignUpResolver {
                 }
                 else {
                     (0, setToken_1.setToken)(user.id, res);
-                    return user;
+                    const response = {
+                        ...user,
+                        twitter: !!user.twitterId,
+                        google: !!user.googleId,
+                    };
+                    return response;
                 }
             }
             else {
@@ -152,7 +176,12 @@ let SignUpResolver = class SignUpResolver {
         try {
             const user = await (0, GoogleLogin_1.GoogleLogin)(code, prisma);
             (0, setToken_1.setToken)(user.id, res);
-            return user;
+            const response = {
+                ...user,
+                twitter: !!user.twitterId,
+                google: !!user.googleId,
+            };
+            return response;
         }
         catch (e) {
             return {
@@ -167,7 +196,17 @@ let SignUpResolver = class SignUpResolver {
                 throw new Error(e.message);
             });
             (0, setToken_1.setToken)(user.id, res);
-            return user;
+            if (user) {
+                const response = {
+                    ...user,
+                    twitter: !!user.twitterId,
+                    google: !!user.googleId,
+                };
+                return response;
+            }
+            else {
+                throw new Error("user not found");
+            }
         }
         catch (e) {
             return {
@@ -184,7 +223,7 @@ __decorate([
     __metadata("design:returntype", void 0)
 ], SignUpResolver.prototype, "hello", null);
 __decorate([
-    (0, type_graphql_1.Query)(() => user_1.User, { nullable: true }),
+    (0, type_graphql_1.Query)(() => FullUser, { nullable: true }),
     __param(0, (0, type_graphql_1.Ctx)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),

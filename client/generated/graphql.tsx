@@ -15,6 +15,19 @@ export type Scalars = {
   Float: number;
 };
 
+export type FullUser = {
+  __typename?: 'FullUser';
+  email?: Maybe<Scalars['String']>;
+  google: Scalars['Boolean'];
+  googleId?: Maybe<Scalars['String']>;
+  id: Scalars['String'];
+  name: Scalars['String'];
+  picture?: Maybe<Scalars['String']>;
+  twitter: Scalars['Boolean'];
+  twitterAccessToken?: Maybe<Scalars['String']>;
+  twitterId?: Maybe<Scalars['String']>;
+};
+
 export type LoginInput = {
   email: Scalars['String'];
   password: Scalars['String'];
@@ -87,7 +100,7 @@ export type Query = {
   getMyTweets: Array<Tweet>;
   getTweets: Array<Tweet>;
   hello: Scalars['String'];
-  me?: Maybe<User>;
+  me?: Maybe<FullUser>;
 };
 
 
@@ -123,36 +136,25 @@ export type TweetUser = {
   verified: Scalars['Boolean'];
 };
 
-export type User = {
-  __typename?: 'User';
-  email?: Maybe<Scalars['String']>;
-  googleId?: Maybe<Scalars['String']>;
-  id: Scalars['String'];
-  name: Scalars['String'];
-  picture?: Maybe<Scalars['String']>;
-  twitterAccessToken?: Maybe<Scalars['String']>;
-  twitterId?: Maybe<Scalars['String']>;
-};
-
 export type UserError = {
   __typename?: 'UserError';
   message: Scalars['String'];
   path: Scalars['String'];
 };
 
-export type UserResponse = User | UserError;
+export type UserResponse = FullUser | UserError;
 
 export type TweetFragmentFragment = { __typename?: 'Tweet', id: number, url: string, likes: number, text?: string | null, retweets: number, replies: number, media?: Array<{ __typename?: 'Media', url?: string | null, preview_image_url?: string | null, type: string, width?: number | null, height?: number | null }> | null, user: { __typename?: 'TweetUser', name: string, profile_image_url: string, id: number, username: string, verified: boolean }, pollOptions?: Array<{ __typename?: 'Poll', label: string, votes: number }> | null };
 
 export type UserErrorFragmentFragment = { __typename?: 'UserError', path: string, message: string };
 
-export type UserFragmentFragment = { __typename?: 'User', id: string, name: string, email?: string | null, picture?: string | null };
+export type UserFragmentFragment = { __typename?: 'FullUser', id: string, name: string, email?: string | null, picture?: string | null, twitter: boolean, google: boolean };
 
-type UserResponseFragment_User_Fragment = { __typename?: 'User', id: string, name: string, email?: string | null, picture?: string | null };
+type UserResponseFragment_FullUser_Fragment = { __typename?: 'FullUser', id: string, name: string, email?: string | null, picture?: string | null, twitter: boolean, google: boolean };
 
 type UserResponseFragment_UserError_Fragment = { __typename?: 'UserError', path: string, message: string };
 
-export type UserResponseFragmentFragment = UserResponseFragment_User_Fragment | UserResponseFragment_UserError_Fragment;
+export type UserResponseFragmentFragment = UserResponseFragment_FullUser_Fragment | UserResponseFragment_UserError_Fragment;
 
 export type AddTweetsMutationVariables = Exact<{
   urls: Array<Scalars['String']> | Scalars['String'];
@@ -180,28 +182,28 @@ export type CreateUserMutationVariables = Exact<{
 }>;
 
 
-export type CreateUserMutation = { __typename?: 'Mutation', signInWithGoogle: { __typename?: 'User', id: string, name: string, email?: string | null, picture?: string | null } | { __typename?: 'UserError', path: string, message: string } };
+export type CreateUserMutation = { __typename?: 'Mutation', signInWithGoogle: { __typename?: 'FullUser', id: string, name: string, email?: string | null, picture?: string | null, twitter: boolean, google: boolean } | { __typename?: 'UserError', path: string, message: string } };
 
 export type LoginMutationVariables = Exact<{
   input: LoginInput;
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'User', id: string, name: string, email?: string | null, picture?: string | null } | { __typename?: 'UserError', path: string, message: string } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'FullUser', id: string, name: string, email?: string | null, picture?: string | null, twitter: boolean, google: boolean } | { __typename?: 'UserError', path: string, message: string } };
 
 export type SignUpMutationVariables = Exact<{
   input: SignupInput;
 }>;
 
 
-export type SignUpMutation = { __typename?: 'Mutation', signup: { __typename?: 'User', id: string, name: string, email?: string | null, picture?: string | null } | { __typename?: 'UserError', path: string, message: string } };
+export type SignUpMutation = { __typename?: 'Mutation', signup: { __typename?: 'FullUser', id: string, name: string, email?: string | null, picture?: string | null, twitter: boolean, google: boolean } | { __typename?: 'UserError', path: string, message: string } };
 
 export type TwitterAuthMutationVariables = Exact<{
   code: Scalars['String'];
 }>;
 
 
-export type TwitterAuthMutation = { __typename?: 'Mutation', signInWithTwitter: { __typename?: 'User', id: string, name: string, email?: string | null, picture?: string | null } | { __typename?: 'UserError', path: string, message: string } };
+export type TwitterAuthMutation = { __typename?: 'Mutation', signInWithTwitter: { __typename?: 'FullUser', id: string, name: string, email?: string | null, picture?: string | null, twitter: boolean, google: boolean } | { __typename?: 'UserError', path: string, message: string } };
 
 export type GetMyTweetsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -218,7 +220,7 @@ export type GetTweetsQuery = { __typename?: 'Query', getTweets: Array<{ __typena
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'User', id: string, name: string, email?: string | null, picture?: string | null } | null };
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'FullUser', id: string, name: string, email?: string | null, picture?: string | null, twitter: boolean, google: boolean } | null };
 
 export const TweetFragmentFragmentDoc = gql`
     fragment TweetFragment on Tweet {
@@ -249,11 +251,13 @@ export const TweetFragmentFragmentDoc = gql`
 }
     `;
 export const UserFragmentFragmentDoc = gql`
-    fragment UserFragment on User {
+    fragment UserFragment on FullUser {
   id
   name
   email
   picture
+  twitter
+  google
 }
     `;
 export const UserErrorFragmentFragmentDoc = gql`

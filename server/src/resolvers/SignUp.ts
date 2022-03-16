@@ -43,12 +43,18 @@ class UserError {
   @Field()
   message: string;
 }
-
+@ObjectType()
+class FullUser extends User {
+  @Field()
+  twitter: boolean;
+  @Field()
+  google: boolean;
+}
 const UserResponse = createUnionType({
   name: "UserResponse",
-  types: () => [User, UserError],
+  types: () => [FullUser, UserError],
   resolveType: (value) => {
-    if ("email" in value || "name" in value) return User;
+    if ("email" in value || "name" in value) return FullUser;
     if ("path" in value) return UserError;
   },
 });
@@ -58,7 +64,7 @@ export class SignUpResolver {
   hello() {
     return "Hello World";
   }
-  @Query(() => User, { nullable: true })
+  @Query(() => FullUser, { nullable: true })
   async me(@Ctx() { req, prisma }: context) {
     const token = req.cookies.token;
     if (token) {
@@ -70,8 +76,16 @@ export class SignUpResolver {
           id: userId,
         },
       });
+
+      // response.google = !!user.googleId;
       if (user) {
-        return user;
+        const response: FullUser = {
+          ...user,
+          twitter: !!user.twitterId,
+          google: !!user.googleId,
+        };
+
+        return response;
       } else {
         return null;
       }
@@ -119,7 +133,12 @@ export class SignUpResolver {
           throw new Error("Could not login user");
         } else {
           setToken(user.id, res);
-          return user;
+          const response: FullUser = {
+            ...user,
+            twitter: !!user.twitterId,
+            google: !!user.googleId,
+          };
+          return response;
         }
       } else {
         throw new Error("Could not login user");
@@ -140,7 +159,12 @@ export class SignUpResolver {
     try {
       const user = await GoogleLogin(code, prisma);
       setToken(user!.id, res);
-      return user;
+      const response: FullUser = {
+        ...user,
+        twitter: !!user.twitterId,
+        google: !!user.googleId,
+      };
+      return response;
     } catch (e) {
       return {
         path: "Google Login",
@@ -159,7 +183,16 @@ export class SignUpResolver {
         throw new Error(e.message);
       });
       setToken(user!.id, res);
-      return user;
+      if (user) {
+        const response: FullUser = {
+          ...user,
+          twitter: !!user.twitterId,
+          google: !!user.googleId,
+        };
+        return response;
+      } else {
+        throw new Error("user not found");
+      }
     } catch (e) {
       return {
         path: "Twitter Login",

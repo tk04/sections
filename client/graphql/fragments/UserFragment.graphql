@@ -1,6 +1,8 @@
-fragment UserFragment on User {
+fragment UserFragment on FullUser {
   id
   name
   email
   picture
+  twitter
+  google
 }

@@ -12,7 +12,9 @@ const auth = async ({ context }, next) => {
         try {
             const userId = jsonwebtoken_1.default.decode(token)
                 .userId;
-            const user = await prisma.user.findFirst({ where: { id: userId } });
+            const user = await prisma.user.findFirst({
+                where: { id: userId },
+            });
             if (!user) {
                 throw new Error("User not found");
             }

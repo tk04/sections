@@ -1,27 +1,15 @@
-import {
-  Avatar,
-  Button,
-  Checkbox,
-  Input,
-  Modal,
-  Row,
-  Text,
-} from "@nextui-org/react";
+import { Avatar, Button } from "@nextui-org/react";
 import Link from "next/link";
-import React, { useState } from "react";
-import { useMeQuery } from "../generated/graphql";
 import { useRouter } from "next/router";
-import handler from "../pages/api/hello";
-import Login from "./Login";
-import Signup from "./Signup";
-import Signupmodal from "./SignupModal";
-import { useSignup } from "../hooks/useSignup";
+import React from "react";
+import { useMeQuery } from "../generated/graphql";
 interface NavBarProps {}
 
 const Navbar: React.FC<NavBarProps> = ({}) => {
   const router = useRouter();
 
   const { data } = useMeQuery();
+
   return (
     <nav className="flex mt-14 font-md font-bold lg:mx-10 2xl:mx-64 mx-10  items-center justify-between">
       <ul className=" cursor-pointer">
