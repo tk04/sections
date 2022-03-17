@@ -23,9 +23,9 @@ const TwitterCb: React.FC<twitter_cbProps> = ({}) => {
         router.push("/?login=success");
       }
     }
-  }, [code, twitterAuth, router]);
+  }, [code, twitterAuth, router, data]);
 
-  return <div>TWITTER LOGIN</div>;
+  return <div></div>;
 };
 
 export default TwitterCb;
