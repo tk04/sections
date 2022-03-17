@@ -6,4 +6,3 @@ export const setToken = (token: string): void => {
     secure: false,
   });
 };
-//
