@@ -112,7 +112,7 @@ const Dashboard: React.FC<dashboardProps> = ({}) => {
 
         <Managetweets />
       </div>
-      <Tweetslink />
+
       <br />
     </>
   );

@@ -7,6 +7,7 @@ import {
   useGetMyTweetsQuery,
 } from "../generated/graphql";
 import Tweets from "./Tweets";
+import Tweetslink from "./TweetsLink";
 interface ManageTweetsProps {}
 
 const Managetweets: React.FC<ManageTweetsProps> = ({}) => {
@@ -76,6 +77,7 @@ const Managetweets: React.FC<ManageTweetsProps> = ({}) => {
               <Tweets tweets={tweets} clickEvent={clickHandler} />
             </>
           )}
+          <Tweetslink />
         </div>
       )}
     </>
