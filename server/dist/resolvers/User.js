@@ -108,19 +108,19 @@ let UserResolver = class UserResolver {
     hello() {
         return "Hello World";
     }
-    async me({ req, prisma }) {
-        const token = req.cookies.token;
+    async me({ req, prisma }, token) {
+        // const token = req.cookies.token;
         console.log("TOKEN: ", token);
         console.log("cookies: ", req.cookies);
         if (token) {
             const { userId } = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
-            console.log("DECODED TOKEN: ", userId);
+            // console.log("DECODED TOKEN: ", userId);
             const user = await prisma.user.findFirst({
                 where: {
                     id: userId,
                 },
             });
-            console.log("USER: ", user);
+            // console.log("USER: ", user);
             // response.google = !!user.googleId;
             if (user) {
                 const response = {
@@ -185,7 +185,7 @@ let UserResolver = class UserResolver {
             const user = await prisma.user.findFirst({
                 where: { email: input.email.toLowerCase() },
             });
-            console.log("USER: ", user);
+            // console.log("USER: ", user);
             if (!user) {
                 throw new Error("User not found");
             }
@@ -255,6 +255,7 @@ let UserResolver = class UserResolver {
             }
         }
         catch (e) {
+            console.log("ERROR: ", e);
             return {
                 path: "Twitter Login",
                 message: "Could not authenticate with Twitter",
@@ -271,8 +272,9 @@ __decorate([
 __decorate([
     (0, type_graphql_1.Query)(() => FullUser, { nullable: true }),
     __param(0, (0, type_graphql_1.Ctx)()),
+    __param(1, (0, type_graphql_1.Arg)("token", () => String)),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [Object, String]),
     __metadata("design:returntype", Promise)
 ], UserResolver.prototype, "me", null);
 __decorate([

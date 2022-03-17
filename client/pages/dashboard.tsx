@@ -109,7 +109,7 @@ const Dashboard: React.FC<dashboardProps> = ({}) => {
             Save
           </Button>
         )}
-        {saveLoading && <Loading />}
+
         <Managetweets />
       </div>
       <Tweetslink />
