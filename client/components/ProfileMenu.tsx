@@ -28,9 +28,11 @@ const Profilemenu: React.FC<ProfileMenuProps> = ({}) => {
         >
           <Profile onSave={closeHandler} />
         </Modal>
-        <Button bordered light>
-          <Link href="/dashboard">Dashboard</Link>
-        </Button>
+        <Link href="/dashboard">
+          <Button bordered light>
+            Dashboard
+          </Button>
+        </Link>
         <Button
           bordered
           light
