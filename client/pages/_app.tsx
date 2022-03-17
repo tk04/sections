@@ -1,20 +1,8 @@
-import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
+import { ApolloProvider } from "@apollo/client";
 import { NextUIProvider } from "@nextui-org/react";
 import type { AppProps } from "next/app";
 import "../styles/globals.css";
-import Cookies from "js-cookie";
-const client = new ApolloClient({
-  uri:
-    process.env.NODE_ENV === "production"
-      ? "https://sections-be.herokuapp.com/graphql"
-      : "http://localhost:4000/graphql",
-  cache: new InMemoryCache(),
-  credentials: "include",
-
-  headers: {
-    cookie: Cookies.get("token") || "",
-  },
-});
+import { client } from "../utils/apollo";
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ApolloProvider client={client}>

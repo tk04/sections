@@ -1,11 +1,13 @@
 import { Button, Modal } from "@nextui-org/react";
-import React, { useState } from "react";
 import Link from "next/link";
+import React, { useState } from "react";
 import Profile from "./Profile";
-
+import { useRouter } from "next/router";
+import Cookies from "js-cookie";
 interface ProfileMenuProps {}
 
 const Profilemenu: React.FC<ProfileMenuProps> = ({}) => {
+  const router = useRouter();
   const [visible, setVisible] = useState(false);
   const handler = () => setVisible(true);
   const closeHandler = () => {
@@ -28,6 +30,24 @@ const Profilemenu: React.FC<ProfileMenuProps> = ({}) => {
         </Modal>
         <Button bordered light>
           <Link href="/dashboard">Dashboard</Link>
+        </Button>
+        <Button
+          bordered
+          light
+          color="error"
+          className="mt-2"
+          onClick={() => {
+            Cookies.remove("token");
+            router.push("/");
+            // router.reload();
+            // client.cache.evict({
+            //   fieldName: "me",
+            //   args: { token: Cookies.get("token") },
+            // });
+            // client.cache.gc();
+          }}
+        >
+          Logout
         </Button>
       </div>
     </div>
