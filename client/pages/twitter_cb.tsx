@@ -9,6 +9,7 @@ const TwitterCb: React.FC<twitter_cbProps> = ({}) => {
   const [twitterAuth, { data }] = useTwitterAuthMutation();
   const router = useRouter();
   const code = router.query.code;
+
   useEffect(() => {
     const auth = async (code: string) => {
       await twitterAuth({
