@@ -44,7 +44,7 @@ const Index: React.FC<indexProps> = ({}) => {
       <Navbar />
       <br />
       <br />
-      <div className="lg:ml-64 mx-16 lg:grid lg:grid-cols-[30%_70%] lg:grid-flow-col-dense h-[90vh] ">
+      <div className="lg:ml-64 mx-16 lg:grid lg:grid-cols-[30%_70%] lg:grid-flow-col-dense lg:h-[90vh]">
         <article className="flex flex-col justify-center items-center lg:items h-[80vh] lg:mr-20 ">
           <div className="block lg:fixed lg:max-w-xs">
             <h1 className="text-7xl font-bold m-auto lg:text-left text-center">
@@ -52,19 +52,22 @@ const Index: React.FC<indexProps> = ({}) => {
               stand out
             </h1>
             <br />
-            <p className="w-96 m-auto text-center lg:text-left">
+            <p className="w-96 self-center m-auto text-center lg:text-left ml-6 sm:ml-auto">
               Customise your site with plugin with custom designed section
               components in less than 20 seconds. Choose from the wide range of
               sections we provide and paste the URL into your website.
             </p>
+
             <Button
               shadow
               size="xl"
-              className="mt-4 text-lg py-6 w-full rounded-none"
+              className="mt-4 text-lg py-6 w-full rounded-none self-center ml-[17px] lg:ml-0"
+              // className="w-screen"
               onClick={SignupHandler}
             >
               Get started
             </Button>
+
             <Signupmodal open={visibleSignup} close={closeSignupHandler} />
             <section className="mt-5 flex flex-col justify-center w-full items-center space-y-4">
               <Twitterbutton />
@@ -72,7 +75,7 @@ const Index: React.FC<indexProps> = ({}) => {
             </section>
           </div>
         </article>
-        <article>
+        <article className="mt-10 lg:mt-0">
           <LandingPageTweets />
         </article>
       </div>

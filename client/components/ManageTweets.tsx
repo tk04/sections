@@ -61,18 +61,24 @@ const Managetweets: React.FC<ManageTweetsProps> = ({}) => {
     }
   };
   return (
-    <div>
-      <h1 className="m-auto w-fit mt-10 mb-5 text-xl ">
-        Manage current tweets (click to delete tweet)
-      </h1>
-      {deleted && <p className="w-fit m-auto">Tweet deleted successfully</p>}
-      <br />
-      {tweets.length > 0 && (
-        <>
-          <Tweets tweets={tweets} clickEvent={clickHandler} />
-        </>
+    <>
+      {data && data.getMyTweets && data.getMyTweets.length > 0 && (
+        <div>
+          <h1 className="m-auto w-fit mt-10 mb-5 text-xl ">
+            Manage current tweets (click to delete tweet)
+          </h1>
+          {deleted && (
+            <p className="w-fit m-auto">Tweet deleted successfully</p>
+          )}
+          <br />
+          {tweets.length > 0 && (
+            <>
+              <Tweets tweets={tweets} clickEvent={clickHandler} />
+            </>
+          )}
+        </div>
       )}
-    </div>
+    </>
   );
 };
 

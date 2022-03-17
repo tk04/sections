@@ -14,7 +14,7 @@ const Navbar: React.FC<NavBarProps> = ({}) => {
 
   return (
     <nav className="flex mt-14 font-md font-bold lg:mx-10 2xl:mx-64 mx-10  items-center justify-between align-middle">
-      <ul className=" cursor-pointer">
+      <ul className="mt-2 cursor-pointer">
         <Link href="/">
           <li>Sections</li>
         </Link>
