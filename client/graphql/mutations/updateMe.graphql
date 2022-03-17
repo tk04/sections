@@ -1,5 +1,5 @@
-mutation UpdateMe($input: updateInput!) {
-  updateMe(input: $input) {
+mutation UpdateMe($input: updateInput!, $token: String!) {
+  updateMe(input: $input, token: $token) {
     __typename
     ... on FullUser {
       name

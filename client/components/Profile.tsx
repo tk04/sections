@@ -20,12 +20,16 @@ const Profile: React.FC<profileProps> = ({ onSave }) => {
   const { data } = useMeQuery({ variables: { token: Cookies.get("token")! } });
   const [updateMe] = useUpdateMeMutation({
     update(cache, { data: { updateMe } }: any) {
-      const { me } = cache.readQuery({ query: MeDocument }) as {
+      const { me } = cache.readQuery({
+        query: MeDocument,
+        variables: { token: Cookies.get("token") },
+      }) as {
         me: UserResponse;
       };
       if (updateMe?.__typename == "FullUser") {
         cache.writeQuery({
           query: MeDocument,
+          variables: { token: Cookies.get("token") },
           data: { me: updateMe },
         });
       }
@@ -49,7 +53,7 @@ const Profile: React.FC<profileProps> = ({ onSave }) => {
       name: nameRef.current!.value,
     };
     await updateMe({
-      variables: { input },
+      variables: { input, token: Cookies.get("token")! },
       optimisticResponse: {
         __typename: "Mutation",
         updateMe: {

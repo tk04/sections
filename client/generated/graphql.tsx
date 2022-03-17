@@ -96,6 +96,7 @@ export type MutationSignupArgs = {
 
 export type MutationUpdateMeArgs = {
   input: UpdateInput;
+  token: Scalars['String'];
 };
 
 export type Poll = {
@@ -234,6 +235,7 @@ export type TwitterAuthMutation = { __typename?: 'Mutation', signInWithTwitter: 
 
 export type UpdateMeMutationVariables = Exact<{
   input: UpdateInput;
+  token: Scalars['String'];
 }>;
 
 
@@ -547,8 +549,8 @@ export type TwitterAuthMutationHookResult = ReturnType<typeof useTwitterAuthMuta
 export type TwitterAuthMutationResult = Apollo.MutationResult<TwitterAuthMutation>;
 export type TwitterAuthMutationOptions = Apollo.BaseMutationOptions<TwitterAuthMutation, TwitterAuthMutationVariables>;
 export const UpdateMeDocument = gql`
-    mutation UpdateMe($input: updateInput!) {
-  updateMe(input: $input) {
+    mutation UpdateMe($input: updateInput!, $token: String!) {
+  updateMe(input: $input, token: $token) {
     __typename
     ... on FullUser {
       name
@@ -581,6 +583,7 @@ export type UpdateMeMutationFn = Apollo.MutationFunction<UpdateMeMutation, Updat
  * const [updateMeMutation, { data, loading, error }] = useUpdateMeMutation({
  *   variables: {
  *      input: // value for 'input'
+ *      token: // value for 'token'
  *   },
  * });
  */
