@@ -44,9 +44,9 @@ const Tweetslink: React.FC<TweetsLinkProps> = ({}) => {
             }}
             width="700px"
             defaultLanguage="html"
-            defaultValue={`<script src="http://localhost:3000/iframeResizer.js"></script>
+            defaultValue={`<script src="https://sections1.vercel.app/iframeResizer.js"></script>
   <iframe id="tweetWall" style="min-width: 100%" frameborder="0" 
-  src="http://localhost:3000/tweets/${data?.me?.id}"></iframe>
+  src="https://sections1.vercel.app/tweets/${data?.me?.id}"></iframe>
   <script>
       iFrameResize({ log: false }, "#tweetWall");
   </script>
