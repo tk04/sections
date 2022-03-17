@@ -65,6 +65,7 @@ const Dashboard: React.FC<dashboardProps> = ({}) => {
       const tweetURLs: string[] = tweets.map((tweet) => tweet.url!);
       await addTweets({
         variables: { urls: tweetURLs, token: Cookies.get("token")! },
+        optimisticResponse: { addTweets: true },
       });
       setTweets([]);
       setLoading(false);

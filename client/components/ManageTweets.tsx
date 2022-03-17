@@ -54,7 +54,10 @@ const Managetweets: React.FC<ManageTweetsProps> = ({}) => {
         setDeleted(false);
       }, 3000);
 
-      await deleteTweet({ variables: { url, token: Cookies.get("token")! } });
+      await deleteTweet({
+        variables: { url, token: Cookies.get("token")! },
+        optimisticResponse: { deleteTweet: url },
+      });
     }
   };
   return (
