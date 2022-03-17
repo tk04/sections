@@ -61,13 +61,13 @@ const Dashboard: React.FC<dashboardProps> = ({}) => {
 
   const saveHandler = async () => {
     if (tweets.length > 0) {
+      setTweets([]);
       setLoading(true);
       const tweetURLs: string[] = tweets.map((tweet) => tweet.url!);
       await addTweets({
         variables: { urls: tweetURLs, token: Cookies.get("token")! },
         optimisticResponse: { addTweets: true },
       });
-      setTweets([]);
       setLoading(false);
       setLabel("Tweets saved successfully");
       setTimeout(() => {
