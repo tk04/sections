@@ -23,6 +23,7 @@ const TwitterCb: React.FC<twitter_cbProps> = ({}) => {
       }
     }
   }, [code, twitterAuth, router]);
+
   return <div>TWITTER LOGIN</div>;
 };
 
