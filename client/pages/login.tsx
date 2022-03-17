@@ -5,6 +5,7 @@ import { useRouter } from "next/router";
 import Googlebutton from "../components/GoogleButton";
 import Twitterbutton from "../components/TwitterButton";
 import { useLoginMutation, LoginInput } from "../generated/graphql";
+import { setToken } from "../utils/setCookie";
 interface loginProps {}
 
 const Login: React.FC<loginProps> = ({}) => {
@@ -30,6 +31,7 @@ const Login: React.FC<loginProps> = ({}) => {
         variables: { input: { email, password } as LoginInput },
       });
       if (user.data?.login.__typename === "FullUser") {
+        setToken(user.data.login.token!);
         router.push("/?login=success");
       }
     }

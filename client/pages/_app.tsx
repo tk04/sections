@@ -10,6 +10,10 @@ const client = new ApolloClient({
       : "http://localhost:4000/graphql",
   cache: new InMemoryCache(),
   credentials: "include",
+
+  // headers: {
+  //   cookie:
+  // },
 });
 function MyApp({ Component, pageProps }: AppProps) {
   return (

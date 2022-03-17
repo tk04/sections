@@ -5,4 +5,5 @@ fragment UserFragment on FullUser {
   picture
   twitter
   google
+  token
 }

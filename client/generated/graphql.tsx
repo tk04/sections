@@ -23,6 +23,7 @@ export type FullUser = {
   id: Scalars['String'];
   name: Scalars['String'];
   picture?: Maybe<Scalars['String']>;
+  token?: Maybe<Scalars['String']>;
   twitter: Scalars['Boolean'];
   twitterAccessToken?: Maybe<Scalars['String']>;
   twitterId?: Maybe<Scalars['String']>;
@@ -160,9 +161,9 @@ export type TweetFragmentFragment = { __typename?: 'Tweet', id: number, url: str
 
 export type UserErrorFragmentFragment = { __typename?: 'UserError', path: string, message: string };
 
-export type UserFragmentFragment = { __typename?: 'FullUser', id: string, name: string, email?: string | null, picture?: string | null, twitter: boolean, google: boolean };
+export type UserFragmentFragment = { __typename?: 'FullUser', id: string, name: string, email?: string | null, picture?: string | null, twitter: boolean, google: boolean, token?: string | null };
 
-type UserResponseFragment_FullUser_Fragment = { __typename?: 'FullUser', id: string, name: string, email?: string | null, picture?: string | null, twitter: boolean, google: boolean };
+type UserResponseFragment_FullUser_Fragment = { __typename?: 'FullUser', id: string, name: string, email?: string | null, picture?: string | null, twitter: boolean, google: boolean, token?: string | null };
 
 type UserResponseFragment_UserError_Fragment = { __typename?: 'UserError', path: string, message: string };
 
@@ -194,28 +195,28 @@ export type CreateUserMutationVariables = Exact<{
 }>;
 
 
-export type CreateUserMutation = { __typename?: 'Mutation', signInWithGoogle: { __typename?: 'FullUser', id: string, name: string, email?: string | null, picture?: string | null, twitter: boolean, google: boolean } | { __typename?: 'UserError', path: string, message: string } };
+export type CreateUserMutation = { __typename?: 'Mutation', signInWithGoogle: { __typename?: 'FullUser', id: string, name: string, email?: string | null, picture?: string | null, twitter: boolean, google: boolean, token?: string | null } | { __typename?: 'UserError', path: string, message: string } };
 
 export type LoginMutationVariables = Exact<{
   input: LoginInput;
 }>;
 
 
-export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'FullUser', id: string, name: string, email?: string | null, picture?: string | null, twitter: boolean, google: boolean } | { __typename?: 'UserError', path: string, message: string } };
+export type LoginMutation = { __typename?: 'Mutation', login: { __typename?: 'FullUser', id: string, name: string, email?: string | null, picture?: string | null, twitter: boolean, google: boolean, token?: string | null } | { __typename?: 'UserError', path: string, message: string } };
 
 export type SignUpMutationVariables = Exact<{
   input: SignupInput;
 }>;
 
 
-export type SignUpMutation = { __typename?: 'Mutation', signup: { __typename?: 'FullUser', id: string, name: string, email?: string | null, picture?: string | null, twitter: boolean, google: boolean } | { __typename?: 'UserError', path: string, message: string } };
+export type SignUpMutation = { __typename?: 'Mutation', signup: { __typename?: 'FullUser', id: string, name: string, email?: string | null, picture?: string | null, twitter: boolean, google: boolean, token?: string | null } | { __typename?: 'UserError', path: string, message: string } };
 
 export type TwitterAuthMutationVariables = Exact<{
   code: Scalars['String'];
 }>;
 
 
-export type TwitterAuthMutation = { __typename?: 'Mutation', signInWithTwitter: { __typename?: 'FullUser', id: string, name: string, email?: string | null, picture?: string | null, twitter: boolean, google: boolean } | { __typename?: 'UserError', path: string, message: string } };
+export type TwitterAuthMutation = { __typename?: 'Mutation', signInWithTwitter: { __typename?: 'FullUser', id: string, name: string, email?: string | null, picture?: string | null, twitter: boolean, google: boolean, token?: string | null } | { __typename?: 'UserError', path: string, message: string } };
 
 export type UpdateMeMutationVariables = Exact<{
   input: UpdateInput;
@@ -244,7 +245,7 @@ export type GetTweetsQuery = { __typename?: 'Query', getTweets: Array<{ __typena
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'FullUser', id: string, name: string, email?: string | null, picture?: string | null, twitter: boolean, google: boolean } | null };
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'FullUser', id: string, name: string, email?: string | null, picture?: string | null, twitter: boolean, google: boolean, token?: string | null } | null };
 
 export const TweetFragmentFragmentDoc = gql`
     fragment TweetFragment on Tweet {
@@ -282,6 +283,7 @@ export const UserFragmentFragmentDoc = gql`
   picture
   twitter
   google
+  token
 }
     `;
 export const UserErrorFragmentFragmentDoc = gql`

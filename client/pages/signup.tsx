@@ -7,6 +7,7 @@ interface indexProps {}
 import Googlebutton from "../components/GoogleButton";
 import Twitterbutton from "../components/TwitterButton";
 import { SignupInput, useSignUpMutation } from "../generated/graphql";
+import { setToken } from "../utils/setCookie";
 
 const Index: React.FC<indexProps> = ({}) => {
   const router = useRouter();
@@ -32,7 +33,10 @@ const Index: React.FC<indexProps> = ({}) => {
       const user = await createUser({
         variables: { input: { name, email, password } as SignupInput },
       });
-      router.push("/?login=success");
+      if (user.data?.signup.__typename === "FullUser") {
+        setToken(user.data.signup.token!);
+        router.push("/?login=success");
+      }
     }
   };
   return (
