@@ -1,17 +1,13 @@
-import "../styles/globals.css";
-import type { AppProps } from "next/app";
+import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import { NextUIProvider } from "@nextui-org/react";
-import { SSRProvider } from "@react-aria/ssr";
+import type { AppProps } from "next/app";
+import "../styles/globals.css";
 
-import {
-  ApolloClient,
-  InMemoryCache,
-  ApolloProvider,
-  gql,
-} from "@apollo/client";
-import Navbar from "../components/NavBar";
 const client = new ApolloClient({
-  uri: "http://localhost:4000/graphql",
+  uri:
+    process.env.NODE_ENV === "production"
+      ? "https://sections-be.herokuapp.com/graphql"
+      : "http://localhost:4000/graphql",
   cache: new InMemoryCache(),
   credentials: "include",
 });
