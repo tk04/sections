@@ -1,3 +1,4 @@
+import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
 import {
   GetMyTweetsDocument,
@@ -10,10 +11,17 @@ interface ManageTweetsProps {}
 
 const Managetweets: React.FC<ManageTweetsProps> = ({}) => {
   const [deleted, setDeleted] = useState<boolean>(false);
-  const { data } = useGetMyTweetsQuery();
+  const { data } = useGetMyTweetsQuery({
+    variables: { token: Cookies.get("token")! },
+  });
   const [deleteTweet] = useDeleteTweetMutation({
+    // variables: { },
     update: (cache, { data }) => {
-      const results: any = cache.readQuery({ query: GetMyTweetsDocument });
+      const results: any = cache.readQuery({
+        query: GetMyTweetsDocument,
+        variables: { token: Cookies.get("token")! },
+      });
+      console.log("RESULTS: ", results);
       if (results.getMyTweets) {
         // const values =
         const idx = results.getMyTweets.findIndex(
@@ -22,6 +30,7 @@ const Managetweets: React.FC<ManageTweetsProps> = ({}) => {
 
         cache.writeQuery({
           query: GetMyTweetsDocument,
+          variables: { token: Cookies.get("token")! },
           data: {
             getMyTweets: [
               ...results.getMyTweets.slice(0, idx),
@@ -45,7 +54,7 @@ const Managetweets: React.FC<ManageTweetsProps> = ({}) => {
         setDeleted(false);
       }, 3000);
 
-      await deleteTweet({ variables: { url } });
+      await deleteTweet({ variables: { url, token: Cookies.get("token")! } });
     }
   };
   return (

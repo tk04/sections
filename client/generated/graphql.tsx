@@ -58,11 +58,13 @@ export type Mutation = {
 
 
 export type MutationAddTweetsArgs = {
+  token: Scalars['String'];
   tweetURLs: Array<Scalars['String']>;
 };
 
 
 export type MutationDeleteTweetArgs = {
+  token: Scalars['String'];
   url: Scalars['String'];
 };
 
@@ -109,6 +111,11 @@ export type Query = {
   getTweets: Array<Tweet>;
   hello: Scalars['String'];
   me?: Maybe<FullUser>;
+};
+
+
+export type QueryGetMyTweetsArgs = {
+  token: Scalars['String'];
 };
 
 
@@ -176,6 +183,7 @@ export type UserResponseFragmentFragment = UserResponseFragment_FullUser_Fragmen
 
 export type AddTweetsMutationVariables = Exact<{
   urls: Array<Scalars['String']> | Scalars['String'];
+  token: Scalars['String'];
 }>;
 
 
@@ -183,6 +191,7 @@ export type AddTweetsMutation = { __typename?: 'Mutation', addTweets: boolean };
 
 export type DeleteTweetMutationVariables = Exact<{
   url: Scalars['String'];
+  token: Scalars['String'];
 }>;
 
 
@@ -235,7 +244,9 @@ export type GetLandingPageTweetsQueryVariables = Exact<{ [key: string]: never; }
 
 export type GetLandingPageTweetsQuery = { __typename?: 'Query', getLandingPageTweets: Array<{ __typename?: 'Tweet', id: number, url: string, likes: number, text?: string | null, retweets: number, replies: number, media?: Array<{ __typename?: 'Media', url?: string | null, preview_image_url?: string | null, type: string, width?: number | null, height?: number | null }> | null, user: { __typename?: 'TweetUser', name: string, profile_image_url: string, id: number, username: string, verified: boolean }, pollOptions?: Array<{ __typename?: 'Poll', label: string, votes: number }> | null }> };
 
-export type GetMyTweetsQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetMyTweetsQueryVariables = Exact<{
+  token: Scalars['String'];
+}>;
 
 
 export type GetMyTweetsQuery = { __typename?: 'Query', getMyTweets: Array<{ __typename?: 'Tweet', id: number, url: string, likes: number, text?: string | null, retweets: number, replies: number, media?: Array<{ __typename?: 'Media', url?: string | null, preview_image_url?: string | null, type: string, width?: number | null, height?: number | null }> | null, user: { __typename?: 'TweetUser', name: string, profile_image_url: string, id: number, username: string, verified: boolean }, pollOptions?: Array<{ __typename?: 'Poll', label: string, votes: number }> | null }> };
@@ -307,8 +318,8 @@ export const UserResponseFragmentFragmentDoc = gql`
     ${UserFragmentFragmentDoc}
 ${UserErrorFragmentFragmentDoc}`;
 export const AddTweetsDocument = gql`
-    mutation addTweets($urls: [String!]!) {
-  addTweets(tweetURLs: $urls)
+    mutation addTweets($urls: [String!]!, $token: String!) {
+  addTweets(tweetURLs: $urls, token: $token)
 }
     `;
 export type AddTweetsMutationFn = Apollo.MutationFunction<AddTweetsMutation, AddTweetsMutationVariables>;
@@ -327,6 +338,7 @@ export type AddTweetsMutationFn = Apollo.MutationFunction<AddTweetsMutation, Add
  * const [addTweetsMutation, { data, loading, error }] = useAddTweetsMutation({
  *   variables: {
  *      urls: // value for 'urls'
+ *      token: // value for 'token'
  *   },
  * });
  */
@@ -338,8 +350,8 @@ export type AddTweetsMutationHookResult = ReturnType<typeof useAddTweetsMutation
 export type AddTweetsMutationResult = Apollo.MutationResult<AddTweetsMutation>;
 export type AddTweetsMutationOptions = Apollo.BaseMutationOptions<AddTweetsMutation, AddTweetsMutationVariables>;
 export const DeleteTweetDocument = gql`
-    mutation DeleteTweet($url: String!) {
-  deleteTweet(url: $url)
+    mutation DeleteTweet($url: String!, $token: String!) {
+  deleteTweet(url: $url, token: $token)
 }
     `;
 export type DeleteTweetMutationFn = Apollo.MutationFunction<DeleteTweetMutation, DeleteTweetMutationVariables>;
@@ -358,6 +370,7 @@ export type DeleteTweetMutationFn = Apollo.MutationFunction<DeleteTweetMutation,
  * const [deleteTweetMutation, { data, loading, error }] = useDeleteTweetMutation({
  *   variables: {
  *      url: // value for 'url'
+ *      token: // value for 'token'
  *   },
  * });
  */
@@ -613,8 +626,8 @@ export type GetLandingPageTweetsQueryHookResult = ReturnType<typeof useGetLandin
 export type GetLandingPageTweetsLazyQueryHookResult = ReturnType<typeof useGetLandingPageTweetsLazyQuery>;
 export type GetLandingPageTweetsQueryResult = Apollo.QueryResult<GetLandingPageTweetsQuery, GetLandingPageTweetsQueryVariables>;
 export const GetMyTweetsDocument = gql`
-    query GetMyTweets {
-  getMyTweets {
+    query GetMyTweets($token: String!) {
+  getMyTweets(token: $token) {
     ...TweetFragment
   }
 }
@@ -632,10 +645,11 @@ export const GetMyTweetsDocument = gql`
  * @example
  * const { data, loading, error } = useGetMyTweetsQuery({
  *   variables: {
+ *      token: // value for 'token'
  *   },
  * });
  */
-export function useGetMyTweetsQuery(baseOptions?: Apollo.QueryHookOptions<GetMyTweetsQuery, GetMyTweetsQueryVariables>) {
+export function useGetMyTweetsQuery(baseOptions: Apollo.QueryHookOptions<GetMyTweetsQuery, GetMyTweetsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<GetMyTweetsQuery, GetMyTweetsQueryVariables>(GetMyTweetsDocument, options);
       }

@@ -1,4 +1,5 @@
 import { Button, Input, Loading } from "@nextui-org/react";
+import Cookies from "js-cookie";
 import React, { useRef, useState } from "react";
 import Managetweets from "../components/ManageTweets";
 import Navbar from "../components/NavBar";
@@ -22,11 +23,15 @@ const Dashboard: React.FC<dashboardProps> = ({}) => {
   const [getTweet, { data }] = useGetTweetMutation();
   const [addTweets] = useAddTweetsMutation({
     update: (cache) => {
-      const data: any = cache.readQuery({ query: GetMyTweetsDocument })!;
+      const data: any = cache.readQuery({
+        query: GetMyTweetsDocument,
+        variables: { token: Cookies.get("token")! },
+      })!;
       console.log("DATA: ", data);
       if (data) {
         cache.writeQuery({
           query: GetMyTweetsDocument,
+          variables: { token: Cookies.get("token")! },
           data: { getMyTweets: [...data.getMyTweets, ...tweets] },
         });
       }
@@ -58,7 +63,9 @@ const Dashboard: React.FC<dashboardProps> = ({}) => {
     if (tweets.length > 0) {
       setLoading(true);
       const tweetURLs: string[] = tweets.map((tweet) => tweet.url!);
-      await addTweets({ variables: { urls: tweetURLs } });
+      await addTweets({
+        variables: { urls: tweetURLs, token: Cookies.get("token")! },
+      });
       setTweets([]);
       setLoading(false);
       setLabel("Tweets saved successfully");
