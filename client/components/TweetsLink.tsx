@@ -3,12 +3,13 @@ import { Button, Modal } from "@nextui-org/react";
 import React, { useState } from "react";
 import { useMeQuery } from "../generated/graphql";
 import Editor from "@monaco-editor/react";
+import Cookies from "js-cookie";
 interface TweetsLinkProps {}
 
 const Tweetslink: React.FC<TweetsLinkProps> = ({}) => {
   const [open, setOpen] = useState(false);
 
-  const { data } = useMeQuery();
+  const { data } = useMeQuery({ variables: { token: Cookies.get("token")! } });
   const openHandler = () => {
     setOpen(true);
   };

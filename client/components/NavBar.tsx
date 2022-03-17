@@ -1,4 +1,5 @@
 import { Avatar, Button, Tooltip } from "@nextui-org/react";
+import Cookies from "js-cookie";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
@@ -8,8 +9,8 @@ interface NavBarProps {}
 
 const Navbar: React.FC<NavBarProps> = ({}) => {
   const router = useRouter();
-
-  const { data } = useMeQuery();
+  const token = Cookies.get("token");
+  const { data } = useMeQuery({ variables: { token: token! } });
 
   return (
     <nav className="flex mt-14 font-md font-bold lg:mx-10 2xl:mx-64 mx-10  items-center justify-between align-middle">

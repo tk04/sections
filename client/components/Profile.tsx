@@ -1,4 +1,5 @@
 import { Button, Input } from "@nextui-org/react";
+import Cookies from "js-cookie";
 import Image from "next/image";
 import React, { useRef } from "react";
 import {
@@ -16,7 +17,7 @@ interface profileProps {
 const Profile: React.FC<profileProps> = ({ onSave }) => {
   const nameRef = useRef<HTMLInputElement>(null);
   const emailRef = useRef<HTMLInputElement>(null);
-  const { data } = useMeQuery();
+  const { data } = useMeQuery({ variables: { token: Cookies.get("token")! } });
   const [updateMe] = useUpdateMeMutation({
     update(cache, { data: { updateMe } }: any) {
       const { me } = cache.readQuery({ query: MeDocument }) as {

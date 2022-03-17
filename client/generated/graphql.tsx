@@ -116,6 +116,11 @@ export type QueryGetTweetsArgs = {
   id: Scalars['String'];
 };
 
+
+export type QueryMeArgs = {
+  token: Scalars['String'];
+};
+
 export type SignupInput = {
   email: Scalars['String'];
   name: Scalars['String'];
@@ -242,7 +247,9 @@ export type GetTweetsQueryVariables = Exact<{
 
 export type GetTweetsQuery = { __typename?: 'Query', getTweets: Array<{ __typename?: 'Tweet', id: number, url: string, likes: number, text?: string | null, retweets: number, replies: number, media?: Array<{ __typename?: 'Media', url?: string | null, preview_image_url?: string | null, type: string, width?: number | null, height?: number | null }> | null, user: { __typename?: 'TweetUser', name: string, profile_image_url: string, id: number, username: string, verified: boolean }, pollOptions?: Array<{ __typename?: 'Poll', label: string, votes: number }> | null }> };
 
-export type MeQueryVariables = Exact<{ [key: string]: never; }>;
+export type MeQueryVariables = Exact<{
+  token: Scalars['String'];
+}>;
 
 
 export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'FullUser', id: string, name: string, email?: string | null, picture?: string | null, twitter: boolean, google: boolean, token?: string | null } | null };
@@ -675,8 +682,8 @@ export type GetTweetsQueryHookResult = ReturnType<typeof useGetTweetsQuery>;
 export type GetTweetsLazyQueryHookResult = ReturnType<typeof useGetTweetsLazyQuery>;
 export type GetTweetsQueryResult = Apollo.QueryResult<GetTweetsQuery, GetTweetsQueryVariables>;
 export const MeDocument = gql`
-    query Me {
-  me {
+    query Me($token: String!) {
+  me(token: $token) {
     ...UserFragment
   }
 }
@@ -694,10 +701,11 @@ export const MeDocument = gql`
  * @example
  * const { data, loading, error } = useMeQuery({
  *   variables: {
+ *      token: // value for 'token'
  *   },
  * });
  */
-export function useMeQuery(baseOptions?: Apollo.QueryHookOptions<MeQuery, MeQueryVariables>) {
+export function useMeQuery(baseOptions: Apollo.QueryHookOptions<MeQuery, MeQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<MeQuery, MeQueryVariables>(MeDocument, options);
       }
