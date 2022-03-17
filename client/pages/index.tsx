@@ -1,16 +1,13 @@
-import React, { useEffect, useRef, useState } from "react";
-import Image from "next/image";
-import { useMeQuery } from "../generated/graphql";
-import { useRouter } from "next/router";
-import Navbar from "../components/NavBar";
-import Twitterbutton from "../components/TwitterButton";
-import Googlebutton from "../components/GoogleButton";
 import { Button } from "@nextui-org/react";
-import Signupmodal from "../components/SignupModal";
-import { useSignup } from "../hooks/useSignup";
-import IframeResizer from "iframe-resizer-react";
-import Script from "next/script";
+import { useRouter } from "next/router";
+import React, { useEffect, useRef, useState } from "react";
+import Googlebutton from "../components/GoogleButton";
 import LandingPageTweets from "../components/LandingPageTweets";
+import Navbar from "../components/NavBar";
+import Signupmodal from "../components/SignupModal";
+import Twitterbutton from "../components/TwitterButton";
+import { useMeQuery } from "../generated/graphql";
+import { useSignup } from "../hooks/useSignup";
 
 interface indexProps {}
 

@@ -2,7 +2,7 @@ import { ApolloClient, ApolloProvider, InMemoryCache } from "@apollo/client";
 import { NextUIProvider } from "@nextui-org/react";
 import type { AppProps } from "next/app";
 import "../styles/globals.css";
-
+import Cookies from "js-cookie";
 const client = new ApolloClient({
   uri:
     process.env.NODE_ENV === "production"
@@ -11,9 +11,9 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
   credentials: "include",
 
-  // headers: {
-  //   cookie:
-  // },
+  headers: {
+    cookie: Cookies.get("token") || "",
+  },
 });
 function MyApp({ Component, pageProps }: AppProps) {
   return (
