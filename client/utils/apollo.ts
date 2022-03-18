@@ -8,8 +8,8 @@ export const client = new ApolloClient({
       : "http://localhost:4000/graphql",
   cache: new InMemoryCache(),
   credentials: "include",
-
   headers: {
     cookie: Cookies.get("token") || "",
+    crossDomain: "true",
   },
 });
