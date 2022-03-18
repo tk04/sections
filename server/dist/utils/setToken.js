@@ -9,15 +9,16 @@ const setToken = (userId, res) => {
     const token = jsonwebtoken_1.default.sign({ userId }, process.env.JWT_SECRET, {
         expiresIn: "30d",
     });
-    // res.cookie("token", token, {
-    //   maxAge: 1000 * 60 * 60 * 24 * 30, // 30 days
-    //   secure: process.env.NODE_ENV === "production",
-    //   httpOnly: true,
-    //   domain:
-    //     process.env.NODE_ENV === "production"
-    //       ? "sections1.vercel.app"
-    //       : undefined,
-    // });
+    res.cookie("session", token, {
+        maxAge: 1000 * 60 * 60 * 24 * 30,
+        secure: process.env.NODE_ENV === "production",
+        httpOnly: true,
+        sameSite: "none",
+        // domain:
+        //   process.env.NODE_ENV === "production"
+        //     ? "sections-be.herokuapp.com"
+        //     : undefined,
+    });
     return token;
 };
 exports.setToken = setToken;

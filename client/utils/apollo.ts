@@ -9,7 +9,6 @@ export const client = new ApolloClient({
   cache: new InMemoryCache(),
   credentials: "include",
   headers: {
-    cookie: Cookies.get("token") || "",
-    crossDomain: "true",
+    "Access-Control-Allow-Credentials": "true",
   },
 });

@@ -108,7 +108,9 @@ let UserResolver = class UserResolver {
         return "Hello World";
     }
     async me({ req, prisma }, token) {
-        // const token = req.cookies.token;
+        const session = req.cookies.session;
+        console.log("COOKIES: ", req.cookies);
+        console.log("TOKEN: ", session);
         if (token) {
             const { userId } = jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET);
             // console.log("DECODED TOKEN: ", userId);
