@@ -8,7 +8,10 @@ export const client = new ApolloClient({
       : "http://localhost:4000/graphql",
   cache: new InMemoryCache(),
   credentials: "include",
+
   headers: {
+    // AccessControlAllowCredentials: "true",
     "Access-Control-Allow-Credentials": "true",
+    withCredentials: "true",
   },
 });
