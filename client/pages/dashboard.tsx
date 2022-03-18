@@ -1,13 +1,11 @@
-import { Button, Input, Loading } from "@nextui-org/react";
+import { Button, Input } from "@nextui-org/react";
 import Cookies from "js-cookie";
 import React, { useRef, useState } from "react";
 import Managetweets from "../components/ManageTweets";
 import Navbar from "../components/NavBar";
 import Tweets from "../components/Tweets";
-import Tweetslink from "../components/TweetsLink";
 import {
   GetMyTweetsDocument,
-  GetTweetsDocument,
   TweetFragmentFragment,
   useAddTweetsMutation,
   useGetTweetMutation,

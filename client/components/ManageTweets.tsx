@@ -1,3 +1,4 @@
+import { Loading } from "@nextui-org/react";
 import Cookies from "js-cookie";
 import React, { useEffect, useState } from "react";
 import {
@@ -12,7 +13,7 @@ interface ManageTweetsProps {}
 
 const Managetweets: React.FC<ManageTweetsProps> = ({}) => {
   const [deleted, setDeleted] = useState<boolean>(false);
-  const { data } = useGetMyTweetsQuery({
+  const { data, loading } = useGetMyTweetsQuery({
     variables: { token: Cookies.get("token")! },
   });
   const [deleteTweet] = useDeleteTweetMutation({
@@ -63,6 +64,9 @@ const Managetweets: React.FC<ManageTweetsProps> = ({}) => {
   };
   return (
     <>
+      {loading && (
+        <Loading className="w-full  justify-center h-[35vh] m-auto items-center" />
+      )}
       {data && data.getMyTweets && data.getMyTweets.length > 0 && (
         <div>
           <h1 className="m-auto w-fit mt-10 mb-5 text-xl ">
