@@ -2,10 +2,10 @@ import { ApolloClient, HttpLink, InMemoryCache } from "@apollo/client";
 import Cookies from "js-cookie";
 
 const link = new HttpLink({
-  uri:
-    process.env.NODE_ENV === "production"
-      ? "https://sections-be.herokuapp.com/graphql"
-      : "http://localhost:4000/graphql",
+  uri: "/graphql",
+  // process.env.NODE_ENV === "production"
+  //   ? "https://sections-be.herokuapp.com/graphql"
+  //   : "http://localhost:4000/graphql",
   credentials: "include",
   // headers: {},
 });

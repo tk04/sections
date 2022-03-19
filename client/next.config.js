@@ -5,7 +5,10 @@ const nextConfig = {
       fallback: [
         {
           source: "/:path*",
-          destination: `https://sections-be.herokuapp.com/graphql`,
+          destination:
+            process.env.NODE_ENV === "production"
+              ? `https://sections-be.herokuapp.com/graphql`
+              : "http://localhost:4000/graphql",
         },
       ],
     };
