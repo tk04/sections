@@ -42,14 +42,14 @@ const Index: React.FC<indexProps> = ({}) => {
       <br />
       <br />
       <div className="lg:ml-64 mx-16 lg:grid lg:grid-cols-[30%_70%] lg:grid-flow-col-dense lg:h-[90vh]">
-        <article className="flex flex-col justify-center items-center lg:items h-[80vh] lg:mr-20 ">
+        <article className="flex flex-col justify-center items-center lg:items h-[80vh] ">
           <div className="block lg:fixed lg:max-w-xs">
             <h1 className="text-7xl font-bold m-auto lg:text-left text-center">
               Make your website <br />
               stand out
             </h1>
             <br />
-            <p className="w-96 self-center m-auto text-center lg:text-left ml-6 sm:ml-auto">
+            <p className=" self-center m-auto text-center lg:text-left  sm:ml-auto">
               Customise your site with plugin with custom designed section
               components in less than 20 seconds. Choose from the wide range of
               sections we provide and paste the URL into your website.
@@ -58,7 +58,7 @@ const Index: React.FC<indexProps> = ({}) => {
             <Button
               shadow
               size="xl"
-              className="mt-4 text-lg py-6 w-full rounded-none self-center ml-[17px] lg:ml-0"
+              className="mt-4 text-lg py-6 w-full rounded-none self-center"
               // className="w-screen"
               onClick={SignupHandler}
             >
