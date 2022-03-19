@@ -1,9 +1,8 @@
 import { Button, Modal } from "@nextui-org/react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React, { useState } from "react";
 import Profile from "./Profile";
-import { useRouter } from "next/router";
-import Cookies from "js-cookie";
 interface ProfileMenuProps {}
 
 const Profilemenu: React.FC<ProfileMenuProps> = ({}) => {
@@ -39,14 +38,8 @@ const Profilemenu: React.FC<ProfileMenuProps> = ({}) => {
           color="error"
           className="mt-2"
           onClick={() => {
-            Cookies.remove("token");
+            // work on logout mutation
             router.push("/");
-            // router.reload();
-            // client.cache.evict({
-            //   fieldName: "me",
-            //   args: { token: Cookies.get("token") },
-            // });
-            // client.cache.gc();
           }}
         >
           Logout

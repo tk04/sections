@@ -58,13 +58,11 @@ export type Mutation = {
 
 
 export type MutationAddTweetsArgs = {
-  token: Scalars['String'];
   tweetURLs: Array<Scalars['String']>;
 };
 
 
 export type MutationDeleteTweetArgs = {
-  token: Scalars['String'];
   url: Scalars['String'];
 };
 
@@ -96,7 +94,6 @@ export type MutationSignupArgs = {
 
 export type MutationUpdateMeArgs = {
   input: UpdateInput;
-  token: Scalars['String'];
 };
 
 export type Poll = {
@@ -115,18 +112,8 @@ export type Query = {
 };
 
 
-export type QueryGetMyTweetsArgs = {
-  token: Scalars['String'];
-};
-
-
 export type QueryGetTweetsArgs = {
   id: Scalars['String'];
-};
-
-
-export type QueryMeArgs = {
-  token: Scalars['String'];
 };
 
 export type SignupInput = {
@@ -184,7 +171,6 @@ export type UserResponseFragmentFragment = UserResponseFragment_FullUser_Fragmen
 
 export type AddTweetsMutationVariables = Exact<{
   urls: Array<Scalars['String']> | Scalars['String'];
-  token: Scalars['String'];
 }>;
 
 
@@ -192,7 +178,6 @@ export type AddTweetsMutation = { __typename?: 'Mutation', addTweets: boolean };
 
 export type DeleteTweetMutationVariables = Exact<{
   url: Scalars['String'];
-  token: Scalars['String'];
 }>;
 
 
@@ -235,7 +220,6 @@ export type TwitterAuthMutation = { __typename?: 'Mutation', signInWithTwitter: 
 
 export type UpdateMeMutationVariables = Exact<{
   input: UpdateInput;
-  token: Scalars['String'];
 }>;
 
 
@@ -246,9 +230,7 @@ export type GetLandingPageTweetsQueryVariables = Exact<{ [key: string]: never; }
 
 export type GetLandingPageTweetsQuery = { __typename?: 'Query', getLandingPageTweets: Array<{ __typename?: 'Tweet', id: number, url: string, likes: number, text?: string | null, retweets: number, replies: number, media?: Array<{ __typename?: 'Media', url?: string | null, preview_image_url?: string | null, type: string, width?: number | null, height?: number | null }> | null, user: { __typename?: 'TweetUser', name: string, profile_image_url: string, id: number, username: string, verified: boolean }, pollOptions?: Array<{ __typename?: 'Poll', label: string, votes: number }> | null }> };
 
-export type GetMyTweetsQueryVariables = Exact<{
-  token: Scalars['String'];
-}>;
+export type GetMyTweetsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type GetMyTweetsQuery = { __typename?: 'Query', getMyTweets: Array<{ __typename?: 'Tweet', id: number, url: string, likes: number, text?: string | null, retweets: number, replies: number, media?: Array<{ __typename?: 'Media', url?: string | null, preview_image_url?: string | null, type: string, width?: number | null, height?: number | null }> | null, user: { __typename?: 'TweetUser', name: string, profile_image_url: string, id: number, username: string, verified: boolean }, pollOptions?: Array<{ __typename?: 'Poll', label: string, votes: number }> | null }> };
@@ -260,9 +242,7 @@ export type GetTweetsQueryVariables = Exact<{
 
 export type GetTweetsQuery = { __typename?: 'Query', getTweets: Array<{ __typename?: 'Tweet', id: number, url: string, likes: number, text?: string | null, retweets: number, replies: number, media?: Array<{ __typename?: 'Media', url?: string | null, preview_image_url?: string | null, type: string, width?: number | null, height?: number | null }> | null, user: { __typename?: 'TweetUser', name: string, profile_image_url: string, id: number, username: string, verified: boolean }, pollOptions?: Array<{ __typename?: 'Poll', label: string, votes: number }> | null }> };
 
-export type MeQueryVariables = Exact<{
-  token: Scalars['String'];
-}>;
+export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'FullUser', id: string, name: string, email?: string | null, picture?: string | null, twitter: boolean, google: boolean, token?: string | null } | null };
@@ -320,8 +300,8 @@ export const UserResponseFragmentFragmentDoc = gql`
     ${UserFragmentFragmentDoc}
 ${UserErrorFragmentFragmentDoc}`;
 export const AddTweetsDocument = gql`
-    mutation addTweets($urls: [String!]!, $token: String!) {
-  addTweets(tweetURLs: $urls, token: $token)
+    mutation addTweets($urls: [String!]!) {
+  addTweets(tweetURLs: $urls)
 }
     `;
 export type AddTweetsMutationFn = Apollo.MutationFunction<AddTweetsMutation, AddTweetsMutationVariables>;
@@ -340,7 +320,6 @@ export type AddTweetsMutationFn = Apollo.MutationFunction<AddTweetsMutation, Add
  * const [addTweetsMutation, { data, loading, error }] = useAddTweetsMutation({
  *   variables: {
  *      urls: // value for 'urls'
- *      token: // value for 'token'
  *   },
  * });
  */
@@ -352,8 +331,8 @@ export type AddTweetsMutationHookResult = ReturnType<typeof useAddTweetsMutation
 export type AddTweetsMutationResult = Apollo.MutationResult<AddTweetsMutation>;
 export type AddTweetsMutationOptions = Apollo.BaseMutationOptions<AddTweetsMutation, AddTweetsMutationVariables>;
 export const DeleteTweetDocument = gql`
-    mutation DeleteTweet($url: String!, $token: String!) {
-  deleteTweet(url: $url, token: $token)
+    mutation DeleteTweet($url: String!) {
+  deleteTweet(url: $url)
 }
     `;
 export type DeleteTweetMutationFn = Apollo.MutationFunction<DeleteTweetMutation, DeleteTweetMutationVariables>;
@@ -372,7 +351,6 @@ export type DeleteTweetMutationFn = Apollo.MutationFunction<DeleteTweetMutation,
  * const [deleteTweetMutation, { data, loading, error }] = useDeleteTweetMutation({
  *   variables: {
  *      url: // value for 'url'
- *      token: // value for 'token'
  *   },
  * });
  */
@@ -549,8 +527,8 @@ export type TwitterAuthMutationHookResult = ReturnType<typeof useTwitterAuthMuta
 export type TwitterAuthMutationResult = Apollo.MutationResult<TwitterAuthMutation>;
 export type TwitterAuthMutationOptions = Apollo.BaseMutationOptions<TwitterAuthMutation, TwitterAuthMutationVariables>;
 export const UpdateMeDocument = gql`
-    mutation UpdateMe($input: updateInput!, $token: String!) {
-  updateMe(input: $input, token: $token) {
+    mutation UpdateMe($input: updateInput!) {
+  updateMe(input: $input) {
     __typename
     ... on FullUser {
       name
@@ -583,7 +561,6 @@ export type UpdateMeMutationFn = Apollo.MutationFunction<UpdateMeMutation, Updat
  * const [updateMeMutation, { data, loading, error }] = useUpdateMeMutation({
  *   variables: {
  *      input: // value for 'input'
- *      token: // value for 'token'
  *   },
  * });
  */
@@ -629,8 +606,8 @@ export type GetLandingPageTweetsQueryHookResult = ReturnType<typeof useGetLandin
 export type GetLandingPageTweetsLazyQueryHookResult = ReturnType<typeof useGetLandingPageTweetsLazyQuery>;
 export type GetLandingPageTweetsQueryResult = Apollo.QueryResult<GetLandingPageTweetsQuery, GetLandingPageTweetsQueryVariables>;
 export const GetMyTweetsDocument = gql`
-    query GetMyTweets($token: String!) {
-  getMyTweets(token: $token) {
+    query GetMyTweets {
+  getMyTweets {
     ...TweetFragment
   }
 }
@@ -648,11 +625,10 @@ export const GetMyTweetsDocument = gql`
  * @example
  * const { data, loading, error } = useGetMyTweetsQuery({
  *   variables: {
- *      token: // value for 'token'
  *   },
  * });
  */
-export function useGetMyTweetsQuery(baseOptions: Apollo.QueryHookOptions<GetMyTweetsQuery, GetMyTweetsQueryVariables>) {
+export function useGetMyTweetsQuery(baseOptions?: Apollo.QueryHookOptions<GetMyTweetsQuery, GetMyTweetsQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<GetMyTweetsQuery, GetMyTweetsQueryVariables>(GetMyTweetsDocument, options);
       }
@@ -699,8 +675,8 @@ export type GetTweetsQueryHookResult = ReturnType<typeof useGetTweetsQuery>;
 export type GetTweetsLazyQueryHookResult = ReturnType<typeof useGetTweetsLazyQuery>;
 export type GetTweetsQueryResult = Apollo.QueryResult<GetTweetsQuery, GetTweetsQueryVariables>;
 export const MeDocument = gql`
-    query Me($token: String!) {
-  me(token: $token) {
+    query Me {
+  me {
     ...UserFragment
   }
 }
@@ -718,11 +694,10 @@ export const MeDocument = gql`
  * @example
  * const { data, loading, error } = useMeQuery({
  *   variables: {
- *      token: // value for 'token'
  *   },
  * });
  */
-export function useMeQuery(baseOptions: Apollo.QueryHookOptions<MeQuery, MeQueryVariables>) {
+export function useMeQuery(baseOptions?: Apollo.QueryHookOptions<MeQuery, MeQueryVariables>) {
         const options = {...defaultOptions, ...baseOptions}
         return Apollo.useQuery<MeQuery, MeQueryVariables>(MeDocument, options);
       }

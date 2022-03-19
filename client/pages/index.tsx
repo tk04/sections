@@ -1,5 +1,4 @@
 import { Button } from "@nextui-org/react";
-import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
 import Googlebutton from "../components/GoogleButton";
@@ -24,9 +23,7 @@ const Index: React.FC<indexProps> = ({}) => {
   };
 
   const tweetRef = useRef<HTMLIFrameElement>(null);
-  const { refetch } = useMeQuery({
-    variables: { token: Cookies.get("token")! },
-  });
+  const { refetch } = useMeQuery({});
   const { visibleSignup, SignupHandler, closeSignupHandler } = useSignup();
   const router = useRouter();
   const LoginSuccess = router.query.login;

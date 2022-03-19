@@ -1,5 +1,5 @@
-query Me($token: String!) {
-  me(token: $token) {
+query Me {
+  me {
     ...UserFragment
   }
 }

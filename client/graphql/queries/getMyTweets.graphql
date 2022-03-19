@@ -1,5 +1,5 @@
-query GetMyTweets($token: String!) {
-  getMyTweets(token: $token) {
+query GetMyTweets {
+  getMyTweets {
     ...TweetFragment
   }
 }

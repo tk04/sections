@@ -9,7 +9,7 @@ interface TweetsLinkProps {}
 const Tweetslink: React.FC<TweetsLinkProps> = ({}) => {
   const [open, setOpen] = useState(false);
 
-  const { data } = useMeQuery({ variables: { token: Cookies.get("token")! } });
+  const { data } = useMeQuery();
   const openHandler = () => {
     setOpen(true);
   };
