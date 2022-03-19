@@ -2,15 +2,34 @@ import { Button, Modal } from "@nextui-org/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
+import { MeDocument, useLogoutMutation } from "../generated/graphql";
 import Profile from "./Profile";
 interface ProfileMenuProps {}
 
 const Profilemenu: React.FC<ProfileMenuProps> = ({}) => {
   const router = useRouter();
   const [visible, setVisible] = useState(false);
+  const [logout, { data }] = useLogoutMutation({
+    update: (cache) => {
+      cache.writeQuery({
+        query: MeDocument,
+        data: {
+          me: null,
+        },
+      });
+    },
+  });
   const handler = () => setVisible(true);
   const closeHandler = () => {
     setVisible(false);
+  };
+  const logoutHandler = () => {
+    logout({
+      optimisticResponse: {
+        logout: true,
+      },
+    });
+    router.push("/");
   };
   return (
     <div>
@@ -37,10 +56,7 @@ const Profilemenu: React.FC<ProfileMenuProps> = ({}) => {
           light
           color="error"
           className="mt-2"
-          onClick={() => {
-            // work on logout mutation
-            router.push("/");
-          }}
+          onClick={logoutHandler}
         >
           Logout
         </Button>
