@@ -12,7 +12,7 @@ const Navbar: React.FC<NavBarProps> = ({}) => {
   const { data } = useMeQuery();
 
   return (
-    <nav className=" flex mt-14 mb-8 sm:mb-0 font-md font-bold lg:mx-52 2xl:mx-72 mx-10  items-center justify-between align-middle">
+    <nav className=" flex mt-14  xs:mb-24 mb-12 font-md font-bold lg:mx-52 2xl:mx-72 mx-10  items-center justify-between align-middle">
       <ul className="mt-2 cursor-pointer">
         <Link href="/">
           <li>Sections</li>

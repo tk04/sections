@@ -39,8 +39,6 @@ const Index: React.FC<indexProps> = ({}) => {
   return (
     <>
       <Navbar />
-      <br />
-      <br />
       <div className="lg:ml-64 mx-16 lg:grid lg:grid-cols-[30%_70%] lg:grid-flow-col-dense lg:h-[90vh]">
         <article className="flex flex-col justify-center items-center lg:items h-[80vh] ">
           <div className="block lg:fixed lg:max-w-xs">
@@ -59,7 +57,6 @@ const Index: React.FC<indexProps> = ({}) => {
               shadow
               size="xl"
               className="mt-4 text-lg py-6 w-full rounded-none self-center"
-              // className="w-screen"
               onClick={SignupHandler}
             >
               Get started
@@ -72,7 +69,7 @@ const Index: React.FC<indexProps> = ({}) => {
             </section>
           </div>
         </article>
-        <article className="mt-10 lg:mt-0">
+        <article className="mt-24  sm:mt-0">
           <LandingPageTweets />
         </article>
       </div>
