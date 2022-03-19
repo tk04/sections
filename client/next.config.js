@@ -1,5 +1,15 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  async rewrites() {
+    return {
+      fallback: [
+        {
+          source: "/:path*",
+          destination: `https://sections-be.herokuapp.com/graphql`,
+        },
+      ],
+    };
+  },
   reactStrictMode: true,
   images: {
     domains: ["lh3.googleusercontent.com", "pbs.twimg.com"],
