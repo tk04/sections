@@ -1,13 +1,10 @@
-import React, { useRef } from "react";
-import { Button } from "@nextui-org/react";
-import { Input } from "@nextui-org/react";
+import { Button, Input } from "@nextui-org/react";
 import { useRouter } from "next/router";
-interface indexProps {}
-
+import React, { useRef } from "react";
 import Googlebutton from "../components/GoogleButton";
 import Twitterbutton from "../components/TwitterButton";
 import { SignupInput, useSignUpMutation } from "../generated/graphql";
-import { setToken } from "../utils/setCookie";
+interface indexProps {}
 
 const Index: React.FC<indexProps> = ({}) => {
   const router = useRouter();
@@ -34,7 +31,6 @@ const Index: React.FC<indexProps> = ({}) => {
         variables: { input: { name, email, password } as SignupInput },
       });
       if (user.data?.signup.__typename === "FullUser") {
-        setToken(user.data.signup.token!);
         router.push("/?login=success");
       }
     }

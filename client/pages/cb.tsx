@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import React, { useEffect } from "react";
 import { useCreateUserMutation } from "../generated/graphql";
-import { setToken } from "../utils/setCookie";
 
 interface cbProps {}
 const Cb: React.FC<cbProps> = ({}) => {
@@ -17,7 +16,6 @@ const Cb: React.FC<cbProps> = ({}) => {
     if (code) {
       initUser();
       if (data?.signInWithGoogle.__typename === "FullUser") {
-        setToken(data.signInWithGoogle.token!);
         router.push("/?login=success");
       }
     }

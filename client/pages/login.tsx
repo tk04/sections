@@ -1,11 +1,9 @@
-import React, { useRef } from "react";
-import { Button } from "@nextui-org/react";
-import { Input } from "@nextui-org/react";
+import { Button, Input } from "@nextui-org/react";
 import { useRouter } from "next/router";
+import React, { useRef } from "react";
 import Googlebutton from "../components/GoogleButton";
 import Twitterbutton from "../components/TwitterButton";
-import { useLoginMutation, LoginInput } from "../generated/graphql";
-import { setToken } from "../utils/setCookie";
+import { LoginInput, useLoginMutation } from "../generated/graphql";
 interface loginProps {}
 
 const Login: React.FC<loginProps> = ({}) => {
@@ -31,7 +29,6 @@ const Login: React.FC<loginProps> = ({}) => {
         variables: { input: { email, password } as LoginInput },
       });
       if (user.data?.login.__typename === "FullUser") {
-        setToken(user.data.login.token!);
         router.push("/?login=success");
       }
     }

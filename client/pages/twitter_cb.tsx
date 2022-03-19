@@ -1,8 +1,7 @@
-import React, { useEffect } from "react";
-
 import { useRouter } from "next/router";
+import React, { useEffect } from "react";
 import { useTwitterAuthMutation } from "../generated/graphql";
-import { setToken } from "../utils/setCookie";
+
 interface twitter_cbProps {}
 
 const TwitterCb: React.FC<twitter_cbProps> = ({}) => {
@@ -19,7 +18,6 @@ const TwitterCb: React.FC<twitter_cbProps> = ({}) => {
     if (code) {
       auth(code as string);
       if (data?.signInWithTwitter.__typename === "FullUser") {
-        setToken(data.signInWithTwitter.token!);
         router.push("/?login=success");
       }
     }
