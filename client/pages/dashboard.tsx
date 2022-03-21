@@ -1,5 +1,5 @@
 import { Button, Input } from "@nextui-org/react";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Managetweets from "../components/ManageTweets";
 import Navbar from "../components/NavBar";
 import Tweets from "../components/Tweets";
@@ -8,6 +8,7 @@ import {
   TweetFragmentFragment,
   useAddTweetsMutation,
   useGetTweetMutation,
+  useMeQuery,
 } from "../generated/graphql";
 
 interface dashboardProps {}
@@ -18,6 +19,7 @@ const Dashboard: React.FC<dashboardProps> = ({}) => {
   const [label, setLabel] = useState<string>("");
   const inputRef = useRef<HTMLInputElement>(null);
   const [getTweet, { data }] = useGetTweetMutation();
+  const { data: meData } = useMeQuery();
   const [addTweets] = useAddTweetsMutation({
     update: (cache) => {
       const data: any = cache.readQuery({
@@ -99,7 +101,7 @@ const Dashboard: React.FC<dashboardProps> = ({}) => {
         )}
         <br />
         <br />
-        {tweets.length > 0 && !saveLoading && (
+        {tweets.length > 0 && !saveLoading && meData && meData.me && (
           <Button onClick={saveHandler} size="lg" className="w-80 m-auto">
             Save
           </Button>

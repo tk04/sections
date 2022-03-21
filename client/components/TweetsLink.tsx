@@ -1,24 +1,43 @@
-import { Button, Modal } from "@nextui-org/react";
-
-import React, { useState } from "react";
-import { useMeQuery } from "../generated/graphql";
 import Editor from "@monaco-editor/react";
-import Cookies from "js-cookie";
+import { Button, Modal } from "@nextui-org/react";
+import React, { useState } from "react";
+import { AiFillCheckCircle } from "react-icons/ai";
+import { VscCopy } from "react-icons/vsc";
+import { useMeQuery } from "../generated/graphql";
+
 interface TweetsLinkProps {}
 
 const Tweetslink: React.FC<TweetsLinkProps> = ({}) => {
   const [open, setOpen] = useState(false);
+  const [copy, setCopy] = useState(false);
 
   const { data } = useMeQuery();
+  let copyContent = `<script src="https://sections1.vercel.app/iframeResizer.js"></script>
+  <iframe id="tweetWall" style="min-width: 100%" frameborder="0" 
+  src="https://sections1.vercel.app/tweets/${data?.me?.id}"></iframe>
+  <script>
+      iFrameResize({ log: false }, "#tweetWall");
+  </script>
+      `;
+
   const openHandler = () => {
     setOpen(true);
   };
   const closeHandler = () => {
     setOpen(false);
   };
+  const copyHandler = () => {
+    navigator.clipboard.writeText(copyContent);
+    setCopy(true);
+    setTimeout(() => {
+      setCopy(false);
+    }, 5000);
+  };
+
   return (
     <div className="w-fit m-auto">
       <Button onClick={openHandler}>Embed link</Button>
+
       <Modal
         width="700px"
         className="bg-white"
@@ -27,7 +46,18 @@ const Tweetslink: React.FC<TweetsLinkProps> = ({}) => {
         open={open}
         onClose={closeHandler}
       >
-        <h1 className="z-10 w-full h-full font-bold ">Embed the code below </h1>
+        <div className="flex justify-center space-x-4 items-center">
+          {copy ? (
+            <AiFillCheckCircle size={25} className="justify-self-start" />
+          ) : (
+            <VscCopy
+              size={25}
+              onClick={copyHandler}
+              className="justify-self-start"
+            />
+          )}
+          <h1 className="z-10 w-fit h-full font-bold ">Embed the code below</h1>
+        </div>
 
         <br />
         {data && data.me && (
@@ -44,13 +74,7 @@ const Tweetslink: React.FC<TweetsLinkProps> = ({}) => {
             }}
             width="700px"
             defaultLanguage="html"
-            defaultValue={`<script src="https://sections1.vercel.app/iframeResizer.js"></script>
-  <iframe id="tweetWall" style="min-width: 100%" frameborder="0" 
-  src="https://sections1.vercel.app/tweets/${data?.me?.id}"></iframe>
-  <script>
-      iFrameResize({ log: false }, "#tweetWall");
-  </script>
-      `}
+            defaultValue={copyContent}
           />
         )}
       </Modal>

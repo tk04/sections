@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import React, { useState } from "react";
 import { MeDocument, useLogoutMutation } from "../generated/graphql";
 import Profile from "./Profile";
+import { client } from "../utils/apollo";
 interface ProfileMenuProps {}
 
 const Profilemenu: React.FC<ProfileMenuProps> = ({}) => {
