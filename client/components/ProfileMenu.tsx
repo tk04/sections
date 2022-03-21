@@ -2,35 +2,37 @@ import { Button, Modal } from "@nextui-org/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import { MeDocument, useLogoutMutation } from "../generated/graphql";
-import Profile from "./Profile";
+import { useLogoutMutation } from "../generated/graphql";
 import { client } from "../utils/apollo";
+import Profile from "./Profile";
+
 interface ProfileMenuProps {}
 
 const Profilemenu: React.FC<ProfileMenuProps> = ({}) => {
   const router = useRouter();
   const [visible, setVisible] = useState(false);
   const [logout, { data }] = useLogoutMutation({
-    update: (cache) => {
-      cache.writeQuery({
-        query: MeDocument,
-        data: {
-          me: null,
-        },
-      });
-    },
+    // update: (cache) => {
+    //   cache.writeQuery({
+    //     query: MeDocument,
+    //     data: {
+    //       me: null,
+    //     },
+    //   });
+    // },
   });
   const handler = () => setVisible(true);
   const closeHandler = () => {
     setVisible(false);
   };
-  const logoutHandler = () => {
-    logout({
+  const logoutHandler = async () => {
+    await logout({
       optimisticResponse: {
         logout: true,
       },
     });
     router.push("/");
+    client.clearStore();
   };
   return (
     <div>
