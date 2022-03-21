@@ -2,7 +2,7 @@ import { Button, Modal } from "@nextui-org/react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
-import { useLogoutMutation } from "../generated/graphql";
+import { MeDocument, useLogoutMutation } from "../generated/graphql";
 import { client } from "../utils/apollo";
 import Profile from "./Profile";
 
@@ -12,14 +12,14 @@ const Profilemenu: React.FC<ProfileMenuProps> = ({}) => {
   const router = useRouter();
   const [visible, setVisible] = useState(false);
   const [logout, { data }] = useLogoutMutation({
-    // update: (cache) => {
-    //   cache.writeQuery({
-    //     query: MeDocument,
-    //     data: {
-    //       me: null,
-    //     },
-    //   });
-    // },
+    update: (cache) => {
+      cache.writeQuery({
+        query: MeDocument,
+        data: {
+          me: null,
+        },
+      });
+    },
   });
   const handler = () => setVisible(true);
   const closeHandler = () => {
@@ -31,8 +31,8 @@ const Profilemenu: React.FC<ProfileMenuProps> = ({}) => {
         logout: true,
       },
     });
-    router.push("/");
     client.clearStore();
+    router.push("/");
   };
   return (
     <div>
