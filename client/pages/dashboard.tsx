@@ -16,6 +16,7 @@ interface dashboardProps {}
 const Dashboard: React.FC<dashboardProps> = ({}) => {
   const [tweets, setTweets] = useState<TweetFragmentFragment[]>([]);
   const [saveLoading, setLoading] = useState<boolean>(false);
+  const [tweetError, setTweetError] = useState<string>("");
   const [label, setLabel] = useState<string>("");
   const inputRef = useRef<HTMLInputElement>(null);
   const [getTweet, { data }] = useGetTweetMutation();
@@ -52,7 +53,14 @@ const Dashboard: React.FC<dashboardProps> = ({}) => {
         url: text,
       },
     });
-    setTweets([...tweets, tweetData.data!.getTweet]);
+    if (tweetData.data?.getTweet) {
+      setTweets([...tweets, tweetData.data!.getTweet]);
+    } else {
+      setTweetError("Tweet not found, try another URL");
+      setTimeout(() => {
+        setTweetError("");
+      }, 3000);
+    }
     inputRef.current!.value = "";
   };
 
@@ -80,6 +88,11 @@ const Dashboard: React.FC<dashboardProps> = ({}) => {
       <div className="p-20">
         <br />
         {label && <h1 className="text-center mb-2">{label}</h1>}
+        {tweetError && (
+          <h1 className="text-center mb-2 text-red-500 font-bold text-sm">
+            {tweetError}
+          </h1>
+        )}
         <div className="flex flex-row  space-x-4 justify-center">
           <div>
             <Input
