@@ -13,7 +13,7 @@ const Tweetslink: React.FC<TweetsLinkProps> = ({}) => {
 
   const { data } = useMeQuery();
   let copyContent = `<script src="https://sections1.vercel.app/iframeResizer.js"></script>
-  <iframe id="tweetWall" style="min-width: 100%" frameborder="0" 
+  <iframe id="tweetWall" width="100%" frameborder="0" scrolling="no"
   src="https://sections1.vercel.app/tweets/${data?.me?.id}"></iframe>
   <script>
       iFrameResize({ log: false }, "#tweetWall");
